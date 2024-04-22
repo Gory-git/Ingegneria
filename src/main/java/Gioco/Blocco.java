@@ -1,6 +1,7 @@
 package Gioco;
 
 import java.lang.invoke.StringConcatFactory;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class Blocco
             throw new RuntimeException("Non sono state passate il numero corretto di celle");
         else
             this.celle = new LinkedList<Cella>(celle);
+        if verifica(operatore, valore, celle);
     }
 
     public Blocco (Blocco blocco)
@@ -35,5 +37,34 @@ public class Blocco
     public boolean soddisfatto()
     {
 
+    }
+
+    private static boolean verifica (Operatore operatore, int valore, List celle)
+    {
+        if ( operatore == Operatore.SOMMA )
+        {
+            int s = 0;
+            Iterator iterator = celle.iterator();
+            while ( iterator.hasNext() )
+                s += (Integer)iterator.next();
+            return s == valore;
+        } else if ( operatore == Operatore.SOTTRAZIONE )
+        {
+            int s = 0;
+            Iterator iterator = celle.iterator();
+            while ( iterator.hasNext())
+                s += (Integer)iterator.next();
+            return s == valore;
+        } else if ( operatore == Operatore.MOLTIPLICAZIONE )
+        {
+            int m = 1;
+            Iterator iterator = celle.iterator();
+            while ( iterator.hasNext() )
+                m *= (Integer)iterator.next();
+            return m == valore;
+        }else
+        {
+
+        }
     }
 }
