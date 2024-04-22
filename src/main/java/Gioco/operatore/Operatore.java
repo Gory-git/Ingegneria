@@ -1,4 +1,4 @@
-package Gioco;
+package Gioco.operatore;
 
 public enum Operatore
 {
