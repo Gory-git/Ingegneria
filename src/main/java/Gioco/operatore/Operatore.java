@@ -5,5 +5,6 @@ public enum Operatore
     SOMMA,
     SOTTRAZIONE,
     MOLTIPLICAZIONE,
-    DIVISIONE;
+    DIVISIONE,
+    NONE;
 }

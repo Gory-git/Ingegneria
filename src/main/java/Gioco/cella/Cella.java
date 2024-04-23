@@ -26,6 +26,14 @@ public class Cella implements Comparable
         this.blocco = blocco;
     }
 
+    public Cella(Blocco blocco)
+    {
+        this(0);
+        if ( blocco == null)
+            throw new IllegalArgumentException("Blocco dev'essere non null");
+        this.blocco = blocco;
+    }
+
     public void setValore(int valore)
     {
         this.valore = valore;

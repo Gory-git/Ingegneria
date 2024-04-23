@@ -18,7 +18,7 @@ public interface Blocco
             throw new IllegalArgumentException("Celle dev'essere non null");
         else if (celle.size() == dimensione)
         {
-            if (dimensione == 1)
+            if (dimensione == 1 && operatore == Operatore.NONE)
             {   //CASO BLOCCO DI DIMENSIONE UNITARIA, SEMPRE SODDISFATTO SE LA CELLA CONTIENE IL VALORE CORRETTO
                 return celle.get(0).getValore() == valore;
             } else if (operatore == Operatore.SOMMA)
@@ -42,7 +42,7 @@ public interface Blocco
                 while (iterator.hasNext())
                     m *= iterator.next().getValore();
                 return m == valore;
-            }else
+            }else if(operatore == Operatore.DIVISIONE)
             {
                 Collections.sort(celle);
                 Collections.reverse(celle);

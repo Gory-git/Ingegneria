@@ -11,8 +11,8 @@ public class Main
 {
     public static void main(String[] args)
     {
-        BloccoList prova = new BloccoList(Operatore.DIVISIONE, 1, 3);
-        Cella c1 = new Cella(3, prova);
+        BloccoList prova = new BloccoList(Operatore.SOTTRAZIONE, 2, 3);
+        Cella c1 = new Cella(7, prova);
         Cella c2 = new Cella(3, prova);
         Cella c3 = new Cella(1, prova);
         List<Cella> celle = new LinkedList<>();
