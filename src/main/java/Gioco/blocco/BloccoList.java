@@ -2,7 +2,7 @@ package Gioco.blocco;
 
 import Gioco.cella.Cella;
 import Gioco.operatore.Operatore;
-
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,19 +20,27 @@ public class BloccoList extends AbstractBlocco
         this.celle = new LinkedList<>();
     }
 
-    public BloccoList(Operatore operatore, int valore, int dimensione, List celle)
+    public BloccoList(Operatore operatore, int valore, int dimensione, List<Cella> celle)
     {
-        this(operatore, valore, dimensione);
-        if ( celle.size() != dimensione)
-            throw new RuntimeException("Non sono state passate il numero corretto di celle");
+        // this(operatore, valore, dimensione); CONTROLLO ECCEZIONI
+        if ( celle == null)
+            throw new IllegalArgumentException("Celle dev'essere non null");
+        else if ( celle.size() != dimensione)
+            throw new IllegalArgumentException("Non sono state passate il numero corretto di celle");
         else
-            this.celle = new LinkedList<Cella>(celle);
-        if ( Blocco.verifica(operatore, valore, dimensione, celle) );
+        {
+            this.celle = new LinkedList<>(celle);
+            this.operatore = operatore;
+            this.valore = valore;
+            this.dimensione = dimensione;
+        }
+        //if ( Blocco.verifica(operatore, valore, dimensione, celle) );
     }
 
     public BloccoList(Blocco blocco)
     {
-        this(blocco.operatore, blocco.valore, blocco.dimensione, blocco.celle);
+        // TODO basarsi su BIGINTLL
+        // ha senso di esistere?
     }
 
     public boolean soddisfatto()
@@ -40,11 +48,18 @@ public class BloccoList extends AbstractBlocco
         return Blocco.verifica(operatore, valore, dimensione, celle);
     }
 
-
+    public Iterator<Cella> iterator()
+    {
+        return celle.iterator();
+    }
 
 
     public void setCelle(List<Cella> celle)
     {
+        if (celle == null)
+            throw new IllegalArgumentException("Celle dev'essere non null");
+        if (celle.size() != dimensione)
+            throw new IllegalArgumentException("Celle di dimensione errata");
         this.celle = new LinkedList<>(celle);
     }
 

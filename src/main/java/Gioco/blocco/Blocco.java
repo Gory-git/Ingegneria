@@ -1,7 +1,10 @@
 package Gioco.blocco;
 
+import Gioco.cella.Cella;
 import Gioco.operatore.Operatore;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -9,43 +12,46 @@ public interface Blocco
 {
     boolean soddisfatto();
 
-    static boolean verifica(Operatore operatore, int valore, int dimensione, List celle)
+    static boolean verifica(Operatore operatore, int valore, int dimensione, List<Cella> celle)
     {
-        if (celle.size() == dimensione)
+        if ( celle == null)
+            throw new IllegalArgumentException("Celle dev'essere non null");
+        else if (celle.size() == dimensione)
         {
             if (dimensione == 1)
-            {   //CASO BLOCCO DI DIMENSIONE UNITARIA, SEMPRE SODDISFATTO SE HA UNA CELLA PIENA
-                return celle.contains(valore);
+            {   //CASO BLOCCO DI DIMENSIONE UNITARIA, SEMPRE SODDISFATTO SE LA CELLA CONTIENE IL VALORE CORRETTO
+                return celle.get(0).getValore() == valore;
             } else if (operatore == Operatore.SOMMA)
             {
                 int s = 0;
-                Iterator iterator = celle.iterator();
+                Iterator<Cella> iterator = celle.iterator();
                 while (iterator.hasNext())
-                    s += (Integer) iterator.next();
+                    s += iterator.next().getValore();
                 return s == valore;
             } else if (operatore == Operatore.SOTTRAZIONE)
             {
                 int s = 0;
-                Iterator iterator = celle.iterator();
+                Iterator<Cella> iterator = celle.iterator();
                 while (iterator.hasNext())
-                    s = Math.abs(s - (Integer) iterator.next());
+                    s = Math.abs(s - iterator.next().getValore());
                 return s == valore;
             } else if (operatore == Operatore.MOLTIPLICAZIONE)
             {
                 int m = 1;
-                Iterator iterator = celle.iterator();
+                Iterator<Cella> iterator = celle.iterator();
                 while (iterator.hasNext())
-                    m *= (Integer) iterator.next();
+                    m *= iterator.next().getValore();
                 return m == valore;
             }else
             {
-                celle.sort(null);
+                Collections.sort(celle);
+                Collections.reverse(celle);
                 int d = 0;
-                Iterator iterator = celle.iterator();
+                Iterator<Cella> iterator = celle.iterator();
                 if (iterator.hasNext())
-                    d = (Integer) iterator.next();
+                    d = iterator.next().getValore();
                 while (iterator.hasNext())
-                    d /= (Integer) iterator.next();
+                    d /= iterator.next().getValore();
                 return d == valore;
             }
         }
