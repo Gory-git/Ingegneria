@@ -3,24 +3,19 @@ import Gioco.blocco.Blocco;
 import Gioco.blocco.BloccoList;
 import Gioco.cella.Cella;
 import Gioco.operatore.Operatore;
+import Gioco.soluzione.Soluzione;
+import Gioco.soluzione.SoluzioneMatrix;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Main
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
-        BloccoList prova = new BloccoList(Operatore.SOTTRAZIONE, 2, 3);
-        Cella c1 = new Cella(7, prova);
-        Cella c2 = new Cella(3, prova);
-        Cella c3 = new Cella(1, prova);
-        List<Cella> celle = new LinkedList<>();
-        celle.add(c1);
-        celle.add(c2);
-        celle.add(c3);
-        prova.setCelle(celle);
-
-        System.out.println("--" + prova.soddisfatto() + "--");
+        Soluzione soluzione = new SoluzioneMatrix(4);
+        soluzione.risolvi(false);
+        System.out.println(soluzione.toString());
     }
 }

@@ -1,5 +1,7 @@
 package Gioco.soluzione;
 
+import Gioco.blocco.Blocco;
+import Gioco.blocco.BloccoList;
 import Gioco.cella.Cella;
 
 import java.util.*;
@@ -15,17 +17,82 @@ public class SoluzioneMatrix extends AbstractSoluzione
         {
             for (int j = 0; j < dimensione; j++)
             {
-                celle[i][j] = new Cella(0);
+                int[] posizione = {i, j};
+                celle[i][j] = new Cella(0, posizione);
             }
-            risolvi();
-            popola(new Random().nextInt(2, dimensione * dimensione));
-
         }
+        risolvi(false);
+        popola(new Random().nextInt(2, dimensione * dimensione));
+        for (Cella cella : this)
+            cella.setValore(0);
     }
-    @Override
-    public void risolvi()
+
+    public SoluzioneMatrix(Soluzione soluzione, int dimensione)
     {
-        // TODO col backtracking
+        celle = new Cella[dimensione][dimensione];
+        for (int i = 0; i < dimensione; i++)
+        {
+            for (int j = 0; j < dimensione; j++)
+            {
+                int[] posizione = {i, j};
+                celle[i][j] = new Cella(0, posizione);
+            }
+        }
+
+        Iterator<Cella> iterator = soluzione.iterator();
+
+        LinkedList<Blocco> blocchi = new LinkedList<>();
+        while (iterator.hasNext())
+        {
+            Cella next = iterator.next();
+            if (!blocchi.contains(next.getBlocco()))
+                blocchi.add(next.getBlocco());
+        }
+        for (Blocco blocco : blocchi)
+        {
+            Blocco duplicato = blocco.duplica();
+            Iterator<Cella> iteratorBlocco = blocco.iterator();
+            while (iteratorBlocco.hasNext())
+            {
+                Cella next = iteratorBlocco.next();
+                int[] posizione = next.getPosizione();
+                duplicato.aggiungiCella(celle[posizione[0]][posizione[1]]);
+                celle[posizione[0]][posizione[1]].setBlocco(duplicato);
+            }
+        }
+        risolvi(true);
+    }
+
+    @Override
+    public boolean risolviBT(int riga, int colonna, boolean controllaBlocchi) // FIXME loop infinito
+    {
+        if ( riga == celle.length || colonna  == celle.length)
+            return true;
+        List<Integer> scartati = new LinkedList<>();
+        while (scartati.size() < celle.length)
+        {
+            int i = new Random().nextInt(1, celle.length + 1);
+            while (scartati.contains(i))
+                i = new Random().nextInt(1, celle.length + 1);
+            if (controlla(riga, colonna, i))
+            {
+                posiziona(riga, colonna, i);
+                int prossimaColonna = (colonna + 1) % celle.length;
+                int prossimaRiga = prossimaColonna == 0 ? riga + 1 : riga;
+                if (controllaBlocchi)
+                {
+                    if (risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi) && celle[riga][colonna].getBlocco().soddisfatto())
+                        return true;
+                } else
+                {
+                    if (risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi))
+                        return true;
+                }
+                rimuovi(riga, colonna);
+                scartati.add(i);
+            }
+        }
+        return false;
     }
 
     @Override
@@ -36,20 +103,14 @@ public class SoluzioneMatrix extends AbstractSoluzione
     }
 
     @Override
-    public void rimuovi(int riga, int colonna)
-    {
-        celle[riga][colonna].setValore(0);
-    }
-
-    @Override
     public boolean controlla(int riga, int colonna, int valore)
     {
         for (int i = 0; i < celle.length; i++)
         {
-            if(i != riga && celle[i][colonna].getValore() == valore || i != colonna && celle[riga][i].getValore() == valore)
+            if (i != riga && celle[i][colonna].getValore() == valore || i != colonna && celle[riga][i].getValore() == valore)
                 return false;
         }
-        return celle[riga][colonna].getBlocco().soddisfatto();
+        return true;
     }
 
     @Override
@@ -63,10 +124,27 @@ public class SoluzioneMatrix extends AbstractSoluzione
     }
 
     @Override
-    public void popola(int dimensioneMassima)
+    public boolean popolaBT(int dimensioneMassima, Iterator<Cella> iterator, Cella cella) // FIXME null pointer && non funziona a dovere, da ripensare e riscrivere da 0!
     {
-        // TODO col backtracking
+        if (!iterator.hasNext())
+            return cella.getBlocco().pieno();
+        Cella next = iterator.next();
+        if (cella == null || cella.getBlocco().pieno())
+            for (int i = dimensioneMassima; i > 1; i--)
+            {
+                next.setBlocco(new BloccoList(i));
+                next.getBlocco().aggiungiCella(next);
+                if (popolaBT(i, iterator, next))
+                    return true;
+            }
+        else
+        {
+            next.setBlocco(cella.getBlocco());
+            next.getBlocco().aggiungiCella(next);
+        }
+        return popolaBT(dimensioneMassima, iterator, next);
     }
+
     @Override
     public List<Cella> vicini(int riga, int colonna)
     {
@@ -86,7 +164,7 @@ public class SoluzioneMatrix extends AbstractSoluzione
     @Override
     public Soluzione creaVariante()
     {
-        return null;
+        return new SoluzioneMatrix(this, this.celle.length);
     }
 
     @Override
@@ -97,27 +175,31 @@ public class SoluzioneMatrix extends AbstractSoluzione
 
     private class Iteratore implements Iterator<Cella>
     {
-        private int[] corrente = {-1, -1};
+        private int[] corrente = {-1, 0};
         private boolean rimuovibile = false;
         int val = -1;
+        int visitati = 0;
 
         @Override
         public boolean hasNext()
         {
-            return corrente[0] + corrente[1] < (celle.length - 1) * 2;
+            return visitati < celle.length;
         }
 
         @Override
         public Cella next()
         {
-            if(!hasNext())
+            if (!hasNext())
                 throw new NoSuchElementException();
             corrente[1]+= val;
-            if(corrente[1] == celle.length || corrente[0] < 0)
+            if (corrente[1] == celle.length || corrente[0] < 0)
             {
+                if (corrente[1] < 0)
+                    corrente[1] = 0;
                 corrente[0]++;
                 val *= -1;
             }
+            visitati++;
             rimuovibile = true;
             return celle[corrente[0]][corrente[1]];
         }
@@ -125,7 +207,7 @@ public class SoluzioneMatrix extends AbstractSoluzione
         @Override
         public void remove()
         {
-            if(!rimuovibile)
+            if (!rimuovibile)
                 throw new IllegalStateException();
             rimuovi(corrente[0], corrente[1]);
         }

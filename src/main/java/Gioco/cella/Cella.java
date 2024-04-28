@@ -1,34 +1,40 @@
 package Gioco.cella;
 
-import Gioco.blocco.AbstractBlocco;
 import Gioco.blocco.Blocco;
-import Gioco.blocco.BloccoList;
 
-import java.util.Iterator;
+import java.util.Arrays;
 
 
 public class Cella implements Comparable<Cella>
 {
+    private int[] posizione;
     private int valore;
     private Blocco blocco;
 
-    public Cella(int valore)
+    public Cella(int[] posizione)
     {
+        if(posizione.length != 2 || posizione[0] < 0 || posizione[1] < 0)
+            throw new IllegalArgumentException("Posizione non valida");
+        this.posizione = new int[]{posizione[0], posizione[1]};
+    }
+    public Cella(int valore, int[] posizione)
+    {
+        this(posizione);
         this.valore = valore;
         this.blocco = null;
     }
 
-    public Cella(int valore, Blocco blocco)
+    public Cella(int[] posizione, int valore, Blocco blocco)
     {
-        this(valore);
+        this(valore, posizione);
         if ( blocco == null)
             throw new IllegalArgumentException("Blocco dev'essere non null");
         this.blocco = blocco;
     }
 
-    public Cella(Blocco blocco)
+    public Cella(int[] posizione, Blocco blocco)
     {
-        this(0);
+        this(0, posizione);
         if ( blocco == null)
             throw new IllegalArgumentException("Blocco dev'essere non null");
         this.blocco = blocco;
@@ -56,6 +62,11 @@ public class Cella implements Comparable<Cella>
         return blocco;
     }
 
+    public int[] getPosizione()
+    {
+        return posizione;
+    }
+
     @Override
     public int compareTo(Cella c)
     {
@@ -66,5 +77,41 @@ public class Cella implements Comparable<Cella>
         if(this.valore < c.valore)
             return -1;
         return 0;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int M = 83;
+        int H = 1;
+
+        H += M * blocco.hashCode();
+        H += M * valore;
+        H += M * Arrays.hashCode(posizione);
+
+        return H;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(obj == this)
+            return true;
+        if(!(obj instanceof Cella))
+            return false;
+        Cella cella = (Cella) obj;
+
+        return this.valore == cella.valore
+                && Arrays.equals(this.posizione, cella.posizione)
+                && this.blocco.equals(cella.blocco);
+    }
+
+    @Override
+    public String toString()
+    {
+        return  posizione[0] + ", " +
+                posizione[1] + ": " +
+                valore + "" +
+                blocco.toString();
     }
 }

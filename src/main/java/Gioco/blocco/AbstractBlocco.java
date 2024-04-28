@@ -1,23 +1,40 @@
 package Gioco.blocco;
 
+import Gioco.operatore.Operatore;
+
 public abstract class AbstractBlocco implements Blocco
 {
-    // TODO i metodi qua di seguito
+    protected Operatore operatore;
+    protected int valore, dimensione;
     @Override
     public int hashCode()
     {
-        return super.hashCode();
+        int M = 83;
+        int H = 1;
+
+        H += M * operatore.hashCode();
+        H += M * valore;
+        H += M * dimensione;
+
+        return H;
     }
 
     @Override
     public boolean equals(Object obj)
     {
-        return super.equals(obj);
+        if(obj == this)
+            return true;
+        if(!(obj instanceof AbstractBlocco))
+            return false;
+        AbstractBlocco blocco = (AbstractBlocco) obj;
+        return this.operatore.equals(blocco.operatore)
+                && this.valore == blocco.valore
+                && this.dimensione == blocco.dimensione;
     }
 
     @Override
     public String toString()
     {
-        return super.toString();
+        return "(" + operatore.toString() + " " + valore + ")";
     }
 }

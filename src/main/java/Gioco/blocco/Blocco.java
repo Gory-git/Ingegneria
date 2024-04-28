@@ -10,7 +10,11 @@ import java.util.List;
 
 public interface Blocco extends Serializable, Iterable<Cella>
 {
+    boolean pieno();
+    void inizializza();
+    void aggiungiCella(Cella cella);
     boolean soddisfatto();
+    Blocco duplica();
 
     static boolean verifica(Operatore operatore, int valore, int dimensione, List<Cella> celle)
     {
@@ -18,6 +22,9 @@ public interface Blocco extends Serializable, Iterable<Cella>
             throw new IllegalArgumentException("Celle dev'essere non null");
         else if (celle.size() == dimensione)
         {
+            for (Cella cella : celle) // caso in cui le celle non sono inizializzate
+                if (cella.getValore() == 0)
+                    return true;
             if (dimensione == 1 && operatore == Operatore.NONE)
             {   //CASO BLOCCO DI DIMENSIONE UNITARIA, SEMPRE SODDISFATTO SE LA CELLA CONTIENE IL VALORE CORRETTO
                 return celle.get(0).getValore() == valore;

@@ -2,22 +2,18 @@ package Gioco.blocco;
 
 import Gioco.cella.Cella;
 import Gioco.operatore.Operatore;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+
+import java.util.*;
 
 public class BloccoList extends AbstractBlocco
 {
-    private Operatore operatore;
-    private int valore, dimensione;
     private List<Cella> celle;
 
     public BloccoList(Operatore operatore, int valore, int dimensione)
     {
+        this(dimensione);
         this.operatore = operatore;
         this.valore = valore;
-        this.dimensione = dimensione;
-        this.celle = new LinkedList<>();
     }
 
     public BloccoList(Operatore operatore, int valore, int dimensione, List<Cella> celle)
@@ -37,10 +33,85 @@ public class BloccoList extends AbstractBlocco
         //if ( Blocco.verifica(operatore, valore, dimensione, celle) );
     }
 
-    public BloccoList(Blocco blocco)
+    public BloccoList(int dimensione)
     {
-        // TODO basarsi su BIGINTLL
-        // ha senso di esistere?
+        this.dimensione = dimensione;
+        this.celle = new LinkedList<>();
+    }
+
+    @Override
+    public boolean pieno()
+    {
+        return celle.size() == dimensione;
+    }
+
+    @Override
+    public void inizializza()
+    {
+        if (dimensione == 1)
+        {
+            operatore = Operatore.NONE;
+            valore = celle.get(0).getValore();
+        }
+        else
+        {
+            Collections.sort(celle);
+            boolean soddisfatto = false;
+            while (!soddisfatto)
+            {
+                operatore =  Operatore.DIVISIONE.getRandom();
+                switch (operatore)
+                {
+                    case SOMMA -> valore = somma(celle);
+                    case SOTTRAZIONE -> valore = sottrazione(celle);
+                    case MOLTIPLICAZIONE -> valore = moltiplicazione(celle);
+                    case DIVISIONE -> valore = divisione(celle);
+                }
+                soddisfatto = soddisfatto();
+            }
+
+        }
+    }
+
+    private static int somma(List<Cella> celle)
+    {
+        int ret = 0;
+        for (Cella cella : celle)
+            ret += cella.getValore();
+        return ret;
+    }
+
+    private static int sottrazione(List<Cella> celle)
+    {
+        int ret = celle.get(0).getValore() * 2;
+        for (Cella cella : celle)
+            ret -= cella.getValore();
+        return ret;
+    }
+
+    private static int moltiplicazione(List<Cella> celle)
+    {
+        int ret = 1;
+        for (Cella cella : celle)
+            ret *= cella.getValore();
+        return ret;
+    }
+
+    private static int divisione(List<Cella> celle)
+    {
+        int ret = celle.get(0).getValore() * celle.get(0).getValore();
+        for (Cella cella : celle)
+            ret += cella.getValore();
+        return ret;
+    }
+
+    @Override
+    public void aggiungiCella(Cella cella)
+    {
+        if (celle.size() < dimensione)
+            celle.add(cella);
+        if (pieno())
+            inizializza();
     }
 
     public boolean soddisfatto()
@@ -49,11 +120,16 @@ public class BloccoList extends AbstractBlocco
     }
 
     @Override
+    public Blocco duplica()
+    {
+        return new BloccoList(this.operatore, this.valore, this.dimensione);
+    }
+
+    @Override
     public Iterator<Cella> iterator()
     {
         return celle.iterator();
     }
-
 
     public void setCelle(List<Cella> celle)
     {

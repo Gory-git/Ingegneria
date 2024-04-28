@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Gioco implements Serializable
 {
-    private static final File FILE = new File("C:");
+    private static final File FILE = new File("Save.dat");
     private final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE));
     private final ObjectInputStream in= new ObjectInputStream(new FileInputStream(FILE));
     private LinkedList<Soluzione> soluzioni;
