@@ -48,6 +48,7 @@ public class BloccoList extends AbstractBlocco
         return Blocco.verifica(operatore, valore, dimensione, celle);
     }
 
+    @Override
     public Iterator<Cella> iterator()
     {
         return celle.iterator();

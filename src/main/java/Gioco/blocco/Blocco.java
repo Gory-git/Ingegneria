@@ -3,12 +3,12 @@ package Gioco.blocco;
 import Gioco.cella.Cella;
 import Gioco.operatore.Operatore;
 
-import java.util.Collection;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public interface Blocco
+public interface Blocco extends Serializable, Iterable<Cella>
 {
     boolean soddisfatto();
 

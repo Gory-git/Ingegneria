@@ -2,7 +2,7 @@ package Gioco.soluzione;
 
 public abstract class AbstractSoluzione implements Soluzione
 {
-    //TODO i metodi qua di seguito
+    // TODO i metodi qua di seguito
     @Override
     public int hashCode()
     {

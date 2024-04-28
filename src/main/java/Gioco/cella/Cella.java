@@ -7,7 +7,7 @@ import Gioco.blocco.BloccoList;
 import java.util.Iterator;
 
 
-public class Cella implements Comparable
+public class Cella implements Comparable<Cella>
 {
     private int valore;
     private Blocco blocco;
@@ -57,13 +57,10 @@ public class Cella implements Comparable
     }
 
     @Override
-    public int compareTo(Object o)
+    public int compareTo(Cella c)
     {
-        if(o == null)
+        if(c == null)
             throw new IllegalArgumentException();
-        if(!(o instanceof Cella))
-            throw new IllegalArgumentException();
-        Cella c = (Cella) o;
         if(this.valore > c.valore)
             return 1;
         if(this.valore < c.valore)
