@@ -42,7 +42,7 @@ public abstract class AbstractSoluzione implements Soluzione
     }
 
     @Override
-    public String toString() // FIXME fa cacare, stampa a cazzo di cane
+    public String toString()
     {
         Iterator<Cella> iterator = this.iterator();
         LinkedList<Cella> celleL = new LinkedList<>();
@@ -53,16 +53,10 @@ public abstract class AbstractSoluzione implements Soluzione
 
         List<Cella>[] celle = new LinkedList[dim];
 
-        int k = 0;
         for (int i = 0; i < dim; i++)
         {
-            celle[i] = new LinkedList<>();
-            for (int j = 0; j < dim; j++)
-            {
-                celle[i].add(celleL.get(k));
-                k++;
-            }
-            if (i % 2 == 0)
+            celle[i] = new LinkedList<>(celleL.subList(i * dim, (i + 1) * dim));
+            if (i % 2 == 1)
                 Collections.reverse(celle[i]);
         }
 

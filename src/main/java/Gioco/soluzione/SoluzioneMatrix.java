@@ -22,7 +22,26 @@ public class SoluzioneMatrix extends AbstractSoluzione
             }
         }
         risolvi(false);
+        // DEBUG
+        for (int i = 0; i < dimensione; i++)
+        {
+            for (int j = 0; j < dimensione; j++)
+            {
+                System.out.print(celle[i][j].getValore() + ", ");
+            }
+            System.out.println();
+        }
         popola(new Random().nextInt(2, dimensione * dimensione));
+        // DEBUG
+        for (int i = 0; i < dimensione; i++)
+        {
+            for (int j = 0; j < dimensione; j++)
+            {
+                System.out.print((celle[i][j].getBlocco() == null ? "nullo" : celle[i][j].getBlocco().pieno()) + ", ");
+            }
+            System.out.println();
+        }
+
         for (Cella cella : this)
             cella.setValore(0);
     }
@@ -64,7 +83,7 @@ public class SoluzioneMatrix extends AbstractSoluzione
     }
 
     @Override
-    public boolean risolviBT(int riga, int colonna, boolean controllaBlocchi) // FIXME loop infinito
+    public boolean risolviBT(int riga, int colonna, boolean controllaBlocchi) // FIXME speculare
     {
         if ( riga == celle.length || colonna  == celle.length)
             return true;
@@ -72,8 +91,13 @@ public class SoluzioneMatrix extends AbstractSoluzione
         while (scartati.size() < celle.length)
         {
             int i = new Random().nextInt(1, celle.length + 1);
+            System.out.println("x" + i);
             while (scartati.contains(i))
+            {
                 i = new Random().nextInt(1, celle.length + 1);
+
+                System.out.println("++" + i + " ++ " + scartati.size());
+            }
             if (controlla(riga, colonna, i))
             {
                 posiziona(riga, colonna, i);
@@ -91,6 +115,7 @@ public class SoluzioneMatrix extends AbstractSoluzione
                 rimuovi(riga, colonna);
                 scartati.add(i);
             }
+            scartati.add(i);
         }
         return false;
     }
@@ -125,7 +150,7 @@ public class SoluzioneMatrix extends AbstractSoluzione
 
     @Override
     public boolean popolaBT(int dimensioneMassima, Iterator<Cella> iterator, Cella cella) // FIXME null pointer && non funziona a dovere, da ripensare e riscrivere da 0!
-    {
+    {                                                                                     // forse era l'iterator a dare il problema
         if (!iterator.hasNext())
             return cella.getBlocco().pieno();
         Cella next = iterator.next();
@@ -141,8 +166,9 @@ public class SoluzioneMatrix extends AbstractSoluzione
         {
             next.setBlocco(cella.getBlocco());
             next.getBlocco().aggiungiCella(next);
+            return popolaBT(dimensioneMassima, iterator, next);
         }
-        return popolaBT(dimensioneMassima, iterator, next);
+        return false;
     }
 
     @Override
@@ -173,7 +199,7 @@ public class SoluzioneMatrix extends AbstractSoluzione
         return new Iteratore();
     }
 
-    private class Iteratore implements Iterator<Cella>
+    private class Iteratore implements Iterator<Cella> // FIXME non funziona, scorre soltanto la prima riga
     {
         private int[] corrente = {-1, 0};
         private boolean rimuovibile = false;
