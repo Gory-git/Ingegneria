@@ -22,26 +22,7 @@ public class SoluzioneMatrix extends AbstractSoluzione
             }
         }
         risolvi(false);
-        // DEBUG
-        for (int i = 0; i < dimensione; i++)
-        {
-            for (int j = 0; j < dimensione; j++)
-            {
-                System.out.print(celle[i][j].getValore() + ", ");
-            }
-            System.out.println();
-        }
         popola(new Random().nextInt(2, dimensione * dimensione));
-        // DEBUG
-        for (int i = 0; i < dimensione; i++)
-        {
-            for (int j = 0; j < dimensione; j++)
-            {
-                System.out.print((celle[i][j].getBlocco() == null ? "nullo" : celle[i][j].getBlocco().pieno()) + ", ");
-            }
-            System.out.println();
-        }
-
         for (Cella cella : this)
             cella.setValore(0);
     }
@@ -149,8 +130,8 @@ public class SoluzioneMatrix extends AbstractSoluzione
     }
 
     @Override
-    public boolean popolaBT(int dimensioneMassima, Iterator<Cella> iterator, Cella cella) // FIXME null pointer && non funziona a dovere, da ripensare e riscrivere da 0!
-    {                                                                                     // forse era l'iterator a dare il problema
+    public boolean popolaBT(int dimensioneMassima, Iterator<Cella> iterator, Cella cella) // FIXME riscrivere per rispettare il nuovo funzionamento dell-iteratore
+    {
         if (!iterator.hasNext())
             return cella.getBlocco().pieno();
         Cella next = iterator.next();
@@ -201,15 +182,13 @@ public class SoluzioneMatrix extends AbstractSoluzione
 
     private class Iteratore implements Iterator<Cella> // FIXME non funziona, scorre soltanto la prima riga
     {
-        private int[] corrente = {-1, 0};
+        private int[] corrente = {-1, -1};
         private boolean rimuovibile = false;
-        int val = -1;
-        int visitati = 0;
 
         @Override
         public boolean hasNext()
         {
-            return visitati < celle.length;
+            return corrente[0] + corrente[1] < (celle.length - 1) * 2;
         }
 
         @Override
@@ -217,16 +196,12 @@ public class SoluzioneMatrix extends AbstractSoluzione
         {
             if (!hasNext())
                 throw new NoSuchElementException();
-            corrente[1]+= val;
+            corrente[1] ++;
             if (corrente[1] == celle.length || corrente[0] < 0)
             {
-                if (corrente[1] < 0)
-                    corrente[1] = 0;
-                corrente[0]++;
-                val *= -1;
+                corrente[1] = 0;
+                corrente[0] ++;
             }
-            visitati++;
-            rimuovibile = true;
             return celle[corrente[0]][corrente[1]];
         }
 
