@@ -109,9 +109,14 @@ public class Cella implements Comparable<Cella>
     @Override
     public String toString()
     {
+        if (blocco == null)
+            return  posizione[0] + ", " +
+                    posizione[1] + ": " +
+                    valore + "->" +
+                    "null";
         return  posizione[0] + ", " +
                 posizione[1] + ": " +
-                valore + "" +
+                valore + "->" +
                 blocco.toString();
     }
 }

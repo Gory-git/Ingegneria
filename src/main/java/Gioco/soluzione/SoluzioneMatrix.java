@@ -22,7 +22,7 @@ public class SoluzioneMatrix extends AbstractSoluzione
             }
         }
         risolvi(false);
-        popola(new Random().nextInt(2, dimensione * dimensione));
+        //popola(new Random().nextInt(2, dimensione * dimensione));
 
         for (int i = 0; i < dimensione; i++)
         {
@@ -169,7 +169,7 @@ public class SoluzioneMatrix extends AbstractSoluzione
         return new Iteratore();
     }
 
-    private class Iteratore implements Iterator<Cella> // FIXME non funziona, scorre soltanto la prima riga
+    private class Iteratore implements Iterator<Cella>
     {
         private int[] corrente = {-1, -1};
         private boolean rimuovibile = false;

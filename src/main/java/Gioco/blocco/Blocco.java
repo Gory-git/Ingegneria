@@ -28,6 +28,9 @@ public interface Blocco extends Serializable, Iterable<Cella>
             if (dimensione == 1 && operatore == Operatore.NONE)
             {   //CASO BLOCCO DI DIMENSIONE UNITARIA, SEMPRE SODDISFATTO SE LA CELLA CONTIENE IL VALORE CORRETTO
                 return celle.get(0).getValore() == valore;
+            }else if (valore == 0)
+            {
+                return false;
             } else if (operatore == Operatore.SOMMA)
             {
                 int s = 0;

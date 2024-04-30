@@ -25,7 +25,7 @@ public interface Soluzione extends Serializable, Iterable<Cella>
     /*
      * il metodo posiziona il valore nella posizione designata
      */
-    void posiziona(int riga, int colonna, int valore);
+    void posiziona(int riga, int colonna, int valore); // TODO da rifare qua dentro
     /*
      * il metodo rimuove il contenuto della posizione designata
      */
@@ -48,7 +48,7 @@ public interface Soluzione extends Serializable, Iterable<Cella>
     /*
      * il metodo implementa la parte backtracking di popola
      */
-    default boolean popolaBT(int dimensioneMassima, Cella precedente) // FIXME riscrivere per rispettare il nuovo funzionamento dell'iteratore
+    default boolean popolaBT(int dimensioneMassima, Cella precedente) // TODO riscrivere per rispettare il nuovo funzionamento dell'iteratore
     {
         return false; // TODO mi sono rotto il cazzo, lo riprendo quando sono capace.
     }

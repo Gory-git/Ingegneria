@@ -15,11 +15,20 @@ public class Main
 {
     public static void main(String[] args) throws IOException
     {
-        Soluzione soluzione = new SoluzioneMatrix(3);
-        //Iterator<Cella> it = soluzione.iterator();
+        int x = 3;
+        Soluzione soluzione = new SoluzioneMatrix(x);
+        Iterator<Cella> it = soluzione.iterator();
+        Blocco[] blocco = new Blocco[]{new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), };
+        int i = 0;
         //soluzione.risolvi(false);
-        //while (it.hasNext())
-        //    System.out.println(it.next().getValore());
+        while (it.hasNext())
+        {
+            Cella cella = it.next();
+            cella.setBlocco(blocco[i]);
+            blocco[i].aggiungiCella(cella);
+            i = (i + 1) % x;
+        }
+        //System.out.println(blocco.soddisfatto());
         System.out.println(soluzione);
     }
 }

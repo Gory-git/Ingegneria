@@ -57,6 +57,7 @@ public class BloccoList extends AbstractBlocco
         else
         {
             Collections.sort(celle);
+            Collections.reverse(celle);
             boolean soddisfatto = false;
             while (!soddisfatto)
             {
@@ -70,7 +71,6 @@ public class BloccoList extends AbstractBlocco
                 }
                 soddisfatto = soddisfatto();
             }
-
         }
     }
 
@@ -102,7 +102,11 @@ public class BloccoList extends AbstractBlocco
     {
         int ret = celle.get(0).getValore() * celle.get(0).getValore();
         for (Cella cella : celle)
-            ret += cella.getValore();
+        {
+            if (ret % cella.getValore() != 0)
+                return 0;
+            ret /= cella.getValore();
+        }
         return ret;
     }
 
