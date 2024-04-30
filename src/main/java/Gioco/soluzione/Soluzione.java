@@ -1,8 +1,10 @@
 package Gioco.soluzione;
 
+import Gioco.blocco.BloccoList;
 import Gioco.cella.Cella;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,16 +44,17 @@ public interface Soluzione extends Serializable, Iterable<Cella>
     /*
      * il metodo popola i blocchi sopra la griglia
      */
-    default void popola(int dimensioneMassima)
-    {
-        popolaBT(dimensioneMassima, this.iterator(), null);
-    }
+    void popola(int dimensioneMassima);
     /*
      * il metodo implementa la parte backtracking di popola
      */
-    boolean popolaBT(int dimensioneMassima, Iterator<Cella> iterator, Cella cella);
+    default boolean popolaBT(int dimensioneMassima, Cella precedente) // FIXME riscrivere per rispettare il nuovo funzionamento dell'iteratore
+    {
+        return false; // TODO mi sono rotto il cazzo, lo riprendo quando sono capace.
+    }
+
     /*
-     * il metodo restituisce una lista contenente gli adiacenti di una cella
+     * il metodo restituisce una lista contenente i vicini di una cella
      */
     List<Cella> vicini(int riga, int colonna);
     /*

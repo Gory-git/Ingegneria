@@ -52,8 +52,8 @@ public class Cella implements Comparable<Cella>
 
     public void setBlocco(Blocco blocco)
     {
-        if ( blocco == null)
-            throw new IllegalArgumentException("Blocco dev'essere non null");
+        //if ( blocco == null)
+        //    throw new IllegalArgumentException("Blocco dev'essere non null");
         this.blocco = blocco;
     }
 

@@ -37,6 +37,7 @@ public class BloccoList extends AbstractBlocco
     {
         this.dimensione = dimensione;
         this.celle = new LinkedList<>();
+        this.operatore = Operatore.NONE;
     }
 
     @Override

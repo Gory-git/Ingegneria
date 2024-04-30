@@ -23,8 +23,18 @@ public class SoluzioneMatrix extends AbstractSoluzione
         }
         risolvi(false);
         popola(new Random().nextInt(2, dimensione * dimensione));
-        for (Cella cella : this)
-            cella.setValore(0);
+
+        for (int i = 0; i < dimensione; i++)
+        {
+            for (int j = 0; j < dimensione; j++)
+            {
+                System.out.print((celle[i][j].getBlocco() == null) + ", ");
+            }
+            System.out.println();
+        }
+
+        //for (Cella cella : this)
+        //    cella.setValore(0);
     }
 
     public SoluzioneMatrix(Soluzione soluzione, int dimensione)
@@ -72,13 +82,8 @@ public class SoluzioneMatrix extends AbstractSoluzione
         while (scartati.size() < celle.length)
         {
             int i = new Random().nextInt(1, celle.length + 1);
-            System.out.println("x" + i);
             while (scartati.contains(i))
-            {
                 i = new Random().nextInt(1, celle.length + 1);
-
-                System.out.println("++" + i + " ++ " + scartati.size());
-            }
             if (controlla(riga, colonna, i))
             {
                 posiziona(riga, colonna, i);
@@ -130,41 +135,25 @@ public class SoluzioneMatrix extends AbstractSoluzione
     }
 
     @Override
-    public boolean popolaBT(int dimensioneMassima, Iterator<Cella> iterator, Cella cella) // FIXME riscrivere per rispettare il nuovo funzionamento dell-iteratore
+    public void popola(int dimensioneMassima)
     {
-        if (!iterator.hasNext())
-            return cella.getBlocco().pieno();
-        Cella next = iterator.next();
-        if (cella == null || cella.getBlocco().pieno())
-            for (int i = dimensioneMassima; i > 1; i--)
-            {
-                next.setBlocco(new BloccoList(i));
-                next.getBlocco().aggiungiCella(next);
-                if (popolaBT(i, iterator, next))
-                    return true;
-            }
-        else
-        {
-            next.setBlocco(cella.getBlocco());
-            next.getBlocco().aggiungiCella(next);
-            return popolaBT(dimensioneMassima, iterator, next);
-        }
-        return false;
+        popolaBT(dimensioneMassima, celle[0][0]);
     }
 
     @Override
     public List<Cella> vicini(int riga, int colonna)
     {
         List<Cella> vicini = new LinkedList<>();
-        int rP = Math.max(riga - 1, 0);
-        int cP = Math.max(colonna - 1, 0);
-        int rA = Math.min(riga + 1, celle.length - 1);
-        int cA = Math.min(colonna + 1, celle.length - 1);
 
-        for (int i = rP; i <= rA; i++)
-            for (int j = cP; j <= cA; j++)
-                if(i != riga && j != colonna)
-                    vicini.add(celle[i][j]);
+        if (riga > 0)
+            vicini.add(celle[riga - 1][colonna]);
+        if (colonna > 0)
+            vicini.add(celle[riga][colonna - 1]);
+        if (colonna < celle.length - 1)
+            vicini.add(celle[riga][colonna + 1]);
+        if (riga < celle.length - 1)
+            vicini.add(celle[riga + 1][colonna]);
+
         return vicini;
     }
 

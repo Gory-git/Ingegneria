@@ -54,11 +54,8 @@ public abstract class AbstractSoluzione implements Soluzione
         List<Cella>[] celle = new LinkedList[dim];
 
         for (int i = 0; i < dim; i++)
-        {
             celle[i] = new LinkedList<>(celleL.subList(i * dim, (i + 1) * dim));
-            if (i % 2 == 1)
-                Collections.reverse(celle[i]);
-        }
+
 
         String ret = "";
 
