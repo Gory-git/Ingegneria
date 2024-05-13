@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public interface Blocco extends Serializable, Iterable<Cella>
+public interface Blocco extends Serializable, Iterable<Cella>, Cloneable
 {
     boolean pieno();
     void inizializza();

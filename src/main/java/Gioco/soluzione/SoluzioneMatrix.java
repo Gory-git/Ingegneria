@@ -12,6 +12,8 @@ public class SoluzioneMatrix extends AbstractSoluzione
 
     public SoluzioneMatrix(int dimensione)
     {
+        if (dimensione < 1)
+            throw new IllegalArgumentException("Dimensione non valida");
         celle = new Cella[dimensione][dimensione];
         for (int i = 0; i < dimensione; i++)
         {
@@ -37,8 +39,11 @@ public class SoluzioneMatrix extends AbstractSoluzione
         //    cella.setValore(0);
     }
 
-    public SoluzioneMatrix(Soluzione soluzione, int dimensione)
+    public SoluzioneMatrix(Soluzione soluzione)
     {
+        if (soluzione == null)
+            throw new IllegalArgumentException("Soluzione non valida");
+        int dimensione = soluzione.dimensione();
         celle = new Cella[dimensione][dimensione];
         for (int i = 0; i < dimensione; i++)
         {
@@ -74,36 +79,9 @@ public class SoluzioneMatrix extends AbstractSoluzione
     }
 
     @Override
-    public boolean risolviBT(int riga, int colonna, boolean controllaBlocchi) // FIXME speculare
+    public void risolvi(boolean controllaBlocchi)
     {
-        if ( riga == celle.length || colonna  == celle.length)
-            return true;
-        List<Integer> scartati = new LinkedList<>();
-        while (scartati.size() < celle.length)
-        {
-            int i = new Random().nextInt(1, celle.length + 1);
-            while (scartati.contains(i))
-                i = new Random().nextInt(1, celle.length + 1);
-            if (controlla(riga, colonna, i))
-            {
-                posiziona(riga, colonna, i);
-                int prossimaColonna = (colonna + 1) % celle.length;
-                int prossimaRiga = prossimaColonna == 0 ? riga + 1 : riga;
-                if (controllaBlocchi)
-                {
-                    if (risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi) && celle[riga][colonna].getBlocco().soddisfatto())
-                        return true;
-                } else
-                {
-                    if (risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi))
-                        return true;
-                }
-                rimuovi(riga, colonna);
-                scartati.add(i);
-            }
-            scartati.add(i);
-        }
-        return false;
+        risolviBT(0,0,controllaBlocchi);
     }
 
     @Override
@@ -121,16 +99,6 @@ public class SoluzioneMatrix extends AbstractSoluzione
             if (i != riga && celle[i][colonna].getValore() == valore || i != colonna && celle[riga][i].getValore() == valore)
                 return false;
         }
-        return true;
-    }
-
-    @Override
-    public boolean verifica()
-    {
-        for (int i = 0; i < celle.length; i++)
-            for (int j = 0; j < celle.length; j++)
-                if (!controlla(i, j, celle[i][j].getValore()) || !celle[i][j].getBlocco().soddisfatto())
-                    return false;
         return true;
     }
 
@@ -158,9 +126,21 @@ public class SoluzioneMatrix extends AbstractSoluzione
     }
 
     @Override
+    public int dimensione()
+    {
+        return celle.length;
+    }
+
+    @Override
+    public Cella cella(int riga, int colonna)
+    {
+        return celle[riga][colonna];
+    }
+
+    @Override
     public Soluzione creaVariante()
     {
-        return new SoluzioneMatrix(this, this.celle.length);
+        return new SoluzioneMatrix(this);
     }
 
     @Override

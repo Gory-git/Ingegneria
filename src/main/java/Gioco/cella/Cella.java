@@ -13,6 +13,8 @@ public class Cella implements Comparable<Cella>
 
     public Cella(int[] posizione)
     {
+        if (posizione == null)
+            throw new IllegalArgumentException("Posizione nulla");
         if(posizione.length != 2 || posizione[0] < 0 || posizione[1] < 0)
             throw new IllegalArgumentException("Posizione non valida");
         this.posizione = new int[]{posizione[0], posizione[1]};
@@ -52,8 +54,8 @@ public class Cella implements Comparable<Cella>
 
     public void setBlocco(Blocco blocco)
     {
-        //if ( blocco == null)
-        //    throw new IllegalArgumentException("Blocco dev'essere non null");
+        if ( blocco == null)
+            throw new IllegalArgumentException("Blocco dev'essere non null");
         this.blocco = blocco;
     }
 

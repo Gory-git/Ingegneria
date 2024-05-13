@@ -127,7 +127,7 @@ public class BloccoList extends AbstractBlocco
     @Override
     public Blocco duplica()
     {
-        return new BloccoList(this.operatore, this.valore, this.dimensione);
+        return new BloccoList(operatore, valore, dimensione, celle);
     }
 
     @Override
@@ -135,7 +135,8 @@ public class BloccoList extends AbstractBlocco
     {
         return celle.iterator();
     }
-
+/*
+ * INUTILE E VIOLA L'IMMUTABILITA'
     public void setCelle(List<Cella> celle)
     {
         if (celle == null)
@@ -144,7 +145,7 @@ public class BloccoList extends AbstractBlocco
             throw new IllegalArgumentException("Celle di dimensione errata");
         this.celle = new LinkedList<>(celle);
     }
-
+*/
     public List<Cella> getCelle()
     {
         return new LinkedList<>(celle);
@@ -163,5 +164,14 @@ public class BloccoList extends AbstractBlocco
     public int getDimensione()
     {
         return dimensione;
+    }
+
+    @Override
+    protected BloccoList clone() throws CloneNotSupportedException
+    {
+        BloccoList blocco = (BloccoList) super.clone();
+        blocco.celle = new LinkedList<>();
+        blocco.celle.addAll(this.celle);
+        return blocco;
     }
 }
