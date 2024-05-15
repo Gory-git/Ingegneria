@@ -24,7 +24,7 @@ public class SoluzioneMatrix extends AbstractSoluzione
             }
         }
         risolvi(false);
-        //popola(new Random().nextInt(2, dimensione * dimensione));
+        popola(new Random().nextInt(2, (dimensione * dimensione)/2));
 
         for (int i = 0; i < dimensione; i++)
         {
@@ -138,6 +138,12 @@ public class SoluzioneMatrix extends AbstractSoluzione
     }
 
     @Override
+    public Blocco blocco(int dimensione)
+    {
+        return new BloccoList(dimensione);
+    }
+
+    @Override
     public Soluzione creaVariante()
     {
         return new SoluzioneMatrix(this);
@@ -157,7 +163,7 @@ public class SoluzioneMatrix extends AbstractSoluzione
         @Override
         public boolean hasNext()
         {
-            return corrente[0] + corrente[1] < (celle.length - 1) * 2;
+            return corrente[0] < dimensione() && corrente[1] < dimensione();
         }
 
         @Override
@@ -166,7 +172,7 @@ public class SoluzioneMatrix extends AbstractSoluzione
             if (!hasNext())
                 throw new NoSuchElementException();
             corrente[1] ++;
-            if (corrente[1] == celle.length || corrente[0] < 0)
+            if (corrente[1] == dimensione() || corrente[0] < 0)
             {
                 corrente[1] = 0;
                 corrente[0] ++;
