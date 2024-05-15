@@ -14,7 +14,7 @@ public interface Blocco extends Serializable, Iterable<Cella>, Cloneable
     void inizializza();
     void aggiungiCella(Cella cella);
     boolean soddisfatto();
-    Blocco duplica();
+    List<Cella> celle();
 
     static boolean verifica(Operatore operatore, int valore, int dimensione, List<Cella> celle)
     {
@@ -34,23 +34,20 @@ public interface Blocco extends Serializable, Iterable<Cella>, Cloneable
             } else if (operatore == Operatore.SOMMA)
             {
                 int s = 0;
-                Iterator<Cella> iterator = celle.iterator();
-                while (iterator.hasNext())
-                    s += iterator.next().getValore();
+                for (Cella cella : celle)
+                    s += cella.getValore();
                 return s == valore;
             } else if (operatore == Operatore.SOTTRAZIONE)
             {
                 int s = 0;
-                Iterator<Cella> iterator = celle.iterator();
-                while (iterator.hasNext())
-                    s = Math.abs(s - iterator.next().getValore());
+                for (Cella cella : celle)
+                    s = Math.abs(s - cella.getValore());
                 return s == valore;
             } else if (operatore == Operatore.MOLTIPLICAZIONE)
             {
                 int m = 1;
-                Iterator<Cella> iterator = celle.iterator();
-                while (iterator.hasNext())
-                    m *= iterator.next().getValore();
+                for (Cella cella : celle)
+                    m *= cella.getValore();
                 return m == valore;
             }else if(operatore == Operatore.DIVISIONE)
             {
@@ -67,4 +64,6 @@ public interface Blocco extends Serializable, Iterable<Cella>, Cloneable
         }
         return false;
     }
+
+    public Blocco clone() throws CloneNotSupportedException;
 }

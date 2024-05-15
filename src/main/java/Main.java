@@ -13,14 +13,15 @@ import java.util.List;
 
 public class Main
 {
-    public static void main(String[] args) throws IOException
+    public static void main(String[] args) throws IOException, CloneNotSupportedException
     {
-        int x = 3;
+        int x = 7;
         Soluzione soluzione = new SoluzioneMatrix(x);
         Iterator<Cella> it = soluzione.iterator();
         Blocco[] blocco = new Blocco[]{new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), };
         int i = 0;
-        //soluzione.risolvi(false);
+        soluzione.risolvi(false);
+        System.out.println(soluzione);
         while (it.hasNext())
         {
             Cella cella = it.next();
@@ -29,6 +30,13 @@ public class Main
             i = (i + 1) % x;
         }
         //System.out.println(blocco.soddisfatto());
+        soluzione.risolvi(true);
         System.out.println(soluzione);
+        System.out.println(soluzione.clone());
+
+        //Gioco.INSTANCE.avvia(0, 3);
+        //Gioco.INSTANCE.salva();
+        //Gioco.INSTANCE.carica();
+        //System.out.println(Gioco.INSTANCE.getSoluzioni().get(0).dimensione());
     }
 }

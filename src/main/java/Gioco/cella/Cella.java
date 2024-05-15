@@ -1,11 +1,11 @@
 package Gioco.cella;
 
 import Gioco.blocco.Blocco;
-
+import java.io.Serializable;
 import java.util.Arrays;
 
 
-public class Cella implements Comparable<Cella>
+public class Cella implements Serializable, Cloneable, Comparable<Cella>
 {
     private int[] posizione;
     private int valore;
@@ -25,7 +25,7 @@ public class Cella implements Comparable<Cella>
         this.valore = valore;
         this.blocco = null;
     }
-
+/*
     public Cella(int[] posizione, int valore, Blocco blocco)
     {
         this(valore, posizione);
@@ -33,7 +33,7 @@ public class Cella implements Comparable<Cella>
             throw new IllegalArgumentException("Blocco dev'essere non null");
         this.blocco = blocco;
     }
-
+*/
     public Cella(int[] posizione, Blocco blocco)
     {
         this(0, posizione);
@@ -114,11 +114,19 @@ public class Cella implements Comparable<Cella>
         if (blocco == null)
             return  posizione[0] + ", " +
                     posizione[1] + ": " +
-                    valore + "->" +
-                    "null";
+                    valore + "->" + "null";
         return  posizione[0] + ", " +
                 posizione[1] + ": " +
-                valore + "->" +
-                blocco.toString();
+                valore + "->" + blocco;
+    }
+
+    @Override
+    public Cella clone() throws CloneNotSupportedException
+    {
+        Cella cella = (Cella) super.clone();
+        cella.valore = this.valore;
+        cella.posizione = new int[]{this.posizione[0], this.posizione[1]};
+        System.out.println(cella);
+        return cella;
     }
 }

@@ -103,7 +103,7 @@ public class BloccoList extends AbstractBlocco
         int ret = celle.get(0).getValore() * celle.get(0).getValore();
         for (Cella cella : celle)
         {
-            if (ret % cella.getValore() != 0)
+            if (ret == 0 || ret % cella.getValore() != 0)
                 return 0;
             ret /= cella.getValore();
         }
@@ -125,9 +125,17 @@ public class BloccoList extends AbstractBlocco
     }
 
     @Override
-    public Blocco duplica()
+    public BloccoList clone() throws CloneNotSupportedException
     {
-        return new BloccoList(operatore, valore, dimensione, celle);
+        BloccoList blocco = (BloccoList) super.clone();
+        blocco.celle = new LinkedList<>();
+        for (Cella cella : this.celle)
+        {
+            blocco.celle.add(cella.clone());
+            celle.getLast().setBlocco(blocco);
+            blocco.celle.add(celle.getLast());
+        }
+        return blocco;
     }
 
     @Override
@@ -146,7 +154,7 @@ public class BloccoList extends AbstractBlocco
         this.celle = new LinkedList<>(celle);
     }
 */
-    public List<Cella> getCelle()
+    public List<Cella> celle()
     {
         return new LinkedList<>(celle);
     }
@@ -166,12 +174,4 @@ public class BloccoList extends AbstractBlocco
         return dimensione;
     }
 
-    @Override
-    protected BloccoList clone() throws CloneNotSupportedException
-    {
-        BloccoList blocco = (BloccoList) super.clone();
-        blocco.celle = new LinkedList<>();
-        blocco.celle.addAll(this.celle);
-        return blocco;
-    }
 }

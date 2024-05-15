@@ -18,7 +18,6 @@ public abstract class AbstractBlocco implements Blocco
 
         return H;
     }
-
     @Override
     public boolean equals(Object obj)
     {
@@ -31,10 +30,13 @@ public abstract class AbstractBlocco implements Blocco
                 && this.valore == blocco.valore
                 && this.dimensione == blocco.dimensione;
     }
-
     @Override
     public String toString()
     {
         return "( " + operatore.toString() + " " + valore + " )";
+    }
+    public AbstractBlocco clone() throws CloneNotSupportedException
+    {
+        return (AbstractBlocco) super.clone();
     }
 }

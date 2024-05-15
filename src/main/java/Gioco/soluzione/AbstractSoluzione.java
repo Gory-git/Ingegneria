@@ -3,10 +3,7 @@ package Gioco.soluzione;
 import Gioco.cella.Cella;
 
 import javax.swing.*;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public abstract class AbstractSoluzione implements Soluzione
 {
@@ -44,28 +41,74 @@ public abstract class AbstractSoluzione implements Soluzione
     @Override
     public String toString()
     {
-        Iterator<Cella> iterator = this.iterator();
-        LinkedList<Cella> celleL = new LinkedList<>();
-        while (iterator.hasNext())
-            celleL.add(iterator.next());
-        int len = celleL.size();
-        int dim = (int)Math.sqrt(len);
-
-        List<Cella>[] celle = new LinkedList[dim];
-
-        for (int i = 0; i < dim; i++)
-            celle[i] = new LinkedList<>(celleL.subList(i * dim, (i + 1) * dim));
-
+        int dim = dimensione();
 
         String ret = "";
 
-        for (int i = 0; i < dim; i++)
+        int i = 1;
+        for (Cella cella : this)
         {
-            ret += "|\t";
-            for (Cella cella : celle[i])
-                ret += cella.toString() + ";\t";
-            ret += "|\n";
+            if (i == 1)
+            {
+                ret += "|\t";
+            }
+
+            ret += cella.toString() + ";\t";
+
+            if ( i == dim )
+            {
+                ret += "|\n";
+                i = 0;
+            }
+            i++;
         }
         return ret;
+    }
+
+    @Override
+    public AbstractSoluzione clone() throws CloneNotSupportedException
+    {
+        return (AbstractSoluzione) super.clone();
+    }
+
+    @Override
+    public Iterator<Cella> iterator()
+    {
+        return new Iteratore();
+    }
+
+    private class Iteratore implements Iterator<Cella>
+    {
+        private int[] corrente = {-1, -1};
+        private boolean rimuovibile = false;
+
+        @Override
+        public boolean hasNext()
+        {
+            return corrente[0] + corrente[1] < (dimensione() * 2) - 2;
+        }
+
+        @Override
+        public Cella next()
+        {
+            if (!hasNext())
+                throw new NoSuchElementException();
+            corrente[1] ++;
+            if (corrente[1] == dimensione() || corrente[0] < 0)
+            {
+                corrente[1] = 0;
+                corrente[0] ++;
+            }
+            rimuovibile = true;
+            return cella(corrente[0],corrente[1]);
+        }
+
+        @Override
+        public void remove()
+        {
+            if (!rimuovibile)
+                throw new IllegalStateException();
+            rimuovi(corrente[0], corrente[1]);
+        }
     }
 }

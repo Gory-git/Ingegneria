@@ -1,54 +1,39 @@
 package Gioco;
 
-import Gioco.cella.Cella;
 import Gioco.soluzione.Soluzione;
 import Gioco.soluzione.SoluzioneMatrix;
-
 import java.io.*;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Gioco implements Serializable
+public enum Gioco implements Serializable
 {
+
+    INSTANCE;
     private static final File FILE = new File("Save.dat");
-    private final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE));
-    private final ObjectInputStream in= new ObjectInputStream(new FileInputStream(FILE));
-    private LinkedList<Soluzione> soluzioni;
+    private final LinkedList<Soluzione> soluzioni = new LinkedList<>();
 
-    public Gioco() throws IOException
+    public void avvia(int soluzioni, int dimensione) throws CloneNotSupportedException
     {
+        if (soluzioni < 0)
+            throw new IllegalArgumentException("Numero di soluzioni non valido");
 
-        soluzioni = new LinkedList<>();
-    }
+        this.soluzioni.add(new SoluzioneMatrix(dimensione));
 
-    public Gioco( int numeroSoluzioni, int dimensione) throws IOException
-    {
-        this();
-        soluzioni.add(new SoluzioneMatrix(dimensione));
-        for (int i = 1 ; i < numeroSoluzioni; i++)
-        {
-            soluzioni.add(soluzioni.getFirst().creaVariante());
-        }
-        Iterator<Cella> iterator = soluzioni.getFirst().iterator();
-        while (iterator.hasNext())
-        {
-            iterator.next();
-            iterator.remove();
-        }
-    }
-
-    public void avvia()
-    {
-
+        for (int i = 0; i < soluzioni; i++)
+            this.soluzioni.add(this.soluzioni.getLast().clone());
     }
 
     public void salva()
     {
         try
         {
+            FileOutputStream fileOut = new FileOutputStream(FILE);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
             for (Soluzione soluzione : soluzioni)
                 out.writeObject(soluzione);
+            fileOut.close();
+            out.close();
         }catch(Exception e)
         {
             e.printStackTrace();
@@ -59,6 +44,8 @@ public class Gioco implements Serializable
     {
         try
         {
+            FileInputStream fileIn = new FileInputStream(FILE);
+            ObjectInputStream in= new ObjectInputStream(fileIn);
             while (in.available() > 0)
             {
                 Object o = in.readObject();
@@ -66,10 +53,22 @@ public class Gioco implements Serializable
                     throw new RuntimeException("Non riesco a caricare tutte le soluzioni salvate");
                 soluzioni.add((Soluzione)o);
             }
+            fileIn.close();
+            in.close();
         }catch (Exception e)
         {
             e.printStackTrace();
         }
+    }
+
+    public void inserisciValore(int riga, int colonna, int valore)
+    {
+        soluzioni.getFirst().posiziona(riga, colonna, valore);
+    }
+
+    public void rimuoviValore(int riga, int colonna)
+    {
+        soluzioni.getFirst().rimuovi(riga, colonna);
     }
 
     public List<Soluzione> getSoluzioni()

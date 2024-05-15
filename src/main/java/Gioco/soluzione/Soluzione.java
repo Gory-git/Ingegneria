@@ -6,18 +6,19 @@ import Gioco.cella.Cella;
 import java.io.Serializable;
 import java.util.*;
 
-public interface Soluzione extends Serializable, Iterable<Cella>
+public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
 {
     /**
      * il metodo risolve la griglia simil sudoku
      */
     void risolvi(boolean controllaBlocchi);
+
     /**
-     * il metodo implemente la parte di backtracking di risolvi
+     * il metodo implementa la parte di backtracking di risolvi
      */
     default boolean risolviBT(int riga, int colonna, boolean controllaBlocchi)
     {
-        if ( riga == dimensione() || colonna  == dimensione())
+        if (riga == dimensione() || colonna == dimensione())
             return true;
         List<Integer> scartati = new LinkedList<>();
         while (scartati.size() < dimensione())
@@ -45,21 +46,25 @@ public interface Soluzione extends Serializable, Iterable<Cella>
         }
         return false;
     }
+
     /**
      * il metodo posiziona il valore nella posizione designata
      */
     void posiziona(int riga, int colonna, int valore);
+
     /**
      * il metodo rimuove il contenuto della posizione designata
      */
-    default void rimuovi (int riga, int colonna)
+    default void rimuovi(int riga, int colonna)
     {
         posiziona(riga, colonna, 0);
     }
+
     /**
      * il metodo controlla se il valore nella posizione designata è ammissibile
      */
-    boolean controlla (int riga, int colonna, int valore);
+    boolean controlla(int riga, int colonna, int valore);
+
     /**
      * il metodo controlla se la soluzione è valida
      */
@@ -67,14 +72,16 @@ public interface Soluzione extends Serializable, Iterable<Cella>
     {
         for (int i = 0; i < dimensione(); i++)
             for (int j = 0; j < dimensione(); j++)
-                if (!controlla(i, j, cella(i,j).getValore()) || !cella(i, j).getBlocco().soddisfatto())
+                if (!controlla(i, j, cella(i, j).getValore()) || !cella(i, j).getBlocco().soddisfatto())
                     return false;
         return true;
     }
+
     /**
      * il metodo popola i blocchi sopra la griglia
      */
     void popola(int dimensioneMassima);
+
     /**
      * il metodo implementa la parte backtracking di popola
      */
@@ -82,24 +89,28 @@ public interface Soluzione extends Serializable, Iterable<Cella>
     {
         return false;
     }
+
     /**
      * il metodo restituisce una lista contenente i vicini di una cella
      */
     List<Cella> vicini(int riga, int colonna);
+
     /**
      * il metodo restituisce la dimensione della griglia
      */
     int dimensione();
+
     /**
      * Il metodo restituisce la cella di posizione riga, colonna
-    */
+     */
     Cella cella(int riga, int colonna);
+
     /**
      * Factory di blocchi;
      */
     Blocco blocco(int dimensione);
     /**
-     * il metodo genera soluzioni diverse dalla stessa griglia
+     * Prototype
      */
-    Soluzione creaVariante();
+    Soluzione clone() throws CloneNotSupportedException;
 }
