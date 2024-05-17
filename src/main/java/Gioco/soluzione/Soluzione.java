@@ -39,6 +39,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
                 {
                     if (risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi))
                         return true;
+
                 }
             }
             rimuovi(riga, colonna);
@@ -92,53 +93,59 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
             return true;
         List<Cella> vicini = vicini(cella.getPosizione()[0], cella.getPosizione()[1]);
         Blocco blocco = cella.getBlocco();
-        int dimensioneRec = dimensioneMassima;
         // caso di ingresso OR caso in cui il blocco precedente è stato posizionato correttamente
         if (blocco == null)
         {
             int dimensione = new Random().nextInt(1, dimensioneMassima);
-            dimensioneRec -= dimensione;
-            blocco = blocco(dimensione);
-            cella.setBlocco(blocco);
-            blocco.aggiungiCella(cella);
+            for (int i = dimensione; i > 0; i--)
+            {
+                blocco = blocco(dimensione);
+                cella.setBlocco(blocco);
+                blocco.aggiungiCella(cella);
+                if (popolaBT(dimensioneMassima - dimensione, cella))
+                    return true;
+                blocco.rimuoviCella(cella);
+                cella.setBlocco(null);
+            }
+            return false;
         }
         // caso in cui il blocco non è stato riempito.
         if (!blocco.pieno())
         {
-            boolean ret = true;
+            Cella ultimoVicino = null;
             for (Cella vicino : vicini)
-                if (vicino.getBlocco() == null && !blocco.pieno())
+                if (vicino.getBlocco() == null)
                 {
                     vicino.setBlocco(blocco);
                     blocco.aggiungiCella(vicino);
-                    ret = ret && popolaBT(dimensioneRec, vicino);
-                    if (!ret)
+                    ultimoVicino = vicino;
+                }
+            if (ultimoVicino != null && popolaBT(dimensioneMassima, ultimoVicino))
+                return true;
+            else
+            {
+                blocco.rimuoviCella(cella);
+                cella.setBlocco(null);
+                for (Cella vicino : vicini)
+                    if (vicino.getBlocco() == blocco)
                     {
                         vicino.setBlocco(null);
                         blocco.rimuoviCella(vicino);
-                        return false;
                     }
-                }
+                return false;
+            }
         }
         // caso in cui il blocco è pieno
         if (blocco.pieno())
         {
-            boolean ret = true;
             for (Cella vicino : vicini)
-            {
                 if (vicino.getBlocco() == null)
-                    ret = ret && popolaBT(dimensioneRec, vicino);
-                if (!ret)
-                {
-                    vicino.setBlocco(null);
-                    blocco.rimuoviCella(vicino);
-                    return false;
-                }
-            }
-            return ret;
+                    popolaBT(dimensioneMassima, vicino);
+            for (Cella next : this)
+                if (next.getBlocco() == null)
+                    popolaBT(dimensioneMassima, next);
         }
-        else
-            return false;
+        return true;
     }
 
     /**

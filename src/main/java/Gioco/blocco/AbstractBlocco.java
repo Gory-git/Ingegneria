@@ -33,7 +33,7 @@ public abstract class AbstractBlocco implements Blocco
     @Override
     public String toString()
     {
-        return "( " + operatore.toString() + " " + valore + " )";
+        return "( " + operatore.toString() + " " + valore + " #" + dimensione + " )";
     }
     public AbstractBlocco clone() throws CloneNotSupportedException
     {

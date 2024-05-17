@@ -15,13 +15,13 @@ public class Main
 {
     public static void main(String[] args) throws IOException, CloneNotSupportedException
     {
-        int x = 3;
+        int x = 5;
         Soluzione soluzione = new SoluzioneMatrix(x);
         Iterator<Cella> it = soluzione.iterator();
         Blocco[] blocco = new Blocco[]{new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), };
         int i = 0;
-        soluzione.risolvi(false);
-        System.out.println(soluzione);
+        //soluzione.risolvi(false);
+        //System.out.println(soluzione);
         /*while (it.hasNext())
         {
             Cella cella = it.next();
@@ -32,7 +32,7 @@ public class Main
         //System.out.println(blocco.soddisfatto());
         soluzione.risolvi(true);
         System.out.println(soluzione);
-        System.out.println(soluzione.clone());
+        //System.out.println(soluzione.clone());
 
         //Gioco.INSTANCE.avvia(0, 3);
         //Gioco.INSTANCE.salva();

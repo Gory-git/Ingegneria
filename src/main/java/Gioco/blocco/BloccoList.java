@@ -113,7 +113,8 @@ public class BloccoList extends AbstractBlocco
     @Override
     public void aggiungiCella(Cella cella)
     {
-        if (celle.size() < dimensione)
+
+        if (!pieno())
             celle.add(cella);
         if (pieno())
             inizializza();

@@ -25,7 +25,7 @@ public interface Blocco extends Serializable, Iterable<Cella>, Cloneable
         {
             for (Cella cella : celle) // caso in cui le celle non sono inizializzate
                 if (cella.getValore() == 0)
-                    return true;
+                    return false;
             if (dimensione == 1 && operatore == Operatore.NONE)
             {   //CASO BLOCCO DI DIMENSIONE UNITARIA, SEMPRE SODDISFATTO SE LA CELLA CONTIENE IL VALORE CORRETTO
                 return celle.get(0).getValore() == valore;
