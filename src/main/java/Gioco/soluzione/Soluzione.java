@@ -16,7 +16,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
     /**
      * il metodo implementa la parte di backtracking di risolvi
      */
-    default boolean risolviBT(int riga, int colonna, boolean controllaBlocchi)
+    default boolean risolviBT(int riga, int colonna, boolean controllaBlocchi)      // TODO CONTROLLARE VERSIONE CON TRUE
     {
         if (riga == dimensione() || colonna == dimensione())
             return true;
@@ -96,7 +96,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
         // caso di ingresso OR caso in cui il blocco precedente è stato posizionato correttamente
         if (blocco == null)
         {
-            int dimensione = new Random().nextInt(1, dimensioneMassima);
+            int dimensione = new Random().nextInt(1, (dimensioneMassima / 2) + 1);
             for (int i = dimensione; i > 0; i--)
             {
                 blocco = blocco(dimensione);
@@ -104,8 +104,11 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
                 blocco.aggiungiCella(cella);
                 if (popolaBT(dimensioneMassima - dimensione, cella))
                     return true;
-                blocco.rimuoviCella(cella);
-                cella.setBlocco(null);
+                if (blocco.celle().contains(cella))
+                {
+                    blocco.rimuoviCella(cella);
+                    cella.setBlocco(null);
+                }
             }
             return false;
         }
@@ -119,9 +122,11 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
                     vicino.setBlocco(blocco);
                     blocco.aggiungiCella(vicino);
                     ultimoVicino = vicino;
+                    if (blocco.pieno())
+                        break;
                 }
-            if (ultimoVicino != null && popolaBT(dimensioneMassima, ultimoVicino))
-                return true;
+            if (ultimoVicino != null)
+                return popolaBT(dimensioneMassima, ultimoVicino);
             else
             {
                 blocco.rimuoviCella(cella);

@@ -41,7 +41,7 @@ public class BloccoList extends AbstractBlocco
     }
 
     @Override
-    public boolean pieno()
+    public boolean pieno()  // TODO CONTROLO FUNZIONAMENTO
     {
         return celle.size() == dimensione;
     }
