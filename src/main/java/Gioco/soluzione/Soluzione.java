@@ -85,9 +85,60 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
     /**
      * il metodo implementa la parte backtracking di popola
      */
-    default boolean popolaBT(int dimensioneMassima, Cella precedente)
+    default boolean popolaBT(int dimensioneMassima, Cella cella)
     {
-        return false;
+        // caso di uscita
+        if (dimensioneMassima <= 1)
+            return true;
+        List<Cella> vicini = vicini(cella.getPosizione()[0], cella.getPosizione()[1]);
+        Blocco blocco = cella.getBlocco();
+        int dimensioneRec = dimensioneMassima;
+        // caso di ingresso OR caso in cui il blocco precedente è stato posizionato correttamente
+        if (blocco == null)
+        {
+            int dimensione = new Random().nextInt(1, dimensioneMassima);
+            dimensioneRec -= dimensione;
+            blocco = blocco(dimensione);
+            cella.setBlocco(blocco);
+            blocco.aggiungiCella(cella);
+        }
+        // caso in cui il blocco non è stato riempito.
+        if (!blocco.pieno())
+        {
+            boolean ret = true;
+            for (Cella vicino : vicini)
+                if (vicino.getBlocco() == null && !blocco.pieno())
+                {
+                    vicino.setBlocco(blocco);
+                    blocco.aggiungiCella(vicino);
+                    ret = ret && popolaBT(dimensioneRec, vicino);
+                    if (!ret)
+                    {
+                        vicino.setBlocco(null);
+                        blocco.rimuoviCella(vicino);
+                        return false;
+                    }
+                }
+        }
+        // caso in cui il blocco è pieno
+        if (blocco.pieno())
+        {
+            boolean ret = true;
+            for (Cella vicino : vicini)
+            {
+                if (vicino.getBlocco() == null)
+                    ret = ret && popolaBT(dimensioneRec, vicino);
+                if (!ret)
+                {
+                    vicino.setBlocco(null);
+                    blocco.rimuoviCella(vicino);
+                    return false;
+                }
+            }
+            return ret;
+        }
+        else
+            return false;
     }
 
     /**

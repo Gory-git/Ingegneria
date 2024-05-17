@@ -15,20 +15,20 @@ public class Main
 {
     public static void main(String[] args) throws IOException, CloneNotSupportedException
     {
-        int x = 7;
+        int x = 3;
         Soluzione soluzione = new SoluzioneMatrix(x);
         Iterator<Cella> it = soluzione.iterator();
         Blocco[] blocco = new Blocco[]{new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), };
         int i = 0;
         soluzione.risolvi(false);
         System.out.println(soluzione);
-        while (it.hasNext())
+        /*while (it.hasNext())
         {
             Cella cella = it.next();
             cella.setBlocco(blocco[i]);
             blocco[i].aggiungiCella(cella);
             i = (i + 1) % x;
-        }
+        }*/
         //System.out.println(blocco.soddisfatto());
         soluzione.risolvi(true);
         System.out.println(soluzione);

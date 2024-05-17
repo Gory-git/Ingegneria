@@ -13,6 +13,7 @@ public interface Blocco extends Serializable, Iterable<Cella>, Cloneable
     boolean pieno();
     void inizializza();
     void aggiungiCella(Cella cella);
+    void rimuoviCella(Cella cella);
     boolean soddisfatto();
     List<Cella> celle();
 
@@ -64,6 +65,6 @@ public interface Blocco extends Serializable, Iterable<Cella>, Cloneable
         }
         return false;
     }
-
+    int dimensione();
     public Blocco clone() throws CloneNotSupportedException;
 }

@@ -7,7 +7,7 @@ import java.util.*;
 
 public class BloccoList extends AbstractBlocco
 {
-    private List<Cella> celle;
+    private LinkedList<Cella> celle;
 
     public BloccoList(Operatore operatore, int valore, int dimensione)
     {
@@ -119,6 +119,15 @@ public class BloccoList extends AbstractBlocco
             inizializza();
     }
 
+    @Override
+    public void rimuoviCella(Cella cella)
+    {
+        if (celle.contains(cella))
+            celle.remove(cella);
+        else
+            throw new IllegalArgumentException("La cella non è di questo bloccco");
+    }
+
     public boolean soddisfatto()
     {
         return Blocco.verifica(operatore, valore, dimensione, celle);
@@ -157,6 +166,12 @@ public class BloccoList extends AbstractBlocco
     public List<Cella> celle()
     {
         return new LinkedList<>(celle);
+    }
+
+    @Override
+    public int dimensione()
+    {
+        return dimensione;
     }
 
     public Operatore getOperatore()

@@ -25,7 +25,7 @@ public class SoluzioneMatrix extends AbstractSoluzione
         }
 
         risolvi(false);
-        popola(new Random().nextInt(2, (dimensione * dimensione)/2));
+        popola(dimensione * dimensione);
 
         for (Cella cella : this)
             cella.setValore(0);
@@ -76,7 +76,8 @@ public class SoluzioneMatrix extends AbstractSoluzione
     @Override
     public void popola(int dimensioneMassima)
     {
-        popolaBT(dimensioneMassima, celle[0][0]);
+        if (!popolaBT(dimensioneMassima, celle[0][0]))
+            throw new RuntimeException("Impossibile risolvere");
     }
 
     @Override
