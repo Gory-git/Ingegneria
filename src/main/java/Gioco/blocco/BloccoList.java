@@ -9,14 +9,6 @@ public class BloccoList extends AbstractBlocco
 {
     private LinkedList<Cella> celle;
 
-    /* FORSE INUTILE
-    public BloccoList(Operatore operatore, int valore, int dimensione)
-    {
-        this(dimensione);
-        this.operatore = operatore;
-        this.valore = valore;
-    }*/
-
     public BloccoList(Operatore operatore, int valore, int dimensione, List<Cella> celle)
     {
         // this(operatore, valore, dimensione); CONTROLLO ECCEZIONI
@@ -115,7 +107,8 @@ public class BloccoList extends AbstractBlocco
     @Override
     public void aggiungiCella(Cella cella)
     {
-
+        if (pieno())
+            throw new IllegalStateException("Blocco pieno!");
         if (!pieno())
             celle.add(cella);
         if (pieno())
