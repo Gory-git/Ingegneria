@@ -7,6 +7,11 @@ public abstract class AbstractBlocco implements Blocco
     protected Operatore operatore;
     protected int valore, dimensione;
     @Override
+    public int dimensione()
+    {
+        return dimensione;
+    }
+    @Override
     public int hashCode()
     {
         int M = 83;
@@ -14,7 +19,7 @@ public abstract class AbstractBlocco implements Blocco
 
         H += M * operatore.hashCode();
         H += M * valore;
-        H += M * dimensione;
+        H += M * dimensione();
 
         return H;
     }
@@ -28,15 +33,16 @@ public abstract class AbstractBlocco implements Blocco
         AbstractBlocco blocco = (AbstractBlocco) obj;
         return this.operatore.equals(blocco.operatore)
                 && this.valore == blocco.valore
-                && this.dimensione == blocco.dimensione;
+                && this.dimensione() == blocco.dimensione();
     }
     @Override
     public String toString()
     {
-        return "( " + operatore.toString() + " " + valore + " #" + dimensione + " )";
+        return "( " + operatore.toString() + " " + valore + " #" + dimensione() + " )";
     }
     public AbstractBlocco clone() throws CloneNotSupportedException
     {
         return (AbstractBlocco) super.clone();
     }
+
 }

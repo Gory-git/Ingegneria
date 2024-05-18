@@ -9,12 +9,13 @@ public class BloccoList extends AbstractBlocco
 {
     private LinkedList<Cella> celle;
 
+    /* FORSE INUTILE
     public BloccoList(Operatore operatore, int valore, int dimensione)
     {
         this(dimensione);
         this.operatore = operatore;
         this.valore = valore;
-    }
+    }*/
 
     public BloccoList(Operatore operatore, int valore, int dimensione, List<Cella> celle)
     {
@@ -25,12 +26,13 @@ public class BloccoList extends AbstractBlocco
             throw new IllegalArgumentException("Non sono state passate il numero corretto di celle");
         else
         {
-            this.celle = new LinkedList<>(celle);
+            this.celle = new LinkedList<>();
+            for (Cella cella : celle)
+                this.celle.add(new Cella(cella.getPosizione(), cella.getValore(), this));
             this.operatore = operatore;
             this.valore = valore;
             this.dimensione = dimensione;
         }
-        //if ( Blocco.verifica(operatore, valore, dimensione, celle) );
     }
 
     public BloccoList(int dimensione)
@@ -41,15 +43,15 @@ public class BloccoList extends AbstractBlocco
     }
 
     @Override
-    public boolean pieno()  // TODO CONTROLO FUNZIONAMENTO
+    public boolean pieno()
     {
-        return celle.size() == dimensione;
+        return celle.size() == dimensione();
     }
 
     @Override
     public void inizializza()
     {
-        if (dimensione == 1)
+        if (dimensione() == 1)
         {
             operatore = Operatore.NONE;
             valore = celle.get(0).getValore();
@@ -126,53 +128,18 @@ public class BloccoList extends AbstractBlocco
         if (celle.contains(cella))
             celle.remove(cella);
         else
-            throw new IllegalArgumentException("La cella non è di questo bloccco");
+            throw new IllegalArgumentException("La cella non è in questo bloccco");
     }
 
     public boolean soddisfatto()
     {
-        return Blocco.verifica(operatore, valore, dimensione, celle);
+        return Blocco.verifica(operatore, valore, dimensione(), celle);
     }
 
     @Override
-    public BloccoList clone() throws CloneNotSupportedException
-    {
-        BloccoList blocco = (BloccoList) super.clone();
-        blocco.celle = new LinkedList<>();
-        for (Cella cella : this.celle)
-        {
-            blocco.celle.add(cella.clone());
-            celle.getLast().setBlocco(blocco);
-            blocco.celle.add(celle.getLast());
-        }
-        return blocco;
-    }
-
-    @Override
-    public Iterator<Cella> iterator()
-    {
-        return celle.iterator();
-    }
-/*
- * INUTILE E VIOLA L'IMMUTABILITA'
-    public void setCelle(List<Cella> celle)
-    {
-        if (celle == null)
-            throw new IllegalArgumentException("Celle dev'essere non null");
-        if (celle.size() != dimensione)
-            throw new IllegalArgumentException("Celle di dimensione errata");
-        this.celle = new LinkedList<>(celle);
-    }
-*/
     public List<Cella> celle()
     {
         return new LinkedList<>(celle);
-    }
-
-    @Override
-    public int dimensione()
-    {
-        return dimensione;
     }
 
     public Operatore getOperatore()
@@ -185,9 +152,16 @@ public class BloccoList extends AbstractBlocco
         return valore;
     }
 
-    public int getDimensione()
+    @Override
+    public BloccoList clone() throws CloneNotSupportedException
     {
-        return dimensione;
+        BloccoList blocco = (BloccoList) super.clone();
+        return new BloccoList(blocco.operatore, blocco.valore, blocco.dimensione(), blocco.celle);
     }
 
+    @Override
+    public Iterator<Cella> iterator()
+    {
+        return celle.iterator();
+    }
 }

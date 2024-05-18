@@ -32,8 +32,8 @@ public class Main
         //System.out.println(blocco.soddisfatto());
         soluzione.risolvi(true);
         System.out.println(soluzione);
-        //System.out.println(soluzione.clone());
-
+        System.out.println(soluzione.clone());
+        System.out.println(soluzione);
         //Gioco.INSTANCE.avvia(0, 3);
         //Gioco.INSTANCE.salva();
         //Gioco.INSTANCE.carica();

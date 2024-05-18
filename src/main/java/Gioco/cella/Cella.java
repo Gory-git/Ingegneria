@@ -25,7 +25,7 @@ public class Cella implements Serializable, Cloneable, Comparable<Cella>
         this.valore = valore;
         this.blocco = null;
     }
-/*
+
     public Cella(int[] posizione, int valore, Blocco blocco)
     {
         this(valore, posizione);
@@ -33,7 +33,7 @@ public class Cella implements Serializable, Cloneable, Comparable<Cella>
             throw new IllegalArgumentException("Blocco dev'essere non null");
         this.blocco = blocco;
     }
-*/
+
     public Cella(int[] posizione, Blocco blocco)
     {
         this(0, posizione);

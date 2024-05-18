@@ -11,12 +11,15 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
     /**
      * il metodo risolve la griglia simil sudoku
      */
-    void risolvi(boolean controllaBlocchi);
 
+    default void risolvi(boolean controllaBlocchi)
+    {
+        risolviBT(0,0,controllaBlocchi);
+    }
     /**
      * il metodo implementa la parte di backtracking di risolvi
      */
-    default boolean risolviBT(int riga, int colonna, boolean controllaBlocchi)      // TODO CONTROLLARE VERSIONE CON TRUE
+    private boolean risolviBT(int riga, int colonna, boolean controllaBlocchi)      // TODO CONTROLLARE VERSIONE CON TRUE
     {
         if (riga == dimensione() || colonna == dimensione())
             return true;
@@ -33,6 +36,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
                 int prossimaRiga = prossimaColonna == 0 ? riga + 1 : riga;
                 if (controllaBlocchi)
                 {
+                    System.out.println(riga + " " + colonna + " " + i);
                     if (risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi) && cella(riga, colonna).getBlocco().soddisfatto())
                         return true;
                 } else
@@ -104,7 +108,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
                 blocco.aggiungiCella(cella);
                 if (popolaBT(dimensioneMassima - dimensione, cella))
                     return true;
-                if (blocco.celle().contains(cella))
+                if (cella.getBlocco() != null)
                 {
                     blocco.rimuoviCella(cella);
                     cella.setBlocco(null);

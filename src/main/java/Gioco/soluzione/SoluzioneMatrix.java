@@ -54,12 +54,6 @@ public class SoluzioneMatrix extends AbstractSoluzione
     }
 
     @Override
-    public void risolvi(boolean controllaBlocchi)
-    {
-        risolviBT(0,0,controllaBlocchi);
-    }
-
-    @Override
     public void posiziona(int riga, int colonna, int valore)
     {
         if (controlla(riga, colonna, valore) || valore == 0)

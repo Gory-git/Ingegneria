@@ -15,6 +15,7 @@ public interface Blocco extends Serializable, Iterable<Cella>, Cloneable
     void aggiungiCella(Cella cella);
     void rimuoviCella(Cella cella);
     boolean soddisfatto();
+    int dimensione();
     List<Cella> celle();
 
     static boolean verifica(Operatore operatore, int valore, int dimensione, List<Cella> celle)     // TODO CONTROLLO FUNZIONAMENTO
@@ -65,6 +66,5 @@ public interface Blocco extends Serializable, Iterable<Cella>, Cloneable
         }
         return false;
     }
-    int dimensione();
     public Blocco clone() throws CloneNotSupportedException;
 }
