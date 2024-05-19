@@ -87,9 +87,9 @@ public class Cella implements Serializable, Cloneable, Comparable<Cella>
         int M = 83;
         int H = 1;
 
-        H += M * blocco.hashCode();
+        //H += M * blocco.hashCode();
         H += M * valore;
-        H += M * Arrays.hashCode(posizione);
+        H += M * posizione.hashCode();
 
         return H;
     }

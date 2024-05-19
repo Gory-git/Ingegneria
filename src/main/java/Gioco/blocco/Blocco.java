@@ -18,7 +18,7 @@ public interface Blocco extends Serializable, Iterable<Cella>, Cloneable
     int dimensione();
     List<Cella> celle();
 
-    static boolean verifica(Operatore operatore, int valore, int dimensione, List<Cella> celle)     // TODO CONTROLLO FUNZIONAMENTO
+    static boolean verifica(Operatore operatore, int valore, int dimensione, List<Cella> celle)
     {
         if ( celle == null)
             throw new IllegalArgumentException("Celle dev'essere non null");

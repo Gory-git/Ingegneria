@@ -19,7 +19,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
     /**
      * il metodo implementa la parte di backtracking di risolvi
      */
-    private boolean risolviBT(int riga, int colonna, boolean controllaBlocchi)      // TODO CONTROLLARE VERSIONE CON TRUE
+    private boolean risolviBT(int riga, int colonna, boolean controllaBlocchi)      // FIXME VERSIONE CON TRUE, molto lenta e non funziona correttamente
     {
         if (riga == dimensione() || colonna == dimensione())
             return true;
@@ -36,8 +36,9 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
                 int prossimaRiga = prossimaColonna == 0 ? riga + 1 : riga;
                 if (controllaBlocchi)
                 {
-                    System.out.println(riga + " " + colonna + " " + i);
-                    if (risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi) && cella(riga, colonna).getBlocco().soddisfatto())
+                    Blocco blocco = cella(riga, colonna).getBlocco();
+                    boolean pienoOSoddisfatto = !blocco.pieno() || blocco.soddisfatto();
+                    if (risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi) && pienoOSoddisfatto)
                         return true;
                 } else
                 {

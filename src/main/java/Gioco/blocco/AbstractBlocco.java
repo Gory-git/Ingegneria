@@ -1,5 +1,6 @@
 package Gioco.blocco;
 
+import Gioco.cella.Cella;
 import Gioco.operatore.Operatore;
 
 public abstract class AbstractBlocco implements Blocco
@@ -20,6 +21,8 @@ public abstract class AbstractBlocco implements Blocco
         H += M * operatore.hashCode();
         H += M * valore;
         H += M * dimensione();
+        for (Cella cella : celle())
+            H += M * cella.hashCode();
 
         return H;
     }

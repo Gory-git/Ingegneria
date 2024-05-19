@@ -27,8 +27,6 @@ public class SoluzioneMatrix extends AbstractSoluzione
         risolvi(false);
         popola(dimensione * dimensione);
 
-        System.out.println(this);
-
         for (Cella cella : this)
             cella.setValore(0);
     }
@@ -37,12 +35,11 @@ public class SoluzioneMatrix extends AbstractSoluzione
     {
         if (soluzione == null)
             throw new IllegalArgumentException("Soluzione non valida");
-        
-        LinkedList<Blocco> blocchi = new LinkedList<>();
+
+        Set<Blocco> blocchi = new HashSet<>();
         for (Cella cella : soluzione)
-            if (!blocchi.contains(cella.getBlocco()))
                 blocchi.add(cella.getBlocco().clone());
-        
+
         int dimensione = soluzione.dimensione();
         celle = new Cella[dimensione][dimensione];
 

@@ -14,17 +14,15 @@ public class BloccoList extends AbstractBlocco
         // this(operatore, valore, dimensione); CONTROLLO ECCEZIONI
         if ( celle == null)
             throw new IllegalArgumentException("Celle dev'essere non null");
-        else if ( celle.size() != dimensione)
+        if ( celle.size() != dimensione)
             throw new IllegalArgumentException("Non sono state passate il numero corretto di celle");
-        else
-        {
-            this.celle = new LinkedList<>();
-            for (Cella cella : celle)
-                this.celle.add(new Cella(cella.getPosizione(), cella.getValore(), this));
-            this.operatore = operatore;
-            this.valore = valore;
-            this.dimensione = dimensione;
-        }
+
+        this.celle = new LinkedList<>();
+        for (Cella cella : celle)
+            this.celle.add(new Cella(cella.getPosizione(), cella.getValore(), this));
+        this.operatore = operatore;
+        this.valore = valore;
+        this.dimensione = dimensione;
     }
 
     public BloccoList(int dimensione)
