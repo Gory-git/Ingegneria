@@ -29,7 +29,7 @@ public class Main
         }*/
         //System.out.println(blocco.soddisfatto());
 
-        int x = 6;
+        int x = 9;
         Soluzione soluzione = new SoluzioneMatrix(x);
         System.out.println("risolvo la soluzione originale");
         soluzione.risolvi(true);

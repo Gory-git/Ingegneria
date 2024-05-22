@@ -35,7 +35,7 @@ public abstract class AbstractSoluzione implements Soluzione
         while (iterator1.hasNext() && iterator2.hasNext())
             if (!iterator1.next().equals(iterator2.next()))
                 return false;
-        return iterator1.hasNext() || iterator2.hasNext();
+        return !iterator1.hasNext() && !iterator2.hasNext();
     }
 
     @Override

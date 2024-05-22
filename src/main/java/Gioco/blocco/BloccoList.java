@@ -41,6 +41,8 @@ public class BloccoList extends AbstractBlocco
     @Override
     public void inizializza()
     {
+        if (dimensione() != celle().size())
+            throw new IllegalStateException("Celle non completamente riempita");
         if (dimensione() == 1)
         {
             operatore = Operatore.NONE;

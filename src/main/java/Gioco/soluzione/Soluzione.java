@@ -31,7 +31,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
         }
 
         if (!controllaBlocchi)
-            inserisciValoriBT(0,0, inseribili, false);
+            risolviBT(0,0, inseribili, false);
         else
         {
             for (Cella cella : this)
@@ -45,8 +45,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
                     inseribili[riga][colonna].add(i);
                 }
             }
-            inserisciValoriBT(0,0, inseribili, controllaBlocchi); // TODO momentaneo, devo inventare l'algoritmo col vincolo di blocchi
-            //inserisciValoriBlocchiBT(0, 0, inseribili);
+            risolviBT(0,0, inseribili, controllaBlocchi);
         }
 
 
@@ -54,7 +53,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
     /**
      * il metodo implementa la parte di risolvi senza il vincolo dei blocchi. Utilizza il backtracking
      */
-    private boolean inserisciValoriBT(int riga, int colonna, ArrayList<Integer>[][] inseribili, boolean controllaBlocchi)      // FIXME implementa parte dei blocchi
+    private boolean risolviBT(int riga, int colonna, ArrayList<Integer>[][] inseribili, boolean controllaBlocchi)
     {
         if (riga == dimensione() || colonna == dimensione())
             return true;
@@ -67,27 +66,27 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
             int i = inseribili[riga][colonna].remove(0);
             if (controllaBlocchi)
             {
-                Blocco blocco = cella(riga, colonna).getBlocco();
-
-                boolean bloccoPieno = true;
-                for (Cella cella : blocco.celle())
-                    if (cella.getValore() == 0)
-                    {
-                        bloccoPieno = false;
-                        break;
-                    }
-
-                if (controlla(riga, colonna, i) && (bloccoPieno || blocco.soddisfatto()))
+                if (controlla(riga, colonna, i))
                 {
+                    Blocco blocco = cella(riga, colonna).getBlocco();
+
+                    boolean bloccoPieno = true;
+                    for (Cella cella : blocco.celle())
+                        if (cella.getValore() == 0)
+                        {
+                            bloccoPieno = false;
+                            break;
+                        }
+
                     posizionaERimuovi(riga, colonna, i, inseribili);
-                    if (inserisciValoriBT(prossimaRiga, prossimaColonna, inseribili, controllaBlocchi))
+                    if (risolviBT(prossimaRiga, prossimaColonna, inseribili, controllaBlocchi) && (!bloccoPieno || blocco.soddisfatto()))
                         return true;
                 }
             }else
                 if (controlla(riga, colonna, i))
                 {
                     posizionaERimuovi(riga, colonna, i, inseribili);
-                    if (inserisciValoriBT(prossimaRiga, prossimaColonna, inseribili, controllaBlocchi))
+                    if (risolviBT(prossimaRiga, prossimaColonna, inseribili, controllaBlocchi))
                         return true;
                 }
             rimuoviEReinserisci(riga, colonna, i, inseribili);
@@ -152,7 +151,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
     /**
      * il metodo popola i blocchi sopra la griglia
      */
-    default void popola(int dimensioneMassima)
+    default void popola(int dimensioneMassima) // FIXME ogni tanto lancia qualche stronzata
     {
         if (!popolaBT(dimensioneMassima, cella(0,0)))
             throw new RuntimeException("Impossibile risolvere");
