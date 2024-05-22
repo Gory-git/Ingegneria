@@ -16,6 +16,7 @@ public interface Blocco extends Serializable, Iterable<Cella>, Cloneable
     void rimuoviCella(Cella cella);
     boolean soddisfatto();
     int dimensione();
+    int valore();
     List<Cella> celle();
 
     static boolean verifica(Operatore operatore, int valore, int dimensione, List<Cella> celle)

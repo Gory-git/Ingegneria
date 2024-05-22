@@ -128,6 +128,12 @@ public class BloccoList extends AbstractBlocco
     }
 
     @Override
+    public int valore()
+    {
+        return valore;
+    }
+
+    @Override
     public List<Cella> celle()
     {
         return new LinkedList<>(celle);

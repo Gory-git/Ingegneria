@@ -6,7 +6,7 @@ import Gioco.cella.Cella;
 
 import java.util.*;
 
-public class SoluzioneMatrix extends AbstractSoluzione
+public final class SoluzioneMatrix extends AbstractSoluzione
 {
     private Cella[][] celle;
 
@@ -26,6 +26,8 @@ public class SoluzioneMatrix extends AbstractSoluzione
 
         risolvi(false);
         popola(dimensione * dimensione);
+
+        System.out.println(this);
 
         for (Cella cella : this)
             cella.setValore(0);
@@ -47,6 +49,9 @@ public class SoluzioneMatrix extends AbstractSoluzione
             for (Cella cella : blocco.celle())
                 celle[cella.getPosizione()[0]][cella.getPosizione()[1]] = cella;
 
+        for (Cella cella : this)
+            cella.setValore(0);
+
         risolvi(true);
     }
 
@@ -64,13 +69,6 @@ public class SoluzioneMatrix extends AbstractSoluzione
             if (i != riga && celle[i][colonna].getValore() == valore || i != colonna && celle[riga][i].getValore() == valore)
                 return false;
         return true;
-    }
-
-    @Override
-    public void popola(int dimensioneMassima)
-    {
-        if (!popolaBT(dimensioneMassima, celle[0][0]))
-            throw new RuntimeException("Impossibile risolvere");
     }
 
     @Override
@@ -111,7 +109,15 @@ public class SoluzioneMatrix extends AbstractSoluzione
     @Override
     public SoluzioneMatrix clone() throws CloneNotSupportedException
     {
-        SoluzioneMatrix soluzione = (SoluzioneMatrix) super.clone();
-        return new SoluzioneMatrix(soluzione);
+        return new SoluzioneMatrix(this);
+    }
+
+    @Override
+    public boolean risolta()
+    {
+        for (Cella cella : this)
+            if (!controlla(cella.getPosizione()[0], cella.getPosizione()[0], cella.getValore()) || !cella.getBlocco().soddisfatto())
+                return false;
+        return true;
     }
 }

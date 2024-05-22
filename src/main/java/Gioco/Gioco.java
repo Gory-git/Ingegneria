@@ -8,26 +8,33 @@ import java.util.List;
 
 public enum Gioco implements Serializable
 {
-
     INSTANCE;
     private static final File FILE = new File("Save.dat");
     private final LinkedList<Soluzione> soluzioni = new LinkedList<>();
 
-    public void avvia(int soluzioni, int dimensione) throws CloneNotSupportedException
+    public void avvia(int soluzioni, int dimensione) throws CloneNotSupportedException, IOException
     {
         if (soluzioni < 0)
             throw new IllegalArgumentException("Numero di soluzioni non valido");
 
+        if (!FILE.exists())
+            FILE.createNewFile();
+
         this.soluzioni.add(new SoluzioneMatrix(dimensione));
 
         for (int i = 0; i < soluzioni; i++)
-            this.soluzioni.add(this.soluzioni.getLast().clone());
+            this.soluzioni.add(this.soluzioni.getFirst().clone());
     }
 
     public void salva()
     {
         try
         {
+            if (FILE.exists())
+            {
+                FILE.delete();
+                FILE.createNewFile();
+            }
             FileOutputStream fileOut = new FileOutputStream(FILE);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             for (Soluzione soluzione : soluzioni)
