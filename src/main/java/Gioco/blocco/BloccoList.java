@@ -11,7 +11,7 @@ public class BloccoList extends AbstractBlocco
 
     public BloccoList(Operatore operatore, int valore, int dimensione, List<Cella> celle)
     {
-        // this(operatore, valore, dimensione); CONTROLLO ECCEZIONI
+        // CONTROLLO ECCEZIONI
         if ( celle == null)
             throw new IllegalArgumentException("Celle dev'essere non null");
         if ( celle.size() != dimensione)
@@ -55,7 +55,7 @@ public class BloccoList extends AbstractBlocco
             boolean soddisfatto = false;
             while (!soddisfatto)
             {
-                operatore =  Operatore.DIVISIONE.getRandom();
+                operatore =  Operatore.getRandom();
                 switch (operatore)
                 {
                     case SOMMA -> valore = somma(celle);
@@ -86,6 +86,8 @@ public class BloccoList extends AbstractBlocco
 
     private static int moltiplicazione(List<Cella> celle)
     {
+        if (celle.size() > 10)
+            return 0;
         int ret = 1;
         for (Cella cella : celle)
             ret *= cella.getValore();

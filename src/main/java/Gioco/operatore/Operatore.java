@@ -10,10 +10,9 @@ public enum Operatore
     DIVISIONE,
     NONE;
 
-    public Operatore getRandom()
+    public static Operatore getRandom()
     {
-        Operatore[] operatori = new Operatore[]{SOMMA, SOTTRAZIONE, MOLTIPLICAZIONE, DIVISIONE};
-        return operatori[new Random().nextInt(0, 4)];
+        return Operatore.values()[new Random().nextInt(0, 4)];
     }
 
     @Override

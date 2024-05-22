@@ -5,6 +5,7 @@ import Gioco.cella.Cella;
 import Gioco.operatore.Operatore;
 import Gioco.soluzione.Soluzione;
 import Gioco.soluzione.SoluzioneMatrix;
+import Interfaccia.Finestra;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -28,7 +29,7 @@ public class Main
             i = (i + 1) % x;
         }*/
         //System.out.println(blocco.soddisfatto());
-
+/*
         int x = 9;
         Soluzione soluzione = new SoluzioneMatrix(x);
         System.out.println("risolvo la soluzione originale");
@@ -39,13 +40,15 @@ public class Main
         Soluzione clone = soluzione.clone();
         System.out.println("clone");
         System.out.println(clone);
+*/
 
-
-        //Gioco.INSTANCE.avvia(0, 3);
+        Gioco.INSTANCE.avvia(1, 9);
         //Gioco.INSTANCE.salva();
         //Gioco.INSTANCE.carica();
-        //System.out.println(Gioco.INSTANCE.getSoluzioni().get(0));
+        System.out.println(Gioco.INSTANCE.getSoluzioni().get(1));
 
+
+        Finestra finestra = new Finestra();
 
         /*while (!soluzione.risolta())
         {
