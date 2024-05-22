@@ -15,8 +15,6 @@ public class Main
 {
     public static void main(String[] args) throws IOException, CloneNotSupportedException
     {
-        int x = 4;
-        Soluzione soluzione = new SoluzioneMatrix(x);
         //Iterator<Cella> it = soluzione.iterator();
         //Blocco[] blocco = new Blocco[]{new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), new BloccoList(x), };
         //int i = 0;
@@ -30,6 +28,9 @@ public class Main
             i = (i + 1) % x;
         }*/
         //System.out.println(blocco.soddisfatto());
+
+        int x = 6;
+        Soluzione soluzione = new SoluzioneMatrix(x);
         System.out.println("risolvo la soluzione originale");
         soluzione.risolvi(true);
         System.out.println("soluzione originale risolta");
@@ -39,12 +40,12 @@ public class Main
         System.out.println("clone");
         System.out.println(clone);
 
-        /*
-        Gioco.INSTANCE.avvia(0, 3);
-        Gioco.INSTANCE.salva();
-        Gioco.INSTANCE.carica();
-        System.out.println(Gioco.INSTANCE.getSoluzioni().get(0).dimensione());
-         */
+
+        //Gioco.INSTANCE.avvia(0, 3);
+        //Gioco.INSTANCE.salva();
+        //Gioco.INSTANCE.carica();
+        //System.out.println(Gioco.INSTANCE.getSoluzioni().get(0));
+
 
         /*while (!soluzione.risolta())
         {

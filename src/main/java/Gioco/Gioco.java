@@ -10,7 +10,7 @@ public enum Gioco implements Serializable
 {
     INSTANCE;
     private static final File FILE = new File("Save.dat");
-    private final LinkedList<Soluzione> soluzioni = new LinkedList<>();
+    private LinkedList<Soluzione> soluzioni = new LinkedList<>();
 
     public void avvia(int soluzioni, int dimensione) throws CloneNotSupportedException, IOException
     {
@@ -37,9 +37,10 @@ public enum Gioco implements Serializable
             }
             FileOutputStream fileOut = new FileOutputStream(FILE);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            for (Soluzione soluzione : soluzioni)
-                out.writeObject(soluzione);
-            fileOut.close();
+
+            out.writeObject(this);
+
+            //fileOut.close();
             out.close();
         }catch(Exception e)
         {
@@ -53,14 +54,16 @@ public enum Gioco implements Serializable
         {
             FileInputStream fileIn = new FileInputStream(FILE);
             ObjectInputStream in= new ObjectInputStream(fileIn);
-            while (in.available() > 0)
-            {
-                Object o = in.readObject();
-                if(!(o instanceof Soluzione))
-                    throw new RuntimeException("Non riesco a caricare tutte le soluzioni salvate");
-                soluzioni.add((Soluzione)o);
-            }
-            fileIn.close();
+
+            Object o = in.readObject();
+            if(!(o instanceof Gioco))
+                throw new RuntimeException("Non riesco a caricare tutte le soluzioni salvate");
+
+            for (Soluzione soluzione : ((Gioco) o).soluzioni)
+                this.soluzioni.add(soluzione);
+
+
+            //fileIn.close();
             in.close();
         }catch (Exception e)
         {
@@ -68,9 +71,10 @@ public enum Gioco implements Serializable
         }
     }
 
-    public void inserisciValore(int riga, int colonna, int valore)
+    public boolean inserisciValore(int riga, int colonna, int valore)
     {
         soluzioni.getFirst().posiziona(riga, colonna, valore);
+        return soluzioni.getFirst().verifica();
     }
 
     public void rimuoviValore(int riga, int colonna)
@@ -81,5 +85,10 @@ public enum Gioco implements Serializable
     public List<Soluzione> getSoluzioni()
     {
         return soluzioni;
+    }
+
+    private class Memento
+    {
+
     }
 }

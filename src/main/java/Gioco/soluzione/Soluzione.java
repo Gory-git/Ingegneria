@@ -30,9 +30,8 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
             }
         }
 
-
         if (!controllaBlocchi)
-            inserisciValoriBT(0,0, inseribili);
+            inserisciValoriBT(0,0, inseribili, false);
         else
         {
             for (Cella cella : this)
@@ -42,11 +41,11 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
                 if (controllaBlocchi && cella(riga, colonna).getBlocco() != null && cella(riga, colonna).getBlocco().dimensione() == 1)
                 {
                     int i = cella(riga, colonna).getBlocco().valore();
-                    posizionaERimuovi(riga, colonna, i, inseribili);
                     inseribili[riga][colonna].clear();
+                    inseribili[riga][colonna].add(i);
                 }
             }
-            inserisciValoriBT(0,0, inseribili); // TODO momentaneo, devo inventare l'algoritmo col vincolo di blocchi
+            inserisciValoriBT(0,0, inseribili, controllaBlocchi); // TODO momentaneo, devo inventare l'algoritmo col vincolo di blocchi
             //inserisciValoriBlocchiBT(0, 0, inseribili);
         }
 
@@ -55,7 +54,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
     /**
      * il metodo implementa la parte di risolvi senza il vincolo dei blocchi. Utilizza il backtracking
      */
-    private boolean inserisciValoriBT(int riga, int colonna, ArrayList<Integer>[][] inseribili)      // FIXME VERSIONE CON TRUE, non funziona correttamente
+    private boolean inserisciValoriBT(int riga, int colonna, ArrayList<Integer>[][] inseribili, boolean controllaBlocchi)      // FIXME implementa parte dei blocchi
     {
         if (riga == dimensione() || colonna == dimensione())
             return true;
@@ -63,19 +62,34 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
         int prossimaColonna = (colonna + 1) % dimensione();
         int prossimaRiga = prossimaColonna == 0 ? riga + 1 : riga;
 
-        if (cella(riga, colonna).getValore() != 0 && controlla(riga, colonna, cella(riga, colonna).getValore()))
-            return inserisciValoriBT(prossimaRiga, prossimaColonna, inseribili);
-
         while (!inseribili[riga][colonna].isEmpty())
         {
             int i = inseribili[riga][colonna].remove(0);
-
-            if (controlla(riga, colonna, i))
+            if (controllaBlocchi)
             {
-                posizionaERimuovi(riga, colonna, i, inseribili);
-                if (inserisciValoriBT(prossimaRiga, prossimaColonna, inseribili))
-                    return true;
-            }
+                Blocco blocco = cella(riga, colonna).getBlocco();
+
+                boolean bloccoPieno = true;
+                for (Cella cella : blocco.celle())
+                    if (cella.getValore() == 0)
+                    {
+                        bloccoPieno = false;
+                        break;
+                    }
+
+                if (controlla(riga, colonna, i) && (bloccoPieno || blocco.soddisfatto()))
+                {
+                    posizionaERimuovi(riga, colonna, i, inseribili);
+                    if (inserisciValoriBT(prossimaRiga, prossimaColonna, inseribili, controllaBlocchi))
+                        return true;
+                }
+            }else
+                if (controlla(riga, colonna, i))
+                {
+                    posizionaERimuovi(riga, colonna, i, inseribili);
+                    if (inserisciValoriBT(prossimaRiga, prossimaColonna, inseribili, controllaBlocchi))
+                        return true;
+                }
             rimuoviEReinserisci(riga, colonna, i, inseribili);
         }
         return false;
@@ -86,10 +100,10 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
         for (int j = 0; j < dimensione(); j++)
         {
             for (int k = 0; k < inseribili[riga][j].size(); k++)
-                if (colonna != j && inseribili[riga][j].get(k) == valore)
+                if (colonna < j && inseribili[riga][j].get(k) == valore)
                     inseribili[riga][j].remove(k);
             for (int k = 0; k < inseribili[j][colonna].size(); k++)
-                if (riga != j && inseribili[j][colonna].get(k) == valore)
+                if (riga < j && inseribili[j][colonna].get(k) == valore)
                     inseribili[j][colonna].remove(k);
         }
     }
@@ -97,9 +111,9 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
     {
         for (int j = 0; j < dimensione(); j++)
         {
-            if (colonna != j && !inseribili[riga][j].contains(valore))
+            if (colonna < j && !inseribili[riga][j].contains(valore))
                 inseribili[riga][j].add(valore);
-            if (riga != j && !inseribili[j][colonna].contains(valore))
+            if (riga < j && !inseribili[j][colonna].contains(valore))
                 inseribili[j][colonna].add(valore);
         }
         rimuovi(riga, colonna);

@@ -126,7 +126,6 @@ public class Cella implements Serializable, Cloneable, Comparable<Cella>
         Cella cella = (Cella) super.clone();
         cella.valore = this.valore;
         cella.posizione = new int[]{this.posizione[0], this.posizione[1]};
-        System.out.println(cella);
         return cella;
     }
 }
