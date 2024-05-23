@@ -27,8 +27,6 @@ public final class SoluzioneMatrix extends AbstractSoluzione
         risolvi(false);
         popola(dimensione * dimensione);
 
-        System.out.println(this);
-
         for (Cella cella : this)
             cella.setValore(0);
     }
@@ -53,6 +51,8 @@ public final class SoluzioneMatrix extends AbstractSoluzione
             cella.setValore(0);
 
         risolvi(true);
+
+        System.out.println(this);
     }
 
     @Override
