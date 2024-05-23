@@ -42,10 +42,10 @@ public class Main
         System.out.println(clone);
 */
 
-        Gioco.INSTANCE.avvia(1, 9);
+        //Gioco.INSTANCE.avvia(1, 7);
         //Gioco.INSTANCE.salva();
         //Gioco.INSTANCE.carica();
-        System.out.println(Gioco.INSTANCE.getSoluzioni().get(1));
+        //System.out.println(Gioco.INSTANCE.getSoluzioni().get(1));
 
 
         Finestra finestra = new Finestra();
