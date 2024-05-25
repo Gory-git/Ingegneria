@@ -81,8 +81,6 @@ public class Finestra
         SpinnerModel valori = new SpinnerNumberModel(0, 0, 100, 1);
         JSpinner spinnerSoluzioni = new JSpinner(valori);
 
-        // TODO estrapolare i dati dagli oggetti sopra e avviare il gioco.
-
         panelNuovoGioco.add(spinnerSoluzioni);
 
         frame.add(panelNuovoGioco);
@@ -130,7 +128,7 @@ public class Finestra
         {
             for (int j = 0; j < dimensioneGriglia; j++)
             {
-                panelGriglia.add(new JLabel(gioco.getSoluzioni().get(1).cella(i, j).getValore() + ""));
+                panelGriglia.add(new JLabel(gioco.getSoluzioni().get(0).cella(i, j).getValore() + ""));
             }
         }
 
