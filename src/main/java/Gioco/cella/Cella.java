@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 
-public class Cella implements Serializable, Cloneable, Comparable<Cella>
+public final class Cella implements Serializable, Cloneable, Comparable<Cella>
 {
     private int[] posizione;
     private int valore;
@@ -121,11 +121,8 @@ public class Cella implements Serializable, Cloneable, Comparable<Cella>
     }
 
     @Override
-    public Cella clone() throws CloneNotSupportedException
+    public Cella clone()
     {
-        Cella cella = (Cella) super.clone();
-        cella.valore = this.valore;
-        cella.posizione = new int[]{this.posizione[0], this.posizione[1]};
-        return cella;
+        return new Cella(this.valore, this.posizione);
     }
 }

@@ -2,11 +2,13 @@ package Gioco.soluzione;
 
 import Gioco.blocco.Blocco;
 import Gioco.cella.Cella;
+import Gioco.memento.Memento;
+import Gioco.memento.Originator;
 
 import java.io.Serializable;
 import java.util.*;
 
-public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>
+public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Originator
 {
     /**
      * il metodo risolve la griglia simil sudoku

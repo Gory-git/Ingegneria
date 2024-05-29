@@ -3,6 +3,8 @@ package Gioco.soluzione;
 import Gioco.blocco.Blocco;
 import Gioco.blocco.BloccoList;
 import Gioco.cella.Cella;
+import Gioco.memento.Memento;
+import Gioco.memento.Originator;
 
 import java.util.*;
 
@@ -31,7 +33,7 @@ public final class SoluzioneMatrix extends AbstractSoluzione
             cella.setValore(0);
     }
 
-    private SoluzioneMatrix(Soluzione soluzione) throws CloneNotSupportedException
+    public SoluzioneMatrix(Soluzione soluzione) throws CloneNotSupportedException
     {
         if (soluzione == null)
             throw new IllegalArgumentException("Soluzione non valida");
@@ -46,13 +48,6 @@ public final class SoluzioneMatrix extends AbstractSoluzione
         for (Blocco blocco : blocchi)
             for (Cella cella : blocco.celle())
                 celle[cella.getPosizione()[0]][cella.getPosizione()[1]] = cella;
-
-        for (Cella cella : this)
-            cella.setValore(0);
-
-        risolvi(true);
-
-        System.out.println(this);
     }
 
     @Override
@@ -109,7 +104,13 @@ public final class SoluzioneMatrix extends AbstractSoluzione
     @Override
     public SoluzioneMatrix clone() throws CloneNotSupportedException
     {
-        return new SoluzioneMatrix(this);
+        SoluzioneMatrix clone = new SoluzioneMatrix(this);
+
+        for (Cella cella : clone)
+            cella.setValore(0);
+
+        clone.risolvi(true);
+        return clone;
     }
 
     @Override
@@ -119,5 +120,45 @@ public final class SoluzioneMatrix extends AbstractSoluzione
             if (!controlla(cella.getPosizione()[0], cella.getPosizione()[0], cella.getValore()) || !cella.getBlocco().soddisfatto())
                 return false;
         return true;
+    }
+
+    @Override
+    public Memento salva()
+    {
+        return new MementoSoluzione();
+    }
+
+    @Override
+    public void ripristina(Memento memento)
+    {
+        if (!(memento instanceof MementoSoluzione))
+            throw new IllegalArgumentException("Memento non corretto");
+
+        MementoSoluzione mementoSoluzione = (MementoSoluzione) memento;
+        if (this != mementoSoluzione.originator())  // TODO valutare se utile. In questo caso credo sia comodo per un eventuale DO/UNDO
+            throw new IllegalArgumentException("Memento non creato da questa istanza");
+
+
+        for (int i = 0; i < celle.length; i++)
+            for (int j = 0; j < celle.length; j++)
+                celle[i][j] = mementoSoluzione.celle[i][j].clone();
+
+    }
+
+    private class MementoSoluzione implements Memento
+    {
+        private Cella[][] celle = new Cella[dimensione()][dimensione()];
+
+        private MementoSoluzione()
+        {
+            for (int i = 0; i < celle.length; i++)
+                for (int j = 0; j < celle.length; j++)
+                    celle[i][j] = cella(i, j).clone();
+        }
+
+        SoluzioneMatrix originator()
+        {
+            return SoluzioneMatrix.this;
+        }
     }
 }

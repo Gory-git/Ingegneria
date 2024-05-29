@@ -1,16 +1,17 @@
 package Interfaccia;
 
 import Gioco.Gioco;
+import Gioco.mediator.ConcreteMediator;
+import Gioco.mediator.Mediator;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
-public class Finestra
+public class Finestra // TODO
 {
-
-    Gioco gioco = Gioco.INSTANCE;
+    Mediator mediator = new ConcreteMediator();
     JFrame frame;
     int numeroSoluzioni, dimensioneGriglia;
     public Finestra()
@@ -20,6 +21,13 @@ public class Finestra
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         finestraIniziale();
+        /* FIXME devo sistemare le prossime righe.
+        numeroSoluzioni = 0;
+        dimensioneGriglia = 3;
+        mediator.avvia(numeroSoluzioni, dimensioneGriglia);
+        finestraGioco();
+        // TODO fino a qua bro
+        */
     }
 
     private void finestraIniziale()
@@ -47,7 +55,9 @@ public class Finestra
             public void actionPerformed(ActionEvent e)
             {
                 frame.remove(panelIniziale);
-                gioco.carica();
+                mediator.carica();
+                numeroSoluzioni = mediator.soluzioni().size();
+                dimensioneGriglia = mediator.soluzioni().get(0).dimensione();
                 finestraGioco();
             }
         });
@@ -71,12 +81,12 @@ public class Finestra
         panelNuovoGioco.add(avviaGioco);
 
 
-        JSlider sliderDimensdione = new JSlider(JSlider.HORIZONTAL, 3, 9, 6);
-        sliderDimensdione.setMajorTickSpacing(1);
-        sliderDimensdione.setPaintTicks(true);
-        sliderDimensdione.setPaintLabels(true);
+        JSlider sliderDimensione = new JSlider(JSlider.HORIZONTAL, 3, 9, 6);
+        sliderDimensione.setMajorTickSpacing(1);
+        sliderDimensione.setPaintTicks(true);
+        sliderDimensione.setPaintLabels(true);
 
-        panelNuovoGioco.add(sliderDimensdione);
+        panelNuovoGioco.add(sliderDimensione);
 
         SpinnerModel valori = new SpinnerNumberModel(0, 0, 100, 1);
         JSpinner spinnerSoluzioni = new JSpinner(valori);
@@ -94,17 +104,8 @@ public class Finestra
             {
                 frame.remove(panelNuovoGioco);
                 numeroSoluzioni = (Integer) spinnerSoluzioni.getValue();
-                dimensioneGriglia = sliderDimensdione.getValue();
-                try
-                {
-                    gioco.avvia(numeroSoluzioni, dimensioneGriglia);
-                } catch (CloneNotSupportedException ex)
-                {
-                    throw new RuntimeException(ex);
-                } catch (IOException ex)
-                {
-                    throw new RuntimeException(ex);
-                }
+                dimensioneGriglia = sliderDimensione.getValue();
+                mediator.avvia(numeroSoluzioni, dimensioneGriglia);
                 frame.remove(panelNuovoGioco);
                 finestraGioco();
             }
@@ -114,27 +115,32 @@ public class Finestra
 
     private void finestraGioco()
     {
-        JPanel panelGioco = new JPanel();
-        panelGioco.setLayout(new BorderLayout());
-        panelGioco.setBackground(Color.PINK);
+        frame.setLayout(new BorderLayout());
 
         JPanel panelGriglia = new JPanel();
-        panelGriglia.setSize(400, 400);
-        panelGriglia.setLayout(new GridLayout(dimensioneGriglia, dimensioneGriglia));
-        panelGioco.setBackground(Color.LIGHT_GRAY);
+        //panelGriglia.setLayout(new GridLayout(dimensioneGriglia, dimensioneGriglia, 5, 5));
+        panelGriglia.setBackground(Color.LIGHT_GRAY);
 
+        JPanel panelBottoni = new JPanel();
+        panelBottoni.setSize(dimensioneGriglia, 1);
+        panelBottoni.setBackground(Color.BLUE);
+        JButton[] bottoni = new JButton[dimensioneGriglia];
 
         for (int i = 0; i < dimensioneGriglia; i++)
         {
             for (int j = 0; j < dimensioneGriglia; j++)
             {
-                panelGriglia.add(new JLabel(gioco.getSoluzioni().get(0).cella(i, j).getValore() + ""));
+                JLabel label = new JLabel(mediator.soluzioni().get(0).cella(i, j).getValore() + "");
+                label.setBackground(Color.LIGHT_GRAY);
+                panelGriglia.add(label);
             }
+            bottoni[i] = new JButton("" + (i+1));
+            panelBottoni.add(bottoni[i]);
         }
 
-        panelGioco.add(panelGriglia, BorderLayout.CENTER);
+        frame.add(panelGriglia, BorderLayout.CENTER);
+        frame.add(panelBottoni, BorderLayout.SOUTH);
 
-        frame.add(panelGioco);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 

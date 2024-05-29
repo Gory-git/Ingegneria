@@ -2,6 +2,8 @@ import Gioco.Gioco;
 import Gioco.blocco.Blocco;
 import Gioco.blocco.BloccoList;
 import Gioco.cella.Cella;
+import Gioco.mediator.ConcreteMediator;
+import Gioco.mediator.Mediator;
 import Gioco.operatore.Operatore;
 import Gioco.soluzione.Soluzione;
 import Gioco.soluzione.SoluzioneMatrix;
@@ -16,10 +18,18 @@ public class Main
 {
     public static void main(String[] args) throws IOException, CloneNotSupportedException
     {
+/*
+        //Gioco.INSTANCE.avvia(2, 7);
 
-        //Gioco.INSTANCE.avvia(1, 7);
-        //Gioco.INSTANCE.salva();
-        //Gioco.INSTANCE.carica();
+        Mediator mediator = new ConcreteMediator();
+        mediator.carica();
+        System.out.println(Gioco.INSTANCE.getSoluzioni().get(0));
+
+        System.out.println(Gioco.INSTANCE.getSoluzioni().get(1));
+
+        System.out.println(Gioco.INSTANCE.getSoluzioni().get(2));
+        //mediator.salva();
+*/
 
         Finestra finestra = new Finestra();
     }
