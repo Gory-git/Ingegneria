@@ -58,7 +58,7 @@ public class Finestra // TODO
                 mediator.carica();
                 numeroSoluzioni = mediator.soluzioni().size();
                 dimensioneGriglia = mediator.soluzioni().get(0).dimensione();
-                finestraGioco();
+                finestraGriglia();
             }
         });
 
@@ -107,24 +107,54 @@ public class Finestra // TODO
                 dimensioneGriglia = sliderDimensione.getValue();
                 mediator.avvia(numeroSoluzioni, dimensioneGriglia);
                 frame.remove(panelNuovoGioco);
-                finestraGioco();
+                finestraGriglia();
             }
         });
 
     }
 
-    private void finestraGioco()
+    private void finestraGriglia()
     {
         frame.setLayout(new BorderLayout());
 
         JPanel panelGriglia = new JPanel();
-        //panelGriglia.setLayout(new GridLayout(dimensioneGriglia, dimensioneGriglia, 5, 5));
+        panelGriglia.setLayout(new GridLayout(dimensioneGriglia, dimensioneGriglia, 5, 5));
         panelGriglia.setBackground(Color.LIGHT_GRAY);
 
-        JPanel panelBottoni = new JPanel();
+        JPanel panelBottoni = new JPanel(); // TODO lo uso magari per metterci i comandi (do, undo, salva, esci ecc.)
         panelBottoni.setSize(dimensioneGriglia, 1);
         panelBottoni.setBackground(Color.BLUE);
-        JButton[] bottoni = new JButton[dimensioneGriglia];
+
+        //clicka per scegliere il valore da assegnare.
+        JPopupMenu valoriDaInserire = new JPopupMenu();
+        JMenuItem[] menuItems = new JMenuItem[dimensioneGriglia];
+        for (int i = 0; i < dimensioneGriglia; i++)
+        {
+            menuItems[i] = new JMenuItem("" + (i+1));
+            valoriDaInserire.add(menuItems[i]);
+        }
+        final int[] X_Y = {0, 0};
+        frame.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                valoriDaInserire.show(frame , e.getX(), e.getY());
+                X_Y[0] = e.getX();
+                X_Y[1] = e.getY();
+            }
+        });
+        for (int i = 0; i < dimensioneGriglia; i++)
+        {
+            final int j = i;
+            menuItems[i].addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                //inserisco il valore i nella cella clickata
+                inserisciValore(X_Y[0], X_Y[1], (j+1));
+            }
+        });
+        }
+
+
+
+        //JButton[] bottoni = new JButton[dimensioneGriglia];
 
         for (int i = 0; i < dimensioneGriglia; i++)
         {
@@ -132,10 +162,11 @@ public class Finestra // TODO
             {
                 JLabel label = new JLabel(mediator.soluzioni().get(0).cella(i, j).getValore() + "");
                 label.setBackground(Color.LIGHT_GRAY);
+                label.setHorizontalAlignment(JLabel.CENTER);
                 panelGriglia.add(label);
             }
-            bottoni[i] = new JButton("" + (i+1));
-            panelBottoni.add(bottoni[i]);
+            //bottoni[i] = new JButton("" + (i+1));
+            //panelBottoni.add(bottoni[i]);
         }
 
         frame.add(panelGriglia, BorderLayout.CENTER);
@@ -144,6 +175,11 @@ public class Finestra // TODO
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
+    }
+
+    private void inserisciValore(int x, int y, int valore)
+    {
+        System.out.println("X: " + x + ", Y: " + y + "--> valore: " + valore);
     }
 
 

@@ -155,10 +155,10 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
      */
     default void popola(int dimensioneMassima) // FIXME ogni tanto lancia qualche stronzata
     {
-        if (!popolaBT(dimensioneMassima, cella(0,0)))
-            throw new RuntimeException("Impossibile risolvere");
+        popolaBT(dimensioneMassima, cella(0,0));
     }
     /**
+     * ++-`
      * il metodo implementa la parte backtracking di popola
      */
     private boolean popolaBT(int dimensioneMassima, Cella cella)
