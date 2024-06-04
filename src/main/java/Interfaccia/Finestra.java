@@ -7,10 +7,12 @@ import Gioco.mediator.Mediator;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.plaf.BorderUIResource;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Random;
 
 public class Finestra // TODO
 {
@@ -102,7 +104,6 @@ public class Finestra // TODO
                 numeroSoluzioni = (Integer) spinnerSoluzioni.getValue();
                 dimensioneGriglia = sliderDimensione.getValue();
                 mediator.avvia(numeroSoluzioni, dimensioneGriglia);
-                frame.remove(panelNuovoGioco);
                 finestraGriglia();
             }
         });
@@ -111,18 +112,18 @@ public class Finestra // TODO
 
     private void finestraGriglia()
     {
-        frame.setSize(500, 600);
+        frame.setSize(504, 604);
         frame.setLayout(new BorderLayout());
 
 
         JPanel panelGriglia = new JPanel();
-        panelGriglia.setLayout(new GridLayout(dimensioneGriglia, dimensioneGriglia, 5, 5));
-        panelGriglia.setBounds(1, 1, 500, 500);
+        panelGriglia.setLayout(new GridLayout(dimensioneGriglia, dimensioneGriglia));
+        panelGriglia.setSize(504, 504);
         panelGriglia.setBackground(Color.LIGHT_GRAY);
 
-        JPanel panelBottoni = new JPanel(); // TODO lo uso magari per metterci i comandi (do, undo, salva, esci ecc.)
+        JPanel panelBottoni = new JPanel();
         panelBottoni.setSize(dimensioneGriglia, 1);
-        panelBottoni.setBounds(1, 1, 500, 100);
+        panelBottoni.setSize(504, 100);
         panelBottoni.setBackground(Color.BLUE);
 
         //clicka per scegliere il valore da assegnare.
@@ -138,7 +139,7 @@ public class Finestra // TODO
         {
             public void mouseClicked(MouseEvent e)
             {
-                valoriDaInserire.show(frame , e.getX(), e.getY());
+                valoriDaInserire.show(panelGriglia , e.getX(), e.getY());
                 X_Y[0] = e.getX();
                 X_Y[1] = e.getY();
             }
@@ -151,7 +152,7 @@ public class Finestra // TODO
                 public void actionPerformed(ActionEvent e)
                 {
                     //inserisco il valore i nella cella clickata
-                    inserisciValore(X_Y[0], X_Y[1], (j+1));
+                    inserisciValore(X_Y[0], X_Y[1], (j+1), panelGriglia);
                 }
             });
         }
@@ -161,36 +162,95 @@ public class Finestra // TODO
         bottoni.add(new JButton("DO")); // bottoneDo TODO actionlistener
         bottoni.add(new JButton("SALVA")); // bottoneSalva TODO actionlistener
         bottoni.add(new JButton("INDIETRO")); // bottoneIndietro TODO actionlistener
+        // BOTTONE UNDO TODO
+
+        // BOTTONE DO TODO
+
+        // BOTTONE SALVA
+        final boolean[] salvato = {false};
+        bottoni.get(2).addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                mediator.salva();
+                salvato[0] = true;
+                JOptionPane.showMessageDialog(frame,"Salvataggio effettuato!","Salvataggio",JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        // BOTTONE INDIETRO
+        bottoni.get(3).addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (!salvato[0])
+                {
+                    JOptionPane.showMessageDialog(frame,"Salvataggio non ancora effettuato!","Attenzione",JOptionPane.ERROR_MESSAGE);
+                    //finestraGriglia();
+                }
+                else
+                {
+                    frame.remove(panelGriglia);
+                    frame.remove(panelBottoni);
+                    finestraNuovoGioco();
+                }
+            }
+        });
 
         for (JButton bottone : bottoni)
             panelBottoni.add(bottone);
 
+        frame.add(panelBottoni, BorderLayout.SOUTH);
+
         for (int i = 0; i < dimensioneGriglia; i++)
             for (int j = 0; j < dimensioneGriglia; j++)
             {
-                JLabel label = new JLabel(mediator.soluzioni().get(0).cella(i, j).getValore() + "");
-                //label.setBackground(Color.LIGHT_GRAY);
-                label.setHorizontalAlignment(JLabel.CENTER);
-                label.setVerticalAlignment(JLabel.CENTER);
-                panelGriglia.add(label);
-                JSeparator separatore = new JSeparator();
-                separatore.setOrientation(JSeparator.VERTICAL);
-                panelGriglia.add(separatore);
+                JLabel labelValore = new JLabel(mediator.soluzioni().get(0).cella(i, j).getValore() + "");
+                labelValore.setHorizontalAlignment(JLabel.CENTER);
+                labelValore.setVerticalAlignment(JLabel.CENTER);
+
+                JPanel panelCella = new JPanel(new BorderLayout());
+                panelCella.setBackground(coloreBlocco(i, j));
+                panelCella.add(labelValore, BorderLayout.CENTER);
+
+                panelGriglia.add(panelCella);
             }
 
         frame.add(panelGriglia, BorderLayout.CENTER);
-        frame.add(panelBottoni, BorderLayout.SOUTH);
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
     }
 
-    private void inserisciValore(int x, int y, int valore)
+    private void inserisciValore(int x, int y, int valore, JPanel panelGriglia)
     {
         System.out.println("X: " + x + ", Y: " + y + "--> valore: " + valore);
 
+        JPanel panelLabel = (JPanel) panelGriglia.getComponentAt(x, y);
+        JLabel label = (JLabel) panelLabel.getComponent(0);
+        label.setText(valore + "");
+
+        float dimensioneSingolaCella = (float) 500 /numeroSoluzioni;
+
+
+
+        int riga = 0;
+        int colonna = 0;
+
+        mediator.inserisciValore(riga, colonna, valore);    // TODO come cazzo faccio?
+
+        if (!mediator.soluzioni().get(0).controlla(riga, colonna, valore))
+            JOptionPane.showMessageDialog(frame,"Valore errato!","ERRORE!",JOptionPane.ERROR_MESSAGE);
+
+        if (mediator.soluzioni().get(0).risolta())
+            return; // TODO schermata finale!!
     }
 
+    private Color coloreBlocco(int x, int y)
+    {
+        return new Color(new Random().nextInt(00000000,99999999));
+    }
 
 }
