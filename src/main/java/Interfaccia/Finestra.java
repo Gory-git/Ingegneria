@@ -1,24 +1,23 @@
 package Interfaccia;
 
-import Gioco.Gioco;
+import Gioco.blocco.Blocco;
+import Gioco.cella.Cella;
 import Gioco.mediator.ConcreteMediator;
 import Gioco.mediator.Mediator;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.plaf.BorderUIResource;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 
-public class Finestra // TODO
+public class Finestra // FIXME devo fare classi diverse, altrimenti esce una merda
 {
-    Mediator mediator = new ConcreteMediator();
-    JFrame frame;
+    private final Mediator mediator = new ConcreteMediator();
+    private final JFrame frame;
     int numeroSoluzioni, dimensioneGriglia;
+    private HashMap<Blocco, Color> bloccoColore = new HashMap<>();
     public Finestra()
     {
         frame = new JFrame("KENKEN");
@@ -115,6 +114,7 @@ public class Finestra // TODO
         frame.setSize(504, 604);
         frame.setLayout(new BorderLayout());
 
+        impostaColori();
 
         JPanel panelGriglia = new JPanel();
         panelGriglia.setLayout(new GridLayout(dimensioneGriglia, dimensioneGriglia));
@@ -210,9 +210,15 @@ public class Finestra // TODO
                 labelValore.setHorizontalAlignment(JLabel.CENTER);
                 labelValore.setVerticalAlignment(JLabel.CENTER);
 
+                JLabel labelBlocco = new JLabel(mediator.soluzioni().get(0).cella(i, j).getBlocco() + "");
+                labelBlocco.setHorizontalAlignment(JLabel.RIGHT);
+                labelBlocco.setVerticalAlignment(JLabel.TOP);
+
                 JPanel panelCella = new JPanel(new BorderLayout());
-                panelCella.setBackground(coloreBlocco(i, j));
+                panelCella.setBackground(bloccoColore.get(mediator.soluzioni().get(0).cella(i, j).getBlocco()));
+
                 panelCella.add(labelValore, BorderLayout.CENTER);
+                panelCella.add(labelBlocco, BorderLayout.NORTH);
 
                 panelGriglia.add(panelCella);
             }
@@ -232,12 +238,10 @@ public class Finestra // TODO
         JLabel label = (JLabel) panelLabel.getComponent(0);
         label.setText(valore + "");
 
-        float dimensioneSingolaCella = (float) 500 /numeroSoluzioni;
+        int riga = Math.floorDiv(x * dimensioneGriglia, 500);
+        int colonna = Math.floorDiv(y * dimensioneGriglia, 500);
 
-
-
-        int riga = 0;
-        int colonna = 0;
+        System.out.println("R: " + riga + "; C: " + colonna);
 
         mediator.inserisciValore(riga, colonna, valore);    // TODO come cazzo faccio?
 
@@ -248,9 +252,14 @@ public class Finestra // TODO
             return; // TODO schermata finale!!
     }
 
-    private Color coloreBlocco(int x, int y)
+    private void impostaColori()
     {
-        return new Color(new Random().nextInt(00000000,99999999));
+        for (Cella cella : mediator.soluzioni().get(0))
+        {
+            Color colore = new Color(new Random().nextInt(1, 99999999));
+            if (!bloccoColore.keySet().contains(cella.getBlocco()))
+                bloccoColore.put(cella.getBlocco(), colore);
+        }
     }
 
 }
