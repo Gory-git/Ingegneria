@@ -55,7 +55,6 @@ public final class SoluzioneMatrix extends AbstractSoluzione
     {
         if (controlla(riga, colonna, valore) || valore == 0)
             celle[riga][colonna].setValore(valore);
-        System.out.println(this);
     }
 
     @Override
@@ -118,7 +117,7 @@ public final class SoluzioneMatrix extends AbstractSoluzione
     public boolean risolta()
     {
         for (Cella cella : this)
-            if (!controlla(cella.getPosizione()[0], cella.getPosizione()[0], cella.getValore()) || !cella.getBlocco().soddisfatto())
+            if (!controlla(cella.getPosizione()[0], cella.getPosizione()[1], cella.getValore()) || !cella.getBlocco().soddisfatto())
                 return false;
         return true;
     }

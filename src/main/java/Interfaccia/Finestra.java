@@ -238,18 +238,18 @@ public class Finestra // FIXME devo fare classi diverse, altrimenti esce una mer
         JLabel label = (JLabel) panelLabel.getComponent(0);
         label.setText(valore + "");
 
-        int riga = Math.floorDiv(x * dimensioneGriglia, 500);
-        int colonna = Math.floorDiv(y * dimensioneGriglia, 500);
+        int riga = Math.min(Math.floorDiv(x * dimensioneGriglia, 500), dimensioneGriglia - 1);
+        int colonna = Math.min(Math.floorDiv(y * dimensioneGriglia, 500), dimensioneGriglia - 1);
 
         System.out.println("R: " + riga + "; C: " + colonna);
 
-        mediator.inserisciValore(riga, colonna, valore);    // TODO come cazzo faccio?
+        mediator.inserisciValore(riga, colonna, valore);    // FIXME non inserisce sempre nella cella giusta
 
         if (!mediator.soluzioni().get(0).controlla(riga, colonna, valore))
             JOptionPane.showMessageDialog(frame,"Valore errato!","ERRORE!",JOptionPane.ERROR_MESSAGE);
 
         if (mediator.soluzioni().get(0).risolta())
-            return; // TODO schermata finale!!
+            System.out.println("YUPPI!!"); // TODO schermata finale!!
     }
 
     private void impostaColori()
@@ -257,7 +257,7 @@ public class Finestra // FIXME devo fare classi diverse, altrimenti esce una mer
         for (Cella cella : mediator.soluzioni().get(0))
         {
             Color colore = new Color(new Random().nextInt(1, 99999999));
-            if (!bloccoColore.keySet().contains(cella.getBlocco()))
+            if (!bloccoColore.containsKey(cella.getBlocco()))
                 bloccoColore.put(cella.getBlocco(), colore);
         }
     }

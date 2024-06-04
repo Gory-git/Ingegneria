@@ -41,7 +41,7 @@ public abstract class AbstractBlocco implements Blocco
     @Override
     public String toString()
     {
-        return "( " + operatore.toString() + " " + valore + " #" + dimensione() + " )";
+        return "( " + operatore.toString() + " " + valore + " #" + dimensione() + " )"; // FIXME fa cacare
     }
     public AbstractBlocco clone() throws CloneNotSupportedException
     {
