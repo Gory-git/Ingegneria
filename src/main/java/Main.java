@@ -1,18 +1,6 @@
-import Gioco.Gioco;
-import Gioco.blocco.Blocco;
-import Gioco.blocco.BloccoList;
-import Gioco.cella.Cella;
-import Gioco.mediator.ConcreteMediator;
-import Gioco.mediator.Mediator;
-import Gioco.operatore.Operatore;
-import Gioco.soluzione.Soluzione;
-import Gioco.soluzione.SoluzioneMatrix;
-import Interfaccia.Finestra;
+import Interfaccia.FinestraIniziale;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Main
 {
@@ -31,6 +19,6 @@ public class Main
         //mediator.salva();
 */
 
-        Finestra finestra = new Finestra();
+        FinestraIniziale finestra = new FinestraIniziale();
     }
 }

@@ -12,13 +12,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 
-public class Finestra // FIXME devo fare classi diverse, altrimenti esce una merda
+public class FinestraIniziale // FIXME devo fare classi diverse, altrimenti esce una merda
 {
     private final Mediator mediator = new ConcreteMediator();
     private final JFrame frame;
     int numeroSoluzioni, dimensioneGriglia;
     private HashMap<Blocco, Color> bloccoColore = new HashMap<>();
-    public Finestra()
+    public FinestraIniziale()
     {
         frame = new JFrame("KENKEN");
         frame.setSize(500, 500);
@@ -111,14 +111,17 @@ public class Finestra // FIXME devo fare classi diverse, altrimenti esce una mer
 
     private void finestraGriglia()
     {
-        frame.setSize(504, 604);
-        frame.setLayout(new BorderLayout());
+        //frame.getContentPane().setSize(504, 504);
+        //frame.setLayout(new BorderLayout());
+
+        System.out.println(frame.getWidth());
+        System.out.println(frame.getHeight());
 
         impostaColori();
 
         JPanel panelGriglia = new JPanel();
-        panelGriglia.setLayout(new GridLayout(dimensioneGriglia, dimensioneGriglia));
-        panelGriglia.setSize(504, 504);
+        panelGriglia.setLayout(new GridLayout(dimensioneGriglia, dimensioneGriglia, 2, 2));
+        panelGriglia.setSize(500, 500);
         panelGriglia.setBackground(Color.LIGHT_GRAY);
 
         JPanel panelBottoni = new JPanel();
@@ -201,7 +204,7 @@ public class Finestra // FIXME devo fare classi diverse, altrimenti esce una mer
         for (JButton bottone : bottoni)
             panelBottoni.add(bottone);
 
-        frame.add(panelBottoni, BorderLayout.SOUTH);
+        //frame.add(panelBottoni, BorderLayout.SOUTH);
 
         for (int i = 0; i < dimensioneGriglia; i++)
             for (int j = 0; j < dimensioneGriglia; j++)
@@ -223,7 +226,7 @@ public class Finestra // FIXME devo fare classi diverse, altrimenti esce una mer
                 panelGriglia.add(panelCella);
             }
 
-        frame.add(panelGriglia, BorderLayout.CENTER);
+        frame.add(panelGriglia/*, BorderLayout.CENTER*/);
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -232,18 +235,28 @@ public class Finestra // FIXME devo fare classi diverse, altrimenti esce una mer
 
     private void inserisciValore(int x, int y, int valore, JPanel panelGriglia)
     {
-        System.out.println("X: " + x + ", Y: " + y + "--> valore: " + valore);
+        // System.out.println("X: " + x + ", Y: " + y + "--> valore: " + valore);
 
         JPanel panelLabel = (JPanel) panelGriglia.getComponentAt(x, y);
-        JLabel label = (JLabel) panelLabel.getComponent(0);
-        label.setText(valore + "");
+        JLabel label;
+        try
+        {
+            label = (JLabel) panelLabel.getComponent(0);
+        }catch (ClassCastException e)
+        {
+            return;
+        }
 
-        int riga = Math.min(Math.floorDiv(x * dimensioneGriglia, 500), dimensioneGriglia - 1);
-        int colonna = Math.min(Math.floorDiv(y * dimensioneGriglia, 500), dimensioneGriglia - 1);
+        int riga = Math.min(Math.floorDiv(y * dimensioneGriglia, 462), dimensioneGriglia - 1);
+        int colonna = Math.min(Math.floorDiv(x * dimensioneGriglia, 485), dimensioneGriglia - 1);
 
-        System.out.println("R: " + riga + "; C: " + colonna);
+        // System.out.println("R: " + riga + "; C: " + colonna);
 
-        mediator.inserisciValore(riga, colonna, valore);    // FIXME non inserisce sempre nella cella giusta
+        mediator.inserisciValore(riga, colonna, valore);
+
+        // System.out.println(mediator.soluzioni().get(0));
+
+        label.setText(mediator.soluzioni().get(0).cella(riga, colonna).getValore() + "");
 
         if (!mediator.soluzioni().get(0).controlla(riga, colonna, valore))
             JOptionPane.showMessageDialog(frame,"Valore errato!","ERRORE!",JOptionPane.ERROR_MESSAGE);
@@ -256,7 +269,10 @@ public class Finestra // FIXME devo fare classi diverse, altrimenti esce una mer
     {
         for (Cella cella : mediator.soluzioni().get(0))
         {
-            Color colore = new Color(new Random().nextInt(1, 99999999));
+            int red = new Random().nextInt(120, 256);
+            int green = new Random().nextInt(120, 256);
+            int blue = new Random().nextInt(120, 256);
+            Color colore = new Color(red, green, blue);
             if (!bloccoColore.containsKey(cella.getBlocco()))
                 bloccoColore.put(cella.getBlocco(), colore);
         }

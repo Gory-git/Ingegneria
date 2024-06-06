@@ -53,7 +53,7 @@ public final class SoluzioneMatrix extends AbstractSoluzione
     @Override
     public void posiziona(int riga, int colonna, int valore)
     {
-        if (controlla(riga, colonna, valore) || valore == 0)
+        // if (controlla(riga, colonna, valore) || valore == 0)
             celle[riga][colonna].setValore(valore);
     }
 

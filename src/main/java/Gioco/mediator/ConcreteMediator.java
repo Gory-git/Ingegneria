@@ -3,13 +3,12 @@ package Gioco.mediator;
 import Gioco.Gioco;
 import Gioco.memento.Memento;
 import Gioco.soluzione.Soluzione;
-import Interfaccia.Finestra;
 import Permanenza.PermanenzaFile;
 
 import java.io.IOException;
 import java.util.List;
 
-public class ConcreteMediator implements Mediator // TODO
+public class ConcreteMediator implements Mediator
 {
     private Gioco istanza = Gioco.INSTANCE;
 
@@ -31,7 +30,7 @@ public class ConcreteMediator implements Mediator // TODO
     @Override
     public void salva()
     {
-        Memento memento = Gioco.INSTANCE.salva(); // FIXME Gioco deve implementare Originator.
+        Memento memento = Gioco.INSTANCE.salva();
         PermanenzaFile.salva(memento);
     }
 
