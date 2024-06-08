@@ -86,8 +86,6 @@ public class BloccoList extends AbstractBlocco
 
     private static int moltiplicazione(List<Cella> celle)
     {
-        if (celle.size() > 10)
-            return 0;
         int ret = 1;
         for (Cella cella : celle)
             ret *= cella.getValore();

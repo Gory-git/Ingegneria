@@ -1,4 +1,4 @@
-import Interfaccia.FinestraIniziale;
+import grafica.FinestraIniziale;
 
 import java.io.IOException;
 
@@ -7,6 +7,11 @@ public class Main
     public static void main(String[] args) throws IOException, CloneNotSupportedException
     {
 /*
+
+        for (int i = 0; i < 10; i++)
+        {
+            new SoluzioneMatrix(9);
+        }
         //Gioco.INSTANCE.avvia(2, 7);
 
         Mediator mediator = new ConcreteMediator();
@@ -18,7 +23,9 @@ public class Main
         System.out.println(Gioco.INSTANCE.getSoluzioni().get(2));
         //mediator.salva();
 */
+        new FinestraIniziale();
 
-        FinestraIniziale finestra = new FinestraIniziale();
+
+
     }
 }

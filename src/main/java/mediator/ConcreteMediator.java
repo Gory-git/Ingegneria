@@ -1,9 +1,9 @@
-package Gioco.mediator;
+package mediator;
 
 import Gioco.Gioco;
 import Gioco.memento.Memento;
 import Gioco.soluzione.Soluzione;
-import Permanenza.PermanenzaFile;
+import permanenza.PermanenzaFile;
 
 import java.io.IOException;
 import java.util.List;

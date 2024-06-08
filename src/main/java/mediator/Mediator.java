@@ -1,10 +1,10 @@
-package Gioco.mediator;
+package mediator;
 
 import Gioco.soluzione.Soluzione;
 
 import java.util.List;
 
-public interface Mediator // TODO
+public interface Mediator
 {
     void avvia(int numeroSoluzioni, int dimensioniGriglia);
     void salva();

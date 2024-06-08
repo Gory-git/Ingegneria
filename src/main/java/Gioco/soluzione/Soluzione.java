@@ -156,6 +156,13 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
     default void popola(int dimensioneMassima) // FIXME ogni tanto lancia qualche stronzata
     {
         popolaBT(dimensioneMassima, cella(0,0));
+        for (Cella next : this)
+            if (next.getBlocco() == null)
+            {
+                Blocco blocco = blocco(1);
+                blocco.aggiungiCella(next);
+                next.setBlocco(blocco);
+            }
     }
     /**
      * ++-`
@@ -172,13 +179,13 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
         // è stato posizionato correttamente e quindi è tutto pieno
         if (blocco == null)
         {
-            int dimensione = new Random().nextInt(1, Math.max(2, dimensioneMassima / 2));
+            int dimensione = new Random().nextInt(1, Math.min(dimensioneMassima, dimensione()));
             for (int i = dimensione; i > 0; i--)
             {
                 blocco = blocco(dimensione);
                 cella.setBlocco(blocco);
                 blocco.aggiungiCella(cella);
-                if (popolaBT(dimensioneMassima - dimensione, cella))
+                if (popolaBT(dimensioneMassima - dimensione, cella) && blocco.pieno())
                     return true;
                 if (cella.getBlocco() != null)
                 {
@@ -220,13 +227,23 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
         if (blocco.pieno())
         {
             for (Cella vicino : vicini)
-                if (vicino.getBlocco() == null)
-                    popolaBT(dimensioneMassima, vicino);
+                if (vicino.getBlocco() == null || !vicino.getBlocco().pieno())
+                    popolaBT(dimensioneMax(), vicino);
             for (Cella next : this)
-                if (next.getBlocco() == null)
-                    popolaBT(dimensioneMassima, next);
+                if (next.getBlocco() == null || !next.getBlocco().pieno())
+                    popolaBT(dimensioneMax(), next);
         }
         return true;
+    }
+
+    private int dimensioneMax()
+    {
+        int dimensioneMax = 0;
+        for (Cella next : this)
+            if (next.getBlocco() == null)
+                dimensioneMax++;
+
+        return dimensioneMax;
     }
 
     /**

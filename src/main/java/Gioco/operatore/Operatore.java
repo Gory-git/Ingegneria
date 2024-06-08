@@ -18,7 +18,7 @@ public enum Operatore
     @Override
     public String toString()
     {
-        String ret = "=";
+        String ret = "";
         switch (this)
         {
             case SOMMA -> ret = "+";

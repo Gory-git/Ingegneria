@@ -1,7 +1,5 @@
 package Gioco;
 
-import Gioco.mediator.ConcreteMediator;
-import Gioco.mediator.Mediator;
 import Gioco.memento.Memento;
 import Gioco.memento.Originator;
 import Gioco.soluzione.Soluzione;
@@ -13,13 +11,13 @@ import java.util.List;
 public enum Gioco implements Originator
 {
     INSTANCE;
-    private LinkedList<Soluzione> soluzioni = new LinkedList<>();
+    private LinkedList<Soluzione> soluzioni;
     public void avvia(int soluzioni, int dimensione) throws CloneNotSupportedException, IOException
     {
         if (soluzioni < 0)
             throw new IllegalArgumentException("Numero di soluzioni non valido");
 
-
+        this.soluzioni = new LinkedList<>();
         this.soluzioni.add(new SoluzioneMatrix(dimensione));
 
         for (int i = 0; i < soluzioni; i++)
@@ -31,11 +29,6 @@ public enum Gioco implements Originator
     {
         soluzioni.getFirst().posiziona(riga, colonna, valore);
         return soluzioni.getFirst().verifica();
-    }
-
-    public void rimuoviValore(int riga, int colonna)
-    {
-        soluzioni.getFirst().rimuovi(riga, colonna);
     }
 
     public List<Soluzione> getSoluzioni()
@@ -62,6 +55,7 @@ public enum Gioco implements Originator
         {
             try
             {
+                this.soluzioni = new LinkedList<>();
                 this.soluzioni.add(new SoluzioneMatrix(soluzione));
             } catch (CloneNotSupportedException e)
             {
@@ -87,6 +81,5 @@ public enum Gioco implements Originator
                 }
             }
         }
-
     }
 }

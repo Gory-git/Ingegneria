@@ -1,4 +1,4 @@
-package Permanenza;
+package permanenza;
 
 import Gioco.memento.Memento;
 
