@@ -1,13 +1,12 @@
 package grafica;
 
-import grafica.finestreObserver.FinestraManager;
 import mediator.ConcreteMediator;
 import mediator.Mediator;
 
 import javax.swing.*;
 import java.awt.event.*;
 
-public class FinestraGioco extends FinestraManager
+class FinestraGioco extends FinestraManager
 {
     private int dimensioneGriglia;
     private Mediator mediator;

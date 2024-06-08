@@ -1,7 +1,5 @@
 package grafica;
 
-import grafica.finestreObserver.FinestraManagerSubscriber;
-import grafica.finestreObserver.FinestraSubscriber;
 import mediator.ConcreteMediator;
 import mediator.Mediator;
 
@@ -10,11 +8,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class FinestraNuovoGioco  extends FinestraManagerSubscriber
+class FinestraNuovoGioco  extends FinestraManagerSubscriber
 {
-    Mediator mediator = new ConcreteMediator();
-    JSlider sliderDimensione;
-    JSpinner spinnerSoluzioni;
+    private Mediator mediator = new ConcreteMediator();
+    private JSlider sliderDimensione;
+    private JSpinner spinnerSoluzioni;
 
     public FinestraNuovoGioco()
     {

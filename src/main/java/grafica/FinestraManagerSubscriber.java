@@ -1,16 +1,16 @@
-package grafica.finestreObserver;
+package grafica;
 
-import observer.Manager;
+import observer.ManagerSubscriber;
 import observer.Subscriber;
 
 import javax.swing.*;
 import java.util.LinkedList;
 
-public abstract class FinestraManager extends JFrame implements Manager
+abstract class FinestraManagerSubscriber extends JFrame implements ManagerSubscriber
 {
     private LinkedList<Subscriber> subscribers = new LinkedList<>();
 
-    public FinestraManager(String s)
+    public FinestraManagerSubscriber(String s)
     {
         super(s);
     }
@@ -34,4 +34,9 @@ public abstract class FinestraManager extends JFrame implements Manager
             subscriber.update();
     }
 
+    @Override
+    public void update()
+    {
+        setVisible(true);
+    }
 }

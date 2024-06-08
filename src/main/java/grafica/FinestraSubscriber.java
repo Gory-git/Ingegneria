@@ -1,10 +1,10 @@
-package grafica.finestreObserver;
+package grafica;
 
 import observer.Subscriber;
 
 import javax.swing.*;
 
-public abstract class FinestraSubscriber extends JFrame implements Subscriber
+abstract class FinestraSubscriber extends JFrame implements Subscriber
 {
     public FinestraSubscriber(String s)
     {

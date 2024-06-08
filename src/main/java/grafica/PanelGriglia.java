@@ -9,11 +9,11 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Random;
 
-public class PanelGriglia extends JPanel
+class PanelGriglia extends JPanel
 {
 
     private HashMap<Blocco, Color> bloccoColore = new HashMap<>();
-    int dimensione;
+    private int dimensione;
 
     public PanelGriglia(Soluzione s)
     {

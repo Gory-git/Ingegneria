@@ -8,12 +8,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class FinestraFinale extends JFrame
+class FinestraFinale extends JFrame
 {
-    Mediator mediator;
-    int numeroSoluzioni;
-    PanelGriglia[] griglie;
-    int[] attuale = {0};
+    private Mediator mediator;
+    private int numeroSoluzioni;
+    private PanelGriglia[] griglie;
+    private int[] attuale = {0};
     public FinestraFinale()
     {
         super("SOLUZIONI!");

@@ -1,6 +1,5 @@
 package grafica;
 
-import grafica.finestreObserver.FinestraSubscriber;
 import mediator.ConcreteMediator;
 import mediator.Mediator;
 
@@ -9,7 +8,6 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class FinestraIniziale extends FinestraSubscriber
-// FIXME devo fare classi diverse, altrimenti esce una merda
 {
     private final Mediator mediator = new ConcreteMediator();
     private JButton nuovoGioco, caricaGioco;
