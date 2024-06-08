@@ -55,13 +55,13 @@ public class FinestraGioco extends FinestraManager
             });
         }
 
-        // BOTTONE UNDO TODO
-        JMenuItem undo = new JMenuItem("UNDO"); // bottoneUndo TODO actionlistener
+        // UNDO TODO
+        JMenuItem undo = new JMenuItem("UNDO"); // Undo TODO actionlistener
 
-        // BOTTONE DO TODO
-        JMenuItem mDo= new JMenuItem("DO"); // bottoneDo TODO actionlistener
+        // DO TODO
+        JMenuItem mDo= new JMenuItem("DO"); // Do TODO actionlistener
 
-        // BOTTONE SALVA
+        // SALVA
         JMenuItem salva = new JMenuItem("SALVA");
         final boolean[] salvato = {false};
         salva.addActionListener(new ActionListener()
@@ -105,14 +105,14 @@ public class FinestraGioco extends FinestraManager
             }
         });
 
-        // BOTTONE TERMINA TODO
-        JMenuItem termina = new JMenuItem("TERMINA"); // bottoneSalva TODO actionlistener
+        // TERMINA
+        JMenuItem termina = new JMenuItem("TERMINA");
         termina.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                int opzione = JOptionPane.showConfirmDialog // TODO devo dare la scelta di continuare a giocare
+                int opzione = JOptionPane.showConfirmDialog
                         (
                                 panelGriglia,
                                 "La partita attuale andrà persa!",

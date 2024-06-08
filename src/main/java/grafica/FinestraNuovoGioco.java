@@ -1,5 +1,6 @@
 package grafica;
 
+import grafica.finestreObserver.FinestraManagerSubscriber;
 import grafica.finestreObserver.FinestraSubscriber;
 import mediator.ConcreteMediator;
 import mediator.Mediator;
@@ -9,7 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class FinestraNuovoGioco  extends FinestraSubscriber
+public class FinestraNuovoGioco  extends FinestraManagerSubscriber
 {
     Mediator mediator = new ConcreteMediator();
     JSlider sliderDimensione;
@@ -18,9 +19,29 @@ public class FinestraNuovoGioco  extends FinestraSubscriber
     public FinestraNuovoGioco()
     {
         super("SELEZIONA VINCOLI");
-        this.setSize(400, 110);
+        this.setSize(400, 130);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // BOTTONE INDIETRO
+        JMenuItem indietro = new JMenuItem("INDIETRO");
+        indietro.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                sendNotification();
+                setVisible(false);
+            }
+        });
+
+        JMenu menu = new JMenu("Opzioni");
+        menu.add(indietro);
+
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(menu);
+
+        setJMenuBar(menuBar);
 
         JPanel panelNuovoGioco = new JPanel();
         panelNuovoGioco.setLayout(new FlowLayout());
@@ -63,4 +84,5 @@ public class FinestraNuovoGioco  extends FinestraSubscriber
             setVisible(false);
         }
     }
+
 }

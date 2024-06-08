@@ -1,5 +1,6 @@
 package grafica;
 
+import grafica.finestreObserver.FinestraSubscriber;
 import mediator.ConcreteMediator;
 import mediator.Mediator;
 
@@ -7,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class FinestraIniziale extends JFrame
+public class FinestraIniziale extends FinestraSubscriber
 // FIXME devo fare classi diverse, altrimenti esce una merda
 {
     private final Mediator mediator = new ConcreteMediator();
@@ -46,11 +47,13 @@ public class FinestraIniziale extends JFrame
         {
             if (e.getSource() == nuovoGioco)
             {
-                new FinestraNuovoGioco();
+                FinestraNuovoGioco f = new FinestraNuovoGioco();
+                f.addSubscriber(FinestraIniziale.this);
             } else if (e.getSource() == caricaGioco)
             {
                 mediator.carica();
-                new FinestraGioco();
+                FinestraGioco f = new FinestraGioco();
+                f.addSubscriber(FinestraIniziale.this);
             }
             setVisible(false);
         }

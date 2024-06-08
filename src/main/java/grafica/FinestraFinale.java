@@ -38,10 +38,22 @@ public class FinestraFinale extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                remove(griglie[attuale[0]]);
-                attuale[0] = (attuale[0] + 1) % numeroSoluzioni;
-                add(griglie[attuale[0]]);
-                SwingUtilities.updateComponentTreeUI(FinestraFinale.this);
+                if (attuale[0] == numeroSoluzioni - 1)
+                {
+                    JOptionPane.showMessageDialog
+                            (
+                                    griglie[attuale[0]],
+                                    "Hai visto tutte le " + numeroSoluzioni + " soluzioni!",
+                                    "Attenzione",
+                                    JOptionPane.ERROR_MESSAGE
+                            );
+                }else
+                {
+                    remove(griglie[attuale[0]]);
+                    attuale[0] = attuale[0] + 1;
+                    add(griglie[attuale[0]]);
+                    SwingUtilities.updateComponentTreeUI(FinestraFinale.this);
+                }
             }
         });
 
@@ -52,10 +64,22 @@ public class FinestraFinale extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                remove(griglie[attuale[0]]);
-                attuale[0] = (attuale[0] - 1) % numeroSoluzioni;
-                add(griglie[attuale[0]]);
-                SwingUtilities.updateComponentTreeUI(FinestraFinale.this);
+                if (attuale[0] == 0)
+                {
+                    JOptionPane.showMessageDialog
+                            (
+                                    griglie[attuale[0]],
+                                    "Sei alla prima soluzione disponibile!",
+                                    "Attenzione",
+                                    JOptionPane.ERROR_MESSAGE
+                            );
+                }else
+                {
+                    remove(griglie[attuale[0]]);
+                    attuale[0] = attuale[0] - 1;
+                    add(griglie[attuale[0]]);
+                    SwingUtilities.updateComponentTreeUI(FinestraFinale.this);
+                }
             }
         });
 
