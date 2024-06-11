@@ -2,8 +2,7 @@ package Gioco.soluzione;
 
 import Gioco.blocco.Blocco;
 import Gioco.cella.Cella;
-import Gioco.memento.Memento;
-import Gioco.memento.Originator;
+import memento.Originator;
 
 import java.io.Serializable;
 import java.util.*;
@@ -17,7 +16,8 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
     default void risolvi(boolean controllaBlocchi)
     {
         ArrayList<Integer>[][] inseribili = new ArrayList[dimensione()][dimensione()];
-
+        do
+        {
         for (int i = 0; i < dimensione(); i++)
         {
             inseribili[i] = new ArrayList[dimensione()];
@@ -25,73 +25,73 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
             {
                 inseribili[i][j] = new ArrayList();
                 for (int k = 1; k < dimensione() + 1; k++)
-                {
                     inseribili[i][j].add(k);
-                }
                 Collections.shuffle(inseribili[i][j]);
             }
         }
 
-        if (!controllaBlocchi)
-            risolviBT(0,0, inseribili, false);
-        else
-        {
+        if (controllaBlocchi)
             for (Cella cella : this)
             {
                 int riga = cella.getPosizione()[0];
                 int colonna = cella.getPosizione()[1];
-                if (controllaBlocchi && cella(riga, colonna).getBlocco() != null && cella(riga, colonna).getBlocco().dimensione() == 1)
+                if (cella.getBlocco() != null && cella.getBlocco().dimensione() == 1)
                 {
-                    int i = cella(riga, colonna).getBlocco().valore();
+                    int i = cella.getBlocco().valore();
                     inseribili[riga][colonna].clear();
-                    inseribili[riga][colonna].add(i);
+                    posizionaERimuovi(riga, colonna, i, inseribili);
                 }
             }
-            risolviBT(0,0, inseribili, controllaBlocchi);
-        }
 
+            for (Cella cella : this)
+                cella.setValore(0);
+            risolviBT(0,0, inseribili/*, controllaBlocchi*/);
+        }while (controllaBlocchi && !risolta());
 
     }
     /**
-     * il metodo implementa la parte di risolvi senza il vincolo dei blocchi. Utilizza il backtracking
+     * il metodo implementa la parte di risolvi. Utilizza il backtracking
      */
-    private boolean risolviBT(int riga, int colonna, ArrayList<Integer>[][] inseribili, boolean controllaBlocchi)
+    private boolean risolviBT(int riga, int colonna, ArrayList<Integer>[][] inseribili/*, boolean controllaBlocchi*/)
     {
-        if (riga == dimensione() || colonna == dimensione())
+        if (riga == dimensione())
             return true;
 
+        Cella cellaCorrente = cella(riga, colonna);
         int prossimaColonna = (colonna + 1) % dimensione();
         int prossimaRiga = prossimaColonna == 0 ? riga + 1 : riga;
+
+        if (cellaCorrente.getValore() != 0)
+            return risolviBT(prossimaRiga, prossimaColonna, inseribili/*, controllaBlocchi*/);
 
         while (!inseribili[riga][colonna].isEmpty())
         {
             int i = inseribili[riga][colonna].remove(0);
-            if (controllaBlocchi)
+            if (controlla(riga, colonna, i))
             {
-                if (controlla(riga, colonna, i))
+                posizionaERimuovi(riga, colonna, i, inseribili);
+                /*System.out.println(this);
+                if (controllaBlocchi)
                 {
-                    Blocco blocco = cella(riga, colonna).getBlocco();
+                    Blocco blocco = cellaCorrente.getBlocco();
 
-                    boolean bloccoPieno = true;
-                    for (Cella cella : blocco.celle())
-                        if (cella.getValore() == 0)
-                        {
-                            bloccoPieno = false;
-                            break;
-                        }
+                    //boolean pieno = true;
+                    //for (Cella c : blocco)
+                    //    if (c.getValore() == 0)
+                    //    {
+                    //        pieno = false;
+                    //        break;
+                    //    }
+                    //if (pieno && !blocco.soddisfatto())
+                    //    break;
 
-                    posizionaERimuovi(riga, colonna, i, inseribili);
-                    if (risolviBT(prossimaRiga, prossimaColonna, inseribili, controllaBlocchi) && (!bloccoPieno || blocco.soddisfatto()))
+                    if (risolviBT(prossimaRiga, prossimaColonna, inseribili, controllaBlocchi) && blocco.soddisfatto())
                         return true;
-                }
-            }else
-                if (controlla(riga, colonna, i))
-                {
-                    posizionaERimuovi(riga, colonna, i, inseribili);
-                    if (risolviBT(prossimaRiga, prossimaColonna, inseribili, controllaBlocchi))
+                } else*/
+                    if (risolviBT(prossimaRiga, prossimaColonna, inseribili/*, controllaBlocchi*/))
                         return true;
-                }
-            rimuoviEReinserisci(riga, colonna, i, inseribili);
+                rimuoviEReinserisci(riga, colonna, i, inseribili);
+            }
         }
         return false;
     }

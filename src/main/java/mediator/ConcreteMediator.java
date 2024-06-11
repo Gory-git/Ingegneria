@@ -1,7 +1,9 @@
 package mediator;
 
+import Command.Command;
+import Command.CommandHanler;
 import Gioco.Gioco;
-import Gioco.memento.Memento;
+import memento.Memento;
 import Gioco.soluzione.Soluzione;
 import permanenza.PermanenzaFile;
 
@@ -30,7 +32,7 @@ public class ConcreteMediator implements Mediator
     @Override
     public void salva()
     {
-        Memento memento = Gioco.INSTANCE.salva();
+        Memento memento = istanza.salva();
         PermanenzaFile.salva(memento);
     }
 
@@ -52,4 +54,5 @@ public class ConcreteMediator implements Mediator
     {
         istanza.inserisciValore(riga, colonna, valore);
     }
+
 }

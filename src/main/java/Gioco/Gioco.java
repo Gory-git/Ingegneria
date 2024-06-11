@@ -1,7 +1,7 @@
 package Gioco;
 
-import Gioco.memento.Memento;
-import Gioco.memento.Originator;
+import memento.Memento;
+import memento.Originator;
 import Gioco.soluzione.Soluzione;
 import Gioco.soluzione.SoluzioneMatrix;
 import java.io.*;
@@ -12,6 +12,7 @@ public enum Gioco implements Originator
 {
     INSTANCE;
     private LinkedList<Soluzione> soluzioni;
+
     public void avvia(int soluzioni, int dimensione) throws CloneNotSupportedException, IOException
     {
         if (soluzioni < 0)
@@ -25,10 +26,9 @@ public enum Gioco implements Originator
     }
 
 
-    public boolean inserisciValore(int riga, int colonna, int valore)
+    public void inserisciValore(int riga, int colonna, int valore)
     {
         soluzioni.getFirst().posiziona(riga, colonna, valore);
-        return soluzioni.getFirst().verifica();
     }
 
     public List<Soluzione> getSoluzioni()
@@ -48,37 +48,31 @@ public enum Gioco implements Originator
         if (!(memento instanceof MementoGioco))
             throw new IllegalArgumentException("Memento non corretto");
 
-        MementoGioco mementoSoluzione = (MementoGioco) memento;
+        MementoGioco mementoGioco = (MementoGioco) memento;
         //if (this != mementoSoluzione.originator())  // TODO valutare se utile. In questo caso credo non lo sia
         //    throw new IllegalArgumentException("Memento non corretto");
-        for (Soluzione soluzione : mementoSoluzione.soluzioni)
+        for (Memento mementoSoluzione : mementoGioco.soluzioni)
         {
             try
             {
                 this.soluzioni = new LinkedList<>();
-                this.soluzioni.add(new SoluzioneMatrix(soluzione));
+                this.soluzioni.add(new SoluzioneMatrix((Soluzione) mementoSoluzione));
             } catch (CloneNotSupportedException e)
             {
-                throw new RuntimeException(e);
+                throw new IllegalArgumentException("Memento non corretto: non è una soluzione");
             }
         }
     }
 
     private class MementoGioco implements Memento, Serializable
     {
-        LinkedList<Soluzione> soluzioni = new LinkedList<>();
+        LinkedList<Memento> soluzioni = new LinkedList<>();
 
         private MementoGioco()
         {
             for (Soluzione soluzione : Gioco.this.soluzioni)
             {
-                try
-                {
-                    this.soluzioni.add(new SoluzioneMatrix(soluzione));
-                } catch (CloneNotSupportedException e)
-                {
-                    throw new RuntimeException(e);
-                }
+                this.soluzioni.add(soluzione.salva());
             }
         }
     }

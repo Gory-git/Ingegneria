@@ -1,3 +1,5 @@
+import Gioco.soluzione.Soluzione;
+import Gioco.soluzione.SoluzioneMatrix;
 import grafica.FinestraIniziale;
 
 import java.io.IOException;
@@ -23,8 +25,11 @@ public class Main
         System.out.println(Gioco.INSTANCE.getSoluzioni().get(2));
         //mediator.salva();
 */
-        new FinestraIniziale();
+        //new FinestraIniziale();
 
+
+        Soluzione s = new SoluzioneMatrix(5);
+        System.out.println(s.clone());
 
 
     }

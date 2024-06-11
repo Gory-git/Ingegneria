@@ -1,4 +1,4 @@
-package Gioco.memento;
+package memento;
 
 public interface Memento
 {

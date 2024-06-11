@@ -8,8 +8,8 @@ import java.awt.event.*;
 
 class FinestraGioco extends FinestraManager
 {
-    private int dimensioneGriglia;
-    private Mediator mediator;
+    private final int dimensioneGriglia;
+    private final Mediator mediator;
 
 
     public FinestraGioco()
@@ -44,89 +44,70 @@ class FinestraGioco extends FinestraManager
         for (int i = 0; i < dimensioneGriglia; i++)
         {
             final int j = i;
-            menuItems[i].addActionListener(new ActionListener()
-            {
-                public void actionPerformed(ActionEvent e)
-                {
-                    //inserisco il valore i nella cella clickata
-                    inserisciValore(X_Y[0], X_Y[1], (j+1), panelGriglia);
-                }
+            menuItems[i].addActionListener(e -> {
+                //inserisco il valore i nella cella clickata
+                inserisciValore(X_Y[0], X_Y[1], (j+1), panelGriglia);
             });
         }
 
         // UNDO TODO
         JMenuItem undo = new JMenuItem("UNDO"); // Undo TODO actionlistener
 
-        // DO TODO
-        JMenuItem mDo= new JMenuItem("DO"); // Do TODO actionlistener
+        // REDO TODO
+        JMenuItem mDo= new JMenuItem("REDO"); // Redo TODO actionlistener
 
         // SALVA
         JMenuItem salva = new JMenuItem("SALVA");
         final boolean[] salvato = {false};
-        salva.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                mediator.salva();
-                salvato[0] = true;
-                JOptionPane.showMessageDialog
-                        (
-                                panelGriglia,
-                                "Salvataggio effettuato!",
-                                "Salvataggio",
-                                JOptionPane.INFORMATION_MESSAGE
-                        );
-            }
+        salva.addActionListener(e -> {
+            mediator.salva();
+            salvato[0] = true;
+            JOptionPane.showMessageDialog
+                    (
+                            panelGriglia,
+                            "Salvataggio effettuato!",
+                            "Salvataggio",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
         });
         // BOTTONE INDIETRO
         JMenuItem indietro = new JMenuItem("INDIETRO");
-        indietro.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
+        indietro.addActionListener(e -> {
+            if (!salvato[0])
             {
-                if (!salvato[0])
-                {
-                    JOptionPane.showMessageDialog
-                            (
-                                    panelGriglia,
-                                    "Salvataggio non ancora effettuato!",
-                                    "Attenzione",
-                                    JOptionPane.ERROR_MESSAGE
-                            );
-                }
-                else
-                {
-                    sendNotification();
-                    setVisible(false);
-                }
+                JOptionPane.showMessageDialog
+                        (
+                                panelGriglia,
+                                "Salvataggio non ancora effettuato!",
+                                "Attenzione",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+            }
+            else
+            {
+                sendNotification();
+                setVisible(false);
             }
         });
 
         // TERMINA
         JMenuItem termina = new JMenuItem("TERMINA");
-        termina.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
+        termina.addActionListener(e -> {
+            int opzione = JOptionPane.showConfirmDialog
+                    (
+                            panelGriglia,
+                            "La partita attuale andrà persa!",
+                            "Attenzione",
+                            JOptionPane.OK_CANCEL_OPTION
+                    );
+            if (opzione == JOptionPane.OK_OPTION)
             {
-                int opzione = JOptionPane.showConfirmDialog
-                        (
-                                panelGriglia,
-                                "La partita attuale andrà persa!",
-                                "Attenzione",
-                                JOptionPane.OK_CANCEL_OPTION
-                        );
-                if (opzione == JOptionPane.OK_OPTION)
+                if (mediator.soluzioni().size() > 1)
                 {
-                    if (mediator.soluzioni().size() > 1)
-                    {
-                        new FinestraFinale();
-                        setVisible(false);
-                    }else
-                        dispatchEvent(new WindowEvent(FinestraGioco.this, WindowEvent.WINDOW_CLOSING));
-                }
+                    new FinestraFinale();
+                    setVisible(false);
+                }else
+                    dispatchEvent(new WindowEvent(FinestraGioco.this, WindowEvent.WINDOW_CLOSING));
             }
         });
 
@@ -151,7 +132,7 @@ class FinestraGioco extends FinestraManager
 
     }
 
-    private void inserisciValore(int x, int y, int valore, JPanel panelGriglia)
+    private void inserisciValore(int x, int y, int valore, JPanel panelGriglia) // TODO rimuovere commenti inutili
     {
         //System.out.println("X: " + x + ", Y: " + y + "--> valore: " + valore);
 
@@ -185,7 +166,7 @@ class FinestraGioco extends FinestraManager
                     (
                             panelGriglia,
                             "COMPLIMENTI!! Hai risolto il gioco correttamente!",
-                            "YUPPI",
+                            "YUPPIE",
                             JOptionPane.INFORMATION_MESSAGE
                     );
             setVisible(false);

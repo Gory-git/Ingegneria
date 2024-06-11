@@ -3,14 +3,13 @@ package Gioco.soluzione;
 import Gioco.blocco.Blocco;
 import Gioco.blocco.BloccoList;
 import Gioco.cella.Cella;
-import Gioco.memento.Memento;
-import Gioco.memento.Originator;
+import memento.Memento;
 
 import java.util.*;
 
 public final class SoluzioneMatrix extends AbstractSoluzione
 {
-    private Cella[][] celle;
+    private final Cella[][] celle;
 
     public SoluzioneMatrix(int dimensione)
     {
@@ -28,6 +27,8 @@ public final class SoluzioneMatrix extends AbstractSoluzione
 
         risolvi(false);
         popola(dimensione * dimensione);
+
+        // System.out.println(this);
 
         for (Cella cella : this)
             cella.setValore(0);
@@ -131,11 +132,10 @@ public final class SoluzioneMatrix extends AbstractSoluzione
     @Override
     public void ripristina(Memento memento)
     {
-        if (!(memento instanceof MementoSoluzione))
+        if (!(memento instanceof MementoSoluzione mementoSoluzione))
             throw new IllegalArgumentException("Memento non corretto");
 
-        MementoSoluzione mementoSoluzione = (MementoSoluzione) memento;
-        if (this != mementoSoluzione.originator())  // TODO valutare se utile. In questo caso credo sia comodo per un eventuale DO/UNDO
+        if (this != mementoSoluzione.originator())
             throw new IllegalArgumentException("Memento non creato da questa istanza");
 
 
@@ -147,7 +147,7 @@ public final class SoluzioneMatrix extends AbstractSoluzione
 
     private class MementoSoluzione implements Memento
     {
-        private Cella[][] celle = new Cella[dimensione()][dimensione()];
+        private final Cella[][] celle = new Cella[dimensione()][dimensione()];
 
         private MementoSoluzione()
         {

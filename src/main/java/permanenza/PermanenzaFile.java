@@ -1,6 +1,6 @@
 package permanenza;
 
-import Gioco.memento.Memento;
+import memento.Memento;
 
 import java.io.*;
 
