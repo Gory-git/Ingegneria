@@ -18,6 +18,7 @@ public interface Blocco extends Serializable, Iterable<Cella>, Cloneable
     int dimensione();
     int valore();
     List<Cella> celle();
+    Operatore operatore();
 
     static boolean verifica(Operatore operatore, int valore, int dimensione, List<Cella> celle)
     {

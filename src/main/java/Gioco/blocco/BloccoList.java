@@ -141,14 +141,9 @@ public class BloccoList extends AbstractBlocco
         return new LinkedList<>(celle);
     }
 
-    public Operatore getOperatore()
+    public Operatore operatore()
     {
         return operatore;
-    }
-
-    public int getValore()
-    {
-        return valore;
     }
 
     @Override

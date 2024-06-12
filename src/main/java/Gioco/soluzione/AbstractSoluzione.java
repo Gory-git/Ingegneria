@@ -1,8 +1,8 @@
 package Gioco.soluzione;
 
+import Gioco.blocco.Blocco;
 import Gioco.cella.Cella;
 
-import javax.swing.*;
 import java.util.*;
 
 public abstract class AbstractSoluzione implements Soluzione
@@ -13,9 +13,8 @@ public abstract class AbstractSoluzione implements Soluzione
         int M = 83;
         int H = 1;
 
-        Iterator<Cella> iterator = this.iterator();
-        while (iterator.hasNext())
-            H += M * iterator.next().hashCode();
+        for (Cella cella : this)
+            H += M * cella.hashCode();
 
         return H;
     }
@@ -79,7 +78,7 @@ public abstract class AbstractSoluzione implements Soluzione
 
     private class Iteratore implements Iterator<Cella>
     {
-        private int[] corrente = {-1, -1};
+        private final int[] corrente = {-1, -1};
         private boolean rimuovibile = false;
 
         @Override
