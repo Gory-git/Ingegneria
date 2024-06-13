@@ -25,12 +25,15 @@ public class Main
         System.out.println(Gioco.INSTANCE.getSoluzioni().get(2));
         //mediator.salva();
 */
-        //new FinestraIniziale();
+        new FinestraIniziale();
 
-
-        Soluzione s = new SoluzioneMatrix(5);
-        System.out.println(s.clone());
-
-
+/*
+        Soluzione s = new SoluzioneMatrix(9);
+        System.out.println(s);
+        System.out.println("\n---CLONE---\n");
+        Soluzione clone = s.clone();
+        System.out.println(clone);
+        System.out.println(clone.risolta());
+*/
     }
 }

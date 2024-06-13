@@ -22,7 +22,19 @@ public enum Gioco implements Originator
         this.soluzioni.add(new SoluzioneMatrix(dimensione));
 
         for (int i = 0; i < soluzioni; i++)
-            this.soluzioni.add(this.soluzioni.getFirst().clone());
+        {
+            Soluzione clone;
+            boolean uguale = false;
+            do
+            {
+                clone = this.soluzioni.getFirst().clone();
+                for (Soluzione soluzione : this.soluzioni)
+                    if (soluzione.equals(clone))
+                        uguale = true;
+            }while (uguale);
+            this.soluzioni.add(clone);
+
+        }
     }
 
 

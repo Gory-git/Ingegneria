@@ -10,7 +10,7 @@ class FinestraGioco extends FinestraManager
 {
     private final int dimensioneGriglia;
     private final Mediator mediator;
-
+    private boolean controllaErrori = true;
 
     public FinestraGioco()
     {
@@ -89,14 +89,13 @@ class FinestraGioco extends FinestraManager
                 setVisible(false);
             }
         });
-
         // TERMINA
         JMenuItem termina = new JMenuItem("TERMINA");
         termina.addActionListener(e -> {
             int opzione = JOptionPane.showConfirmDialog
                     (
                             panelGriglia,
-                            "La partita attuale andrà persa!",
+                            "I progressi non salvati verranno persi!",
                             "Attenzione",
                             JOptionPane.OK_CANCEL_OPTION
                     );
@@ -107,8 +106,28 @@ class FinestraGioco extends FinestraManager
                     new FinestraFinale();
                     setVisible(false);
                 }else
-                    dispatchEvent(new WindowEvent(FinestraGioco.this, WindowEvent.WINDOW_CLOSING));
+                {
+                    opzione = JOptionPane.showConfirmDialog
+                            (
+                                panelGriglia,
+                                "Iniziare una nuova partita?",
+                                "Attenzione",
+                                JOptionPane.YES_NO_OPTION
+                            );
+                    if (opzione == JOptionPane.YES_OPTION)
+                    {
+                        new FinestraIniziale();
+                        setVisible(false);
+                    }else
+                        dispatchEvent(new WindowEvent(FinestraGioco.this, WindowEvent.WINDOW_CLOSING));
+                }
             }
+        });
+        // MOSTRA ERRORI
+        JMenuItem avvisoMossaErrata = new JMenuItem("AVVISO MOSSA ERRATA");
+        avvisoMossaErrata.addActionListener(e ->
+        {
+            controllaErrori = !controllaErrori;
         });
 
         JMenu operazioni = new JMenu("Operazioni");
@@ -119,6 +138,7 @@ class FinestraGioco extends FinestraManager
         opzioni.add(indietro);
         opzioni.add(salva);
         opzioni.add(termina);
+        opzioni.add(avvisoMossaErrata);
 
         JMenuBar barraMenu = new JMenuBar();
         barraMenu.add(operazioni);
@@ -157,7 +177,7 @@ class FinestraGioco extends FinestraManager
 
         label.setText(mediator.soluzioni().get(0).cella(riga, colonna).getValore() + "");
 
-        if (!mediator.soluzioni().get(0).controlla(riga, colonna, valore))
+        if (controllaErrori && !mediator.soluzioni().get(0).controlla(riga, colonna, valore))
             JOptionPane.showMessageDialog(this,"Valore errato!","ERRORE!",JOptionPane.ERROR_MESSAGE);
 
         if (mediator.soluzioni().get(0).risolta())

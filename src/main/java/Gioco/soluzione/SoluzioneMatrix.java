@@ -5,6 +5,7 @@ import Gioco.blocco.BloccoList;
 import Gioco.cella.Cella;
 import memento.Memento;
 
+import java.io.Serializable;
 import java.util.*;
 
 public final class SoluzioneMatrix extends AbstractSoluzione
@@ -61,6 +62,9 @@ public final class SoluzioneMatrix extends AbstractSoluzione
     @Override
     public boolean controlla(int riga, int colonna, int valore)     // TODO forse private
     {
+        //Blocco b = cella(riga, colonna).getBlocco();
+        //if (b != null && !b.assegnabile(valore))
+        //    return false;
         for (int i = 0; i < celle.length; i++)
             if (i != riga && celle[i][colonna].getValore() == valore || i != colonna && celle[riga][i].getValore() == valore)
                 return false;
@@ -85,7 +89,7 @@ public final class SoluzioneMatrix extends AbstractSoluzione
     }
 
     @Override
-    public int dimensione()                                         // TODO forse private
+    public int dimensione()
     {
         return celle.length;
     }
@@ -145,7 +149,7 @@ public final class SoluzioneMatrix extends AbstractSoluzione
 
     }
 
-    private class MementoSoluzione implements Memento
+    private class MementoSoluzione implements Memento, Serializable
     {
         private final Cella[][] celle = new Cella[dimensione()][dimensione()];
 

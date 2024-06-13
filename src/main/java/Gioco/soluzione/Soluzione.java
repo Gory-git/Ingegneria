@@ -16,20 +16,12 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
     {
         int dimensione = dimensione();
         ArrayList<Integer>[][] inseribili = new ArrayList[dimensione][dimensione];
-        ArrayList<Integer>[][] nonInseribili = new ArrayList[dimensione][dimensione];
 
         for (int i = 0; i < dimensione; i++)
         {
             inseribili[i] = new ArrayList[dimensione];
-            nonInseribili[i] = new ArrayList[dimensione];
             for (int j = 0; j < dimensione; j++)
-            {
                 inseribili[i][j] = new ArrayList();
-                nonInseribili[i][j] = new ArrayList();
-                for (int k = 1; k < dimensione + 1; k++)
-                    inseribili[i][j].add(k);
-                Collections.shuffle(inseribili[i][j]);
-            }
         }
 
         for (Cella cella : this)
@@ -40,17 +32,17 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
             {
                 int k = cella(i, j).getBlocco().valore();
                 inseribili[i][j].clear();
-                posizionaERimuovi(i, j, k, inseribili, nonInseribili);
+                posizionaERimuovi(i, j, k, inseribili);
             }
         }
 
-        risolviBT(0, 0, controllaBlocchi, inseribili, nonInseribili);
+        risolviBT(0, 0, controllaBlocchi, inseribili);
     }
 
     /**
      * il metodo implementa la parte di risolvi. Utilizza il backtracking
      */
-    private boolean risolviBT(int riga, int colonna, boolean controllaBlocchi, ArrayList<Integer>[][] inseribili, ArrayList<Integer>[][] nonInseribili)
+    private boolean risolviBT(int riga, int colonna, boolean controllaBlocchi, ArrayList<Integer>[][] inseribili)
     {
         if (riga == dimensione())
             return true;
@@ -61,26 +53,24 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
         int prossimaRiga = prossimaColonna == 0 ? riga + 1 : riga;
 
         if (cellaCorrente.getValore() != 0)
-            return risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi,inseribili, nonInseribili);
+            return risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi, inseribili);
 
         if (inseribili[riga][colonna].isEmpty())
-        {
-            for (int i = 1; i <= dimensione(); i++)
-                inseribili[riga][colonna].add(i);
-            Collections.shuffle(inseribili[riga][colonna]);
-        }
+            riempi(riga, colonna, inseribili);
 
         while (!inseribili[riga][colonna].isEmpty())
         {
+            //System.out.println("R: " + riga + " ;C: " + colonna + " not empty");
+            //System.out.println(inseribili[riga][colonna]);
             int valore = inseribili[riga][colonna].remove(0);
             if (controlla(riga, colonna, valore))
             {
-                posizionaERimuovi(riga, colonna, valore, inseribili, nonInseribili);
-                System.out.println(this);
-                if (controllaBlocchi) // FIXME non risolve
+                //System.out.println("R: " + riga + " ;C: " + colonna + " --> valore assegnabile: " + valore);
+                posizionaERimuovi(riga, colonna, valore, inseribili);
+                if (controllaBlocchi) // FIXME leeentiiiissiiimooooo
                 {
                     Blocco blocco = cellaCorrente.getBlocco();
-
+                    //System.out.println(this);
                     boolean pieno = true;
                     for (Cella c : blocco)
                         if (c.getValore() == 0)
@@ -88,37 +78,53 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
                             pieno = false;
                             break;
                         }
-                    if ((!pieno && risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi,inseribili, nonInseribili)) || blocco.soddisfatto())
+
+                    if (!pieno && risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi,inseribili))
+                        return true;
+                    if (pieno && blocco.soddisfatto())
+                        if (risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi,inseribili))
+                            return true;
+                    if (risolta())
                         return true;
                 } else
-                if (risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi,inseribili, nonInseribili))
-                    return true;
-                rimuoviEReinserisci(riga, colonna, valore, inseribili, nonInseribili);
+                {
+                    if (risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi, inseribili))
+                        return true;
+                }
+                //System.out.println("R: " + riga + " ;C: " + colonna + " --> valore NON assegnabile: " + valore);
+                rimuoviEReinserisci(riga, colonna, valore, inseribili);
             }
         }
+        riempi(riga, colonna, inseribili);
         return false;
     }
-    private void posizionaERimuovi(int riga, int colonna, int valore, ArrayList<Integer>[][] inseribili, ArrayList<Integer>[][] nonInseribili)
+    private void riempi(int riga, int colonna, ArrayList<Integer>[][] inseribili)
+    {
+        for (int k = 1; k <= dimensione(); k++)
+            inseribili[riga][colonna].add(k);
+        Collections.shuffle(inseribili[riga][colonna]);
+    }
+
+    private void posizionaERimuovi(int riga, int colonna, int valore, ArrayList<Integer>[][] inseribili)
     {
         posiziona(riga, colonna, valore);
-        nonInseribili[riga][colonna].add(valore);
         for (int j = 0; j < dimensione(); j++)
         {
             for (int k = 0; k < inseribili[riga][j].size(); k++)
-                if (colonna != j && inseribili[riga][j].get(k) == valore)
+                if (colonna < j && inseribili[riga][j].get(k) == valore)
                     inseribili[riga][j].remove(k);
             for (int k = 0; k < inseribili[j][colonna].size(); k++)
-                if (riga != j && inseribili[j][colonna].get(k) == valore)
+                if (riga < j && inseribili[j][colonna].get(k) == valore)
                     inseribili[j][colonna].remove(k);
         }
     }
-    private void rimuoviEReinserisci(int riga, int colonna, int valore, ArrayList<Integer>[][] inseribili, ArrayList<Integer>[][] nonInseribili)
+    private void rimuoviEReinserisci(int riga, int colonna, int valore, ArrayList<Integer>[][] inseribili)
     {
         for (int j = 0; j < dimensione(); j++)
         {
-            if (colonna != j && !inseribili[riga][j].contains(valore) && !nonInseribili[riga][j].contains(valore))
+            if (colonna < j && !inseribili[riga][j].contains(valore))
                 inseribili[riga][j].add(valore);
-            if (riga != j && !inseribili[j][colonna].contains(valore) && !nonInseribili[riga][j].contains(valore))
+            if (riga < j && !inseribili[j][colonna].contains(valore))
                 inseribili[j][colonna].add(valore);
         }
         rimuovi(riga, colonna);

@@ -13,11 +13,11 @@ class FinestraNuovoGioco  extends FinestraManagerSubscriber
     private Mediator mediator = new ConcreteMediator();
     private JSlider sliderDimensione;
     private JSpinner spinnerSoluzioni;
-
+    private JProgressBar progressBar;
     public FinestraNuovoGioco()
     {
         super("SELEZIONA VINCOLI");
-        this.setSize(400, 130);
+        this.setSize(400, 150);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -63,6 +63,10 @@ class FinestraNuovoGioco  extends FinestraManagerSubscriber
 
         panelNuovoGioco.add(spinnerSoluzioni);
 
+        progressBar = new JProgressBar();
+
+        progressBar.setIndeterminate(true);
+
         this.add(panelNuovoGioco);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
@@ -74,6 +78,8 @@ class FinestraNuovoGioco  extends FinestraManagerSubscriber
         @Override
         public void actionPerformed(ActionEvent e)
         {
+            add(progressBar);
+
             int numeroSoluzioni = (Integer) spinnerSoluzioni.getValue();
             int dimensioneGriglia = sliderDimensione.getValue();
             mediator.avvia(numeroSoluzioni, dimensioneGriglia);
