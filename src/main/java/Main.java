@@ -26,14 +26,13 @@ public class Main
         //mediator.salva();
 */
         new FinestraIniziale();
-
 /*
-        Soluzione s = new SoluzioneMatrix(9);
+        Soluzione s = new SoluzioneMatrix(9, 40);
         System.out.println(s);
         System.out.println("\n---CLONE---\n");
         Soluzione clone = s.clone();
         System.out.println(clone);
         System.out.println(clone.risolta());
-*/
+/**/
     }
 }

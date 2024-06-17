@@ -19,59 +19,6 @@ public interface Blocco extends Serializable, Iterable<Cella>, Cloneable
     int dimensione();
     int valore();
     List<Cella> celle();
-    Operatore operatore();
-    default boolean assegnabile(int valore)
-    {
-        switch (operatore())
-        {
-            case MOLTIPLICAZIONE ->
-            {
-                int mul = valore;
-                for (Cella cella :this)
-                    if (cella.getValore() != 0)
-                        mul *= cella.getValore();
-                return valore() >= mul;
-            }
-            case SOMMA ->
-            {
-                int sum = valore;
-                for (Cella cella :this)
-                    if (cella.getValore() != 0)
-                        sum += cella.getValore();
-                return valore() >= sum;
-            }
-            case SOTTRAZIONE ->
-            {
-
-                LinkedList<Cella> celle = new LinkedList<>();
-                celle.add(new Cella(valore, new int[]{0,0}));
-                for (Cella cella : this)
-                    if (cella.getValore() != 0)
-                        celle.add(cella);
-
-                Collections.sort(celle);
-                Collections.reverse(celle);
-
-                int sub = celle.get(0).getValore() * 2;
-                for (Cella cella : celle)
-                    sub -= cella.getValore();
-
-                return valore() <= sub;
-            }
-            case DIVISIONE ->
-            {
-                int div = valore;
-                for (Cella cella :this)
-                {
-                    if (div == 0 || cella.getValore() == 0 || div % cella.getValore() != 0)
-                        return false;
-                    div /= cella.getValore();
-                }
-                return valore() <= div;
-            }
-        }
-        return false;
-    }
 
     static boolean verifica(Operatore operatore, int valore, int dimensione, List<Cella> celle)
     {

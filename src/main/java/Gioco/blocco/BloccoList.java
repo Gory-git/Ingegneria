@@ -15,7 +15,7 @@ public class BloccoList extends AbstractBlocco
         if ( celle == null)
             throw new IllegalArgumentException("Celle dev'essere non null");
         if ( celle.size() != dimensione)
-            throw new IllegalArgumentException("Non sono state passate il numero corretto di celle");
+            throw new IllegalArgumentException("Non sono state passate il numero corretto di celle" + operatore + " ; " + valore + " ; " + celle);
 
         this.celle = new LinkedList<>();
         for (Cella cella : celle)
@@ -27,6 +27,8 @@ public class BloccoList extends AbstractBlocco
 
     public BloccoList(int dimensione)
     {
+        if (dimensione < 1)
+            throw new IllegalArgumentException("Dimensione non valida");
         this.dimensione = dimensione;
         this.celle = new LinkedList<>();
         this.operatore = Operatore.NONE;
@@ -139,11 +141,6 @@ public class BloccoList extends AbstractBlocco
     public List<Cella> celle()
     {
         return new LinkedList<>(celle);
-    }
-
-    public Operatore operatore()
-    {
-        return operatore;
     }
 
     @Override

@@ -3,11 +3,12 @@ package Gioco.soluzione;
 import Gioco.blocco.Blocco;
 import Gioco.cella.Cella;
 import memento.Originator;
+import observer.Manager;
 
 import java.io.Serializable;
 import java.util.*;
 
-public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Originator
+public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Originator, Manager
 {
     /**
      * il metodo risolve la griglia simil sudoku
@@ -21,7 +22,10 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
         {
             inseribili[i] = new ArrayList[dimensione];
             for (int j = 0; j < dimensione; j++)
+            {
                 inseribili[i][j] = new ArrayList();
+                riempi(i, j, inseribili);
+            }
         }
 
         for (Cella cella : this)
@@ -55,9 +59,6 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
         if (cellaCorrente.getValore() != 0)
             return risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi, inseribili);
 
-        if (inseribili[riga][colonna].isEmpty())
-            riempi(riga, colonna, inseribili);
-
         while (!inseribili[riga][colonna].isEmpty())
         {
             //System.out.println("R: " + riga + " ;C: " + colonna + " not empty");
@@ -67,10 +68,11 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
             {
                 //System.out.println("R: " + riga + " ;C: " + colonna + " --> valore assegnabile: " + valore);
                 posizionaERimuovi(riga, colonna, valore, inseribili);
-                if (controllaBlocchi) // FIXME leeentiiiissiiimooooo
+                if (controllaBlocchi) // FIXME leeentiiiissiiimooooo se dim = 9
                 {
+                    if (risolta())
+                        return true;
                     Blocco blocco = cellaCorrente.getBlocco();
-                    //System.out.println(this);
                     boolean pieno = true;
                     for (Cella c : blocco)
                         if (c.getValore() == 0)
@@ -78,20 +80,22 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
                             pieno = false;
                             break;
                         }
-
                     if (!pieno && risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi,inseribili))
                         return true;
+                    for (Cella c : blocco)
+                        if (c.getValore() == 0)
+                        {
+                            pieno = false;
+                            break;
+                        }
                     if (pieno && blocco.soddisfatto())
                         if (risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi,inseribili))
                             return true;
-                    if (risolta())
-                        return true;
                 } else
                 {
                     if (risolviBT(prossimaRiga, prossimaColonna, controllaBlocchi, inseribili))
                         return true;
                 }
-                //System.out.println("R: " + riga + " ;C: " + colonna + " --> valore NON assegnabile: " + valore);
                 rimuoviEReinserisci(riga, colonna, valore, inseribili);
             }
         }
@@ -101,7 +105,8 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
     private void riempi(int riga, int colonna, ArrayList<Integer>[][] inseribili)
     {
         for (int k = 1; k <= dimensione(); k++)
-            inseribili[riga][colonna].add(k);
+            if (controlla(riga, colonna, k))
+                inseribili[riga][colonna].add(k);
         Collections.shuffle(inseribili[riga][colonna]);
     }
 
@@ -163,97 +168,67 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
     /**
      * il metodo popola i blocchi sopra la griglia
      */
-    default void popola(int dimensioneMassima)
+    default void popola(int numeroBlocchi)   // FIXME aggiungere controllo celle di un blocco tutte adiacenti.
     {
-        popolaBT(dimensioneMassima, cella(0,0));
-        for (Cella next : this)
-            if (next.getBlocco() == null)
+        int dimensioneMassima = dimensione() * dimensione();
+        LinkedList<Blocco> blocchi = new LinkedList<>();
+        if (numeroBlocchi > 1)
+            for (int i = 0; i < numeroBlocchi - 1; i++)
             {
-                Blocco blocco = blocco(1);
-                blocco.aggiungiCella(next);
-                next.setBlocco(blocco);
+                int dimensione = new Random().nextInt(1, Math.max(Math.floorDiv(dimensioneMassima, numeroBlocchi - i) + 1, 1/*Math.floorDiv(dimensione() * dimensione(), numeroBlocchi) + 1*/));
+                dimensioneMassima -= dimensione;
+                blocchi.add(blocco(dimensione));
             }
-    }
-    /**
-     * ++-`
-     * il metodo implementa la parte backtracking di popola
-     */
-    private boolean popolaBT(int dimensioneMassima, Cella cella)
-    {
-        // caso di uscita
-        if (dimensioneMassima <= 1)
-            return true;
-        List<Cella> vicini = vicini(cella.getPosizione()[0], cella.getPosizione()[1]);
-        Blocco blocco = cella.getBlocco();
-        // caso di ingresso OR caso in cui il blocco precedente
-        // è stato posizionato correttamente e quindi è tutto pieno
-        if (blocco == null)
+
+        blocchi.add(blocco(dimensioneMassima));
+        Collections.shuffle(blocchi);
+        for (Blocco b : blocchi)
         {
-            int dimensione = new Random().nextInt(1, Math.min(dimensioneMassima, dimensione()));
-            for (int i = dimensione; i > 0; i--)
-            {
-                blocco = blocco(dimensione);
-                cella.setBlocco(blocco);
-                blocco.aggiungiCella(cella);
-                if (popolaBT(dimensioneMassima - dimensione, cella) && blocco.pieno())
-                    return true;
-                if (cella.getBlocco() != null)
-                {
-                    blocco.rimuoviCella(cella);
-                    cella.setBlocco(null);
-                }
-            }
-            return false;
+            for (Cella c : this)
+                if (c.getBlocco() == null && popolaBT(c,b))
+                    break;
         }
-        // caso in cui il blocco non è stato riempito.
-        if (!blocco.pieno())
-        {
-            Cella ultimoVicino = null;
-            for (Cella vicino : vicini)
-                if (vicino.getBlocco() == null)
+        for (Blocco b : blocchi)
+            for (Cella c1 : b)
+                for (Cella c2 : b)
                 {
-                    vicino.setBlocco(blocco);
-                    blocco.aggiungiCella(vicino);
-                    ultimoVicino = vicino;
-                    if (blocco.pieno())
+                    if (c1 == c2)
+                        break;
+                    if (!vicini(c1.getPosizione()[0], c1.getPosizione()[1]).contains(c2))
+                        return;// TODO magari scambia con qualche cella
+                    else
                         break;
                 }
-            if (ultimoVicino != null)
-                return popolaBT(dimensioneMassima, ultimoVicino);
-            else
-            {
-                blocco.rimuoviCella(cella);
-                cella.setBlocco(null);
-                for (Cella vicino : vicini)
-                    if (vicino.getBlocco() == blocco)
-                    {
-                        vicino.setBlocco(null);
-                        blocco.rimuoviCella(vicino);
-                    }
-                return false;
-            }
-        }
-        // caso in cui il blocco è pieno
-        if (blocco.pieno())
-        {
-            for (Cella vicino : vicini)
-                if (vicino.getBlocco() == null || !vicino.getBlocco().pieno())
-                    popolaBT(dimensioneMax(), vicino);
-            for (Cella next : this)
-                if (next.getBlocco() == null || !next.getBlocco().pieno())
-                    popolaBT(dimensioneMax(), next);
-        }
-        return true;
+
     }
-
-    private int dimensioneMax()
+    /**
+     *
+     * il metodo implementa la parte backtracking di popola
+     */
+    private boolean popolaBT(Cella cella, Blocco blocco)
     {
-        int dimensioneMax = 0;
-        for (Cella next : this)
-            if (next.getBlocco() == null)
-                dimensioneMax++;
+        if (blocco.pieno())
+            return true;
+        if (cella.getBlocco() == null)
+        {
+            cella.setBlocco(blocco);
+            blocco.aggiungiCella(cella);
+        }
 
-        return dimensioneMax;
+        List<Cella> vicini = vicini(cella.getPosizione()[0], cella.getPosizione()[1]);
+        Cella ultimoVicino = null;
+        for (Cella vicino : vicini)
+            if (vicino.getBlocco() == null && !blocco.pieno())
+            {
+                vicino.setBlocco(blocco);
+                blocco.aggiungiCella(vicino);
+                ultimoVicino = vicino;
+                if (blocco.pieno())
+                    return true;
+            }
+        if (ultimoVicino != null)
+            return popolaBT(ultimoVicino, blocco);
+        return false;
     }
 
     /**

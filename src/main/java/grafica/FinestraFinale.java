@@ -32,7 +32,7 @@ class FinestraFinale extends JFrame
         add(griglie[0]);
 
         // AVANTI
-        JMenuItem avanti = new JMenuItem("AVANTI"); // bottoneSalva TODO actionlistener
+        JMenuItem avanti = new JMenuItem("AVANTI");
         avanti.addActionListener(new ActionListener()
         {
             @Override
@@ -58,7 +58,7 @@ class FinestraFinale extends JFrame
         });
 
         // INDIETRO
-        JMenuItem indietro = new JMenuItem("INDIETRO"); // bottoneSalva TODO actionlistener
+        JMenuItem indietro = new JMenuItem("INDIETRO");
         indietro.addActionListener(new ActionListener()
         {
             @Override
@@ -83,7 +83,7 @@ class FinestraFinale extends JFrame
             }
         });
         // NUOVOGIOCO
-        JMenuItem nuovoGioco = new JMenuItem("NUOVO GIOCO"); // bottoneSalva TODO actionlistener
+        JMenuItem nuovoGioco = new JMenuItem("NUOVO GIOCO");
         nuovoGioco.addActionListener(new ActionListener()
         {
             @Override

@@ -4,45 +4,43 @@ import memento.Memento;
 
 import java.io.*;
 
-public class PermanenzaFile // TODO
+public class PermanenzaFile
 {
-    private static final File FILE = new File("Save.dat");
-    // private static Mediator mediator = new ConcreteMediator(); FIXME capire se utile
-    public PermanenzaFile()
-    {
+    private static final File FILE;
 
+    static
+    {
+        FILE = new File("Save.dat");
+        try
+        {
+            FILE.createNewFile();
+        } catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void salva(Memento memento)
     {
         try
         {
-            if (FILE.exists())
-            {
-                FILE.delete();
-                FILE.createNewFile();
-            }
             FileOutputStream fileOut = new FileOutputStream(FILE);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
 
             out.writeObject(memento);
             //fileOut.close();
             out.close();
-        }catch(Exception e)
+        } catch (IOException e)
         {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
     public static Memento carica()
     {
-        Memento ret = null;
+        Memento ret;
         try
         {
-            if (!FILE.exists())
-            {
-                FILE.createNewFile();
-            }
             FileInputStream fileIn = new FileInputStream(FILE);
             ObjectInputStream in= new ObjectInputStream(fileIn);
 
@@ -53,9 +51,15 @@ public class PermanenzaFile // TODO
             //fileIn.close();
             in.close();
             ret = (Memento) o;
-        }catch (Exception e)
+        } catch (FileNotFoundException e)
         {
-            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e)
+        {
+            throw new RuntimeException(e);
         }
         return ret;
     }

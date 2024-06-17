@@ -19,7 +19,7 @@ public abstract class AbstractBlocco implements Blocco
         int H = 1;
 
         H += M * operatore.hashCode();
-        H += M * valore;
+        H += M * valore();
         H += M * dimensione();
         for (Cella cella : celle())
             H += M * cella.hashCode();
@@ -35,13 +35,13 @@ public abstract class AbstractBlocco implements Blocco
             return false;
         AbstractBlocco blocco = (AbstractBlocco) obj;
         return this.operatore.equals(blocco.operatore)
-                && this.valore == blocco.valore
+                && this.valore() == blocco.valore()
                 && this.dimensione() == blocco.dimensione();
     }
     @Override
     public String toString()
     {
-        return /*"( " + */operatore.toString() + " " + valore /*+ " #" + dimensione() + " )"*/; // FIXME fa cacare
+        return operatore.toString() + " " + valore + " #" + dimensione();
     }
     public AbstractBlocco clone() throws CloneNotSupportedException
     {

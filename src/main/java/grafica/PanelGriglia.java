@@ -3,6 +3,8 @@ package grafica;
 import Gioco.blocco.Blocco;
 import Gioco.cella.Cella;
 import Gioco.soluzione.Soluzione;
+import mediator.ConcreteMediator;
+import mediator.Mediator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,18 +16,20 @@ class PanelGriglia extends JPanel
 
     private HashMap<Blocco, Color> bloccoColore = new HashMap<>();
     private int dimensione;
+    private Mediator mediator;
 
-    public PanelGriglia(Soluzione s)
+    public PanelGriglia()
     {
-        dimensione = s.dimensione();
-        impostaColori(s);
+        mediator  = new ConcreteMediator();
+        dimensione = mediator.dimensione();
+        impostaColori();
         this.setBackground(Color.BLACK);
         this.setLayout(new GridLayout(dimensione, dimensione, 2, 2));
 
         for (int i = 0; i < dimensione; i++)
             for (int j = 0; j < dimensione; j++)
             {
-                JLabel labelValore = new JLabel(s.cella(i, j).getValore() + "");
+                JLabel labelValore = new JLabel(" ");
                 labelValore.setHorizontalAlignment(JLabel.CENTER);
                 labelValore.setVerticalAlignment(JLabel.CENTER);
 
@@ -44,7 +48,7 @@ class PanelGriglia extends JPanel
 
     }
 
-    private void impostaColori(Soluzione s)
+    private void impostaColori()
     {
         for (Cella cella : s)
         {

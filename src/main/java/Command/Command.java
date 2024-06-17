@@ -2,7 +2,7 @@ package Command;
 
 public interface Command
 {
-    void execute();
+    void execute(int riga, int colona, int valore);
     void deExecute();
-    void backup();
+    void backup(int riga, int colonna);
 }

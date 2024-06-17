@@ -4,22 +4,26 @@ import memento.Memento;
 import memento.Originator;
 import Gioco.soluzione.Soluzione;
 import Gioco.soluzione.SoluzioneMatrix;
+import observer.Manager;
+import observer.Subscriber;
+
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public enum Gioco implements Originator
+public enum Gioco implements Originator, Manager
 {
     INSTANCE;
     private LinkedList<Soluzione> soluzioni;
+    private LinkedList<Subscriber> subscribers = new LinkedList<>();
 
-    public void avvia(int soluzioni, int dimensione) throws CloneNotSupportedException, IOException
+    public void avvia(int soluzioni, int dimensione, int numeroBlocchi) throws CloneNotSupportedException, IOException
     {
         if (soluzioni < 0)
             throw new IllegalArgumentException("Numero di soluzioni non valido");
 
         this.soluzioni = new LinkedList<>();
-        this.soluzioni.add(new SoluzioneMatrix(dimensione));
+        this.soluzioni.add(new SoluzioneMatrix(dimensione, numeroBlocchi));
 
         for (int i = 0; i < soluzioni; i++)
         {
@@ -37,15 +41,38 @@ public enum Gioco implements Originator
         }
     }
 
-
     public void inserisciValore(int riga, int colonna, int valore)
     {
         soluzioni.getFirst().posiziona(riga, colonna, valore);
+        if (soluzioni.getFirst().risolta())
+            sendNotification();
     }
 
-    public List<Soluzione> getSoluzioni()
+    public int valore(int riga, int colonna)
     {
-        return soluzioni;
+        return soluzioni.get(0).cella(riga, colonna).getValore();
+    }
+
+    public int valore(int riga, int colonna, int indiceSoluzione)
+    {
+        if (indiceSoluzione < 0 || indiceSoluzione > soluzioni.size() - 1)
+            throw new IllegalArgumentException("Inserire un indice di soluzione valido");
+        return soluzioni.get(indiceSoluzione + 1).cella(riga, colonna).getValore();
+    }
+
+    public int numeroSoluzioni()
+    {
+        return soluzioni.size() - 1;
+    }
+
+    public boolean controlla(int riga, int colonna, int valore)
+    {
+        return soluzioni.get(0).controlla(riga, colonna, valore);
+    }
+
+    public int dimensione()
+    {
+        return soluzioni.get(0).dimensione();
     }
 
     @Override
@@ -74,6 +101,29 @@ public enum Gioco implements Originator
                 throw new IllegalArgumentException("Memento non corretto: non è una soluzione");
             }
         }
+    }
+
+    @Override
+    public void addSubscriber(Subscriber subscriber)
+    {
+        if (subscribers.contains(subscriber))
+            throw new IllegalArgumentException("Subscriber presente!");
+        subscribers.add(subscriber);
+    }
+
+    @Override
+    public void removeSubscriber(Subscriber subscriber)
+    {
+        if (!subscribers.contains(subscriber))
+            throw new IllegalArgumentException("Subscriber non presente!");
+        subscribers.remove(subscriber);
+    }
+
+    @Override
+    public void sendNotification()
+    {
+        for (Subscriber subscriber : subscribers)
+            subscriber.update();
     }
 
     private class MementoGioco implements Memento, Serializable

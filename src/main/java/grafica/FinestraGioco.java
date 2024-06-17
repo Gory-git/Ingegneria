@@ -1,16 +1,20 @@
 package grafica;
 
+import Command.Command;
+import Command.HistoryCommandHandler;
 import mediator.ConcreteMediator;
 import mediator.Mediator;
+import observer.Subscriber;
 
 import javax.swing.*;
 import java.awt.event.*;
 
-class FinestraGioco extends FinestraManager
+class FinestraGioco extends FinestraManager implements HistoryCommandHandler, Subscriber
 {
     private final int dimensioneGriglia;
     private final Mediator mediator;
     private boolean controllaErrori = true;
+    private PanelGriglia panelGriglia;
 
     public FinestraGioco()
     {
@@ -20,9 +24,10 @@ class FinestraGioco extends FinestraManager
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         mediator = new ConcreteMediator();
-        this.dimensioneGriglia = mediator.soluzioni().get(0).dimensione();
+        mediator.addSubscriber(this);
+        this.dimensioneGriglia = mediator.dimensione();
 
-        JPanel panelGriglia = new PanelGriglia(mediator.soluzioni().get(0));
+        panelGriglia = new PanelGriglia();
         //clicka per scegliere il valore da assegnare.
         JPopupMenu valoriDaInserire = new JPopupMenu();
         JMenuItem[] menuItems = new JMenuItem[dimensioneGriglia];
@@ -101,7 +106,7 @@ class FinestraGioco extends FinestraManager
                     );
             if (opzione == JOptionPane.OK_OPTION)
             {
-                if (mediator.soluzioni().size() > 1)
+                if (mediator.numeroSoluzioni() > 0)
                 {
                     new FinestraFinale();
                     setVisible(false);
@@ -124,10 +129,11 @@ class FinestraGioco extends FinestraManager
             }
         });
         // MOSTRA ERRORI
-        JMenuItem avvisoMossaErrata = new JMenuItem("AVVISO MOSSA ERRATA");
+        JMenuItem avvisoMossaErrata = new JMenuItem("DISATTIVA AVVISO");
         avvisoMossaErrata.addActionListener(e ->
         {
             controllaErrori = !controllaErrori;
+            avvisoMossaErrata.setText("ATTIVA AVVISO");
         });
 
         JMenu operazioni = new JMenu("Operazioni");
@@ -174,13 +180,34 @@ class FinestraGioco extends FinestraManager
         mediator.inserisciValore(riga, colonna, valore);
 
         // System.out.println(mediator.soluzioni().get(0));
+        if (mediator.valore(riga, colonna) == 0)
+            label.setText(" ");
+        else
+            label.setText(mediator.valore(riga, colonna) + "");
 
-        label.setText(mediator.soluzioni().get(0).cella(riga, colonna).getValore() + "");
-
-        if (controllaErrori && !mediator.soluzioni().get(0).controlla(riga, colonna, valore))
+        if (controllaErrori && !mediator.controlla(riga, colonna, valore))
             JOptionPane.showMessageDialog(this,"Valore errato!","ERRORE!",JOptionPane.ERROR_MESSAGE);
 
-        if (mediator.soluzioni().get(0).risolta())
+    }
+
+    private void risolta()
+    {
+        if (mediator.numeroSoluzioni() == 0)
+        {
+            int opzione = JOptionPane.showConfirmDialog
+                    (
+                            panelGriglia,
+                            "Iniziare una nuova partita?",
+                            "Attenzione",
+                            JOptionPane.YES_NO_OPTION
+                    );
+            if (opzione == JOptionPane.YES_OPTION)
+            {
+                setVisible(false);
+                new FinestraIniziale();
+            }else
+                dispatchEvent(new WindowEvent(FinestraGioco.this, WindowEvent.WINDOW_CLOSING));
+        }else
         {
             JOptionPane.showMessageDialog
                     (
@@ -192,6 +219,30 @@ class FinestraGioco extends FinestraManager
             setVisible(false);
             new FinestraFinale();
         }
+
     }
 
+    @Override
+    public void redo()
+    {
+
+    }
+
+    @Override
+    public void undo()
+    {
+
+    }
+
+    @Override
+    public void handle(Command command)
+    {
+
+    }
+
+    @Override
+    public void update()
+    {
+        risolta();
+    }
 }

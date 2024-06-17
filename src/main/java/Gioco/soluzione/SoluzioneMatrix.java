@@ -4,6 +4,7 @@ import Gioco.blocco.Blocco;
 import Gioco.blocco.BloccoList;
 import Gioco.cella.Cella;
 import memento.Memento;
+import observer.Subscriber;
 
 import java.io.Serializable;
 import java.util.*;
@@ -12,10 +13,12 @@ public final class SoluzioneMatrix extends AbstractSoluzione
 {
     private final Cella[][] celle;
 
-    public SoluzioneMatrix(int dimensione)
+    public SoluzioneMatrix(int dimensione, int numeroBlocchi)
     {
         if (dimensione < 1)
             throw new IllegalArgumentException("Dimensione non valida");
+        if (numeroBlocchi > dimensione * dimensione)
+            throw new IllegalArgumentException("Non possono essere creati tutti questi blocchi");
         celle = new Cella[dimensione][dimensione];
         for (int i = 0; i < dimensione; i++)
         {
@@ -27,7 +30,7 @@ public final class SoluzioneMatrix extends AbstractSoluzione
         }
 
         risolvi(false);
-        popola(dimensione * dimensione);
+        popola(numeroBlocchi);
 
         // System.out.println(this);
 
@@ -42,7 +45,7 @@ public final class SoluzioneMatrix extends AbstractSoluzione
 
         Set<Blocco> blocchi = new HashSet<>();
         for (Cella cella : soluzione)
-                blocchi.add(cella.getBlocco().clone());
+            blocchi.add(cella.getBlocco().clone());
 
         int dimensione = soluzione.dimensione();
         celle = new Cella[dimensione][dimensione];
@@ -62,9 +65,6 @@ public final class SoluzioneMatrix extends AbstractSoluzione
     @Override
     public boolean controlla(int riga, int colonna, int valore)     // TODO forse private
     {
-        //Blocco b = cella(riga, colonna).getBlocco();
-        //if (b != null && !b.assegnabile(valore))
-        //    return false;
         for (int i = 0; i < celle.length; i++)
             if (i != riga && celle[i][colonna].getValore() == valore || i != colonna && celle[riga][i].getValore() == valore)
                 return false;
@@ -127,6 +127,7 @@ public final class SoluzioneMatrix extends AbstractSoluzione
         return true;
     }
 
+
     @Override
     public Memento salva()
     {
@@ -146,6 +147,24 @@ public final class SoluzioneMatrix extends AbstractSoluzione
         for (int i = 0; i < celle.length; i++)
             for (int j = 0; j < celle.length; j++)
                 celle[i][j] = mementoSoluzione.celle[i][j].clone();
+
+    }
+
+    @Override
+    public void addSubscriber(Subscriber subscriber)
+    {
+
+    }
+
+    @Override
+    public void removeSubscriber(Subscriber subscriber)
+    {
+
+    }
+
+    @Override
+    public void sendNotification()
+    {
 
     }
 
