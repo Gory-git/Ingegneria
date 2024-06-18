@@ -21,13 +21,13 @@ class FinestraFinale extends JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         mediator = new ConcreteMediator();
-        numeroSoluzioni = mediator.soluzioni().size() - 1;
+        numeroSoluzioni = mediator.numeroSoluzioni();
         griglie = new PanelGriglia[numeroSoluzioni];
 
-        for (int i = 1; i <= numeroSoluzioni; i++)
+        for (int i = 0; i <= numeroSoluzioni; i++)
         {
-            griglie[i - 1] = new PanelGriglia(mediator.soluzioni().get(i));
-            griglie[i - 1].setVisible(true);
+            griglie[i] = new PanelGriglia(i);
+            griglie[i].setVisible(true);
         }
         add(griglie[0]);
 

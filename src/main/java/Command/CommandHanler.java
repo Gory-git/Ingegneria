@@ -1,6 +1,9 @@
 package Command;
 
-public interface CommandHanler
+public abstract class CommandHanler
 {
-    void handle(Command command);
+    public void handle(Command command)
+    {
+        command.execute();
+    }
 }

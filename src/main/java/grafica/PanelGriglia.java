@@ -15,11 +15,17 @@ class PanelGriglia extends JPanel
 {
 
     private HashMap<Blocco, Color> bloccoColore = new HashMap<>();
-    private int dimensione;
+    private int dimensione, indiceSoluzione;
     private Mediator mediator;
 
     public PanelGriglia()
     {
+        this(-1);
+    }
+
+    public PanelGriglia(int numeroSoluzione)
+    {
+        this.indiceSoluzione = numeroSoluzione;
         mediator  = new ConcreteMediator();
         dimensione = mediator.dimensione();
         impostaColori();
@@ -30,6 +36,8 @@ class PanelGriglia extends JPanel
             for (int j = 0; j < dimensione; j++)
             {
                 JLabel labelValore = new JLabel(" ");
+                if (numeroSoluzione >= 0)
+                    labelValore.setText(mediator.valore(i, j, indiceSoluzione) + "");
                 labelValore.setHorizontalAlignment(JLabel.CENTER);
                 labelValore.setVerticalAlignment(JLabel.CENTER);
 

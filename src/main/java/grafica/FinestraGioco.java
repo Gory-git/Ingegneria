@@ -1,20 +1,20 @@
 package grafica;
 
-import Command.Command;
 import Command.HistoryCommandHandler;
+import Command.Inserisci;
 import mediator.ConcreteMediator;
 import mediator.Mediator;
-import observer.Subscriber;
 
 import javax.swing.*;
 import java.awt.event.*;
 
-class FinestraGioco extends FinestraManager implements HistoryCommandHandler, Subscriber
+class FinestraGioco extends FinestraManagerSubscriber
 {
     private final int dimensioneGriglia;
     private final Mediator mediator;
     private boolean controllaErrori = true;
     private PanelGriglia panelGriglia;
+    private final GiocoHandler giocoHandler = new GiocoHandler();
 
     public FinestraGioco()
     {
@@ -57,9 +57,11 @@ class FinestraGioco extends FinestraManager implements HistoryCommandHandler, Su
 
         // UNDO TODO
         JMenuItem undo = new JMenuItem("UNDO"); // Undo TODO actionlistener
+        undo.addActionListener(e -> {giocoHandler.undo();});
 
         // REDO TODO
         JMenuItem mDo= new JMenuItem("REDO"); // Redo TODO actionlistener
+        mDo.addActionListener(e -> {giocoHandler.redo();});
 
         // SALVA
         JMenuItem salva = new JMenuItem("SALVA");
@@ -177,7 +179,7 @@ class FinestraGioco extends FinestraManager implements HistoryCommandHandler, Su
 
         // System.out.println("R: " + riga + "; C: " + colonna);
 
-        mediator.inserisciValore(riga, colonna, valore);
+        giocoHandler.handle(new Inserisci(riga, colonna, valore));
 
         // System.out.println(mediator.soluzioni().get(0));
         if (mediator.valore(riga, colonna) == 0)
@@ -223,26 +225,23 @@ class FinestraGioco extends FinestraManager implements HistoryCommandHandler, Su
     }
 
     @Override
-    public void redo()
-    {
-
-    }
-
-    @Override
-    public void undo()
-    {
-
-    }
-
-    @Override
-    public void handle(Command command)
-    {
-
-    }
-
-    @Override
     public void update()
     {
         risolta();
     }
+
+    private class GiocoHandler extends HistoryCommandHandler
+    {
+        public GiocoHandler()
+        {
+
+        }
+        public GiocoHandler(int lunghezzaStoria)
+        {
+            if (lunghezzaStoria < 0)
+                throw new IllegalArgumentException("Impossibile avere una stria di lunghezza negativa");
+            super.lunghezzaStoria = lunghezzaStoria;
+        }
+    }
+
 }

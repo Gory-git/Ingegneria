@@ -5,15 +5,20 @@ import mediator.Mediator;
 
 public class Inserisci implements Command
 {
-    private int valorePrecedente, riga, colonna;
+    private int valorePrecedente, riga, colonna, nuovoValore;
     private final Mediator mediator = new ConcreteMediator();
-    @Override
-    public void execute(int riga, int colonna, int valore)
+    public Inserisci(int riga, int colonna, int nuovoValore)
     {
-        backup(riga, colonna);
         this.riga = riga;
         this.colonna = colonna;
-        mediator.inserisciValore(riga, colonna, valore);
+        this.nuovoValore = nuovoValore;
+    }
+
+    @Override
+    public void execute()
+    {
+        backup();
+        mediator.inserisciValore(riga, colonna, nuovoValore);
     }
 
     @Override
@@ -23,7 +28,7 @@ public class Inserisci implements Command
     }
 
     @Override
-    public void backup(int riga, int colonna)
+    public void backup()
     {
         mediator.valore(riga, colonna);
     }
