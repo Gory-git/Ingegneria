@@ -69,7 +69,6 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
                 posizionaERimuovi(riga, colonna, valore, inseribili);
                 if (controllaBlocchi) // FIXME ogni tanto si rincoglionisce pd
                 {
-                    System.out.println("controllablocchi = true");
                     if (risolta())
                         return true;
                     Blocco blocco = cellaCorrente.getBlocco();
@@ -182,32 +181,39 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
 
         blocchi.add(blocco(dimensioneMassima));
         Collections.shuffle(blocchi);
-        for (Blocco b : blocchi)
+        /*
+        for (Blocco blocco : blocchi)
         {
-            for (Cella c : this)
-                if (c.getBlocco() == null && popolaBT(c,b))
+            for (Cella cella : this)
+                if (cella.getBlocco() == null && popolaBT(cella,blocco, blocchi))
                     break;
         }
+        */
+        popolaBT(cella(0,0), null, blocchi);
         /*
         for (Blocco b : blocchi)
             for (Cella c1 : b)
-                for (Cella c2 : b)
-                {
-                    if (c1 == c2)
-                        break;
-                    if (!vicini(c1.getPosizione()[0], c1.getPosizione()[1]).contains(c2))
-                        return;// TODO magari scambia con qualche cella
-                    else
-                        break;
-                }
-
-        /**/
+            {
+                int viciniBlocco = 0;
+                for (Cella c2 : vicini(c1.getPosizione()[0], c1.getPosizione()[1]))
+                    if (c1.getBlocco() == c2.getBlocco())
+                        viciniBlocco++;
+                if (viciniBlocco == 0)
+                    ricompatta(c1, b);
+            }
+    /**/
     }
     /**
-     *
      * il metodo implementa la parte backtracking di popola
+     * @param cella
+     * @param blocco
+     * @return
      */
-    private boolean popolaBT(Cella cella, Blocco blocco)
+    private boolean popolaBT(Cella cella, Blocco blocco, LinkedList<Blocco> blocchi) // TODO creare nuova implementazione. SIAMO ALLA 5 %$*%#@
+    {
+        return false;
+    }
+    /*
     {
         if (blocco.pieno())
             return true;
@@ -232,7 +238,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
             return popolaBT(ultimoVicino, blocco);
         return false;
     }
-
+*/
     /**
      * il metodo restituisce una lista contenente i vicini di una cella
      */

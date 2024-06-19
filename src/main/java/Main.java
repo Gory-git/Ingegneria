@@ -25,8 +25,8 @@ public class Main
         System.out.println(Gioco.INSTANCE.getSoluzioni().get(2));
         //mediator.salva();
 */
-        new FinestraIniziale();
-/*
+        //new FinestraIniziale();
+
         Soluzione s = new SoluzioneMatrix(6, 20);
         System.out.println(s);
         System.out.println("\n---CLONE---\n");
