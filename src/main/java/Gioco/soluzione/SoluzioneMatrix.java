@@ -139,44 +139,31 @@ public final class SoluzioneMatrix extends AbstractSoluzione
     {
         if (!(memento instanceof MementoSoluzione mementoSoluzione))
             throw new IllegalArgumentException("Memento non corretto");
-
-        if (this != mementoSoluzione.originator())
-            throw new IllegalArgumentException("Memento non creato da questa istanza");
-
-
-        for (int i = 0; i < celle.length; i++)
-            for (int j = 0; j < celle.length; j++)
-                celle[i][j] = mementoSoluzione.celle[i][j].clone();
-
-    }
-
-    @Override
-    public void addSubscriber(Subscriber subscriber)
-    {
-
-    }
-
-    @Override
-    public void removeSubscriber(Subscriber subscriber)
-    {
-
-    }
-
-    @Override
-    public void sendNotification()
-    {
-
+        try
+        {
+            Soluzione soluzioneMatrix = new SoluzioneMatrix(mementoSoluzione.soluzione);
+            for (int i = 0; i < dimensione(); i++)
+                for (int j = 0; j < dimensione(); j++)
+                    celle[i][j] = soluzioneMatrix.cella(i, j);
+        } catch (CloneNotSupportedException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     private class MementoSoluzione implements Memento, Serializable
     {
-        private final Cella[][] celle = new Cella[dimensione()][dimensione()];
+        private final Soluzione soluzione;
 
         private MementoSoluzione()
         {
-            for (int i = 0; i < celle.length; i++)
-                for (int j = 0; j < celle.length; j++)
-                    celle[i][j] = cella(i, j).clone();
+            try
+            {
+                soluzione = new SoluzioneMatrix(SoluzioneMatrix.this);
+            } catch (CloneNotSupportedException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
 
         SoluzioneMatrix originator()

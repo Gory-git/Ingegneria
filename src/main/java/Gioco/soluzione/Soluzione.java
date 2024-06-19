@@ -8,7 +8,7 @@ import observer.Manager;
 import java.io.Serializable;
 import java.util.*;
 
-public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Originator, Manager
+public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Originator
 {
     /**
      * il metodo risolve la griglia simil sudoku
@@ -39,7 +39,6 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
                 posizionaERimuovi(i, j, k, inseribili);
             }
         }
-
         risolviBT(0, 0, controllaBlocchi, inseribili);
     }
 
@@ -68,8 +67,9 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
             {
                 //System.out.println("R: " + riga + " ;C: " + colonna + " --> valore assegnabile: " + valore);
                 posizionaERimuovi(riga, colonna, valore, inseribili);
-                if (controllaBlocchi) // FIXME leeentiiiissiiimooooo se dim = 9
+                if (controllaBlocchi) // FIXME ogni tanto si rincoglionisce pd
                 {
+                    System.out.println("controllablocchi = true");
                     if (risolta())
                         return true;
                     Blocco blocco = cellaCorrente.getBlocco();
@@ -188,6 +188,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
                 if (c.getBlocco() == null && popolaBT(c,b))
                     break;
         }
+        /*
         for (Blocco b : blocchi)
             for (Cella c1 : b)
                 for (Cella c2 : b)
@@ -200,6 +201,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
                         break;
                 }
 
+        /**/
     }
     /**
      *

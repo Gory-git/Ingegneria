@@ -1,16 +1,12 @@
 package mediator;
 
-import Command.Command;
-import Command.CommandHanler;
 import Gioco.Gioco;
 import memento.Memento;
-import Gioco.soluzione.Soluzione;
 import observer.Subscriber;
 import permanenza.PermanenzaFile;
 
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
 
 public class ConcreteMediator implements Mediator
 {
@@ -61,7 +57,7 @@ public class ConcreteMediator implements Mediator
     @Override
     public int valore(int riga, int colonna, int indiceSoluzione)
     {
-        return valore(riga, colonna, indiceSoluzione);
+        return istanza.valore(riga, colonna, indiceSoluzione);
     }
 
     @Override
@@ -80,6 +76,13 @@ public class ConcreteMediator implements Mediator
     public int dimensione()
     {
         return istanza.dimensione();
+    }
+
+
+    @Override
+    public String[] blocco(int riga, int colonna)
+    {
+        return istanza.blocco(riga, colonna);
     }
 
     @Override

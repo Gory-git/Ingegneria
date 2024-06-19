@@ -9,14 +9,17 @@ import mediator.Mediator;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 class PanelGriglia extends JPanel
 {
 
-    private HashMap<Blocco, Color> bloccoColore = new HashMap<>();
-    private int dimensione, indiceSoluzione;
-    private Mediator mediator;
+    private final HashMap<String, Color> bloccoColore = new HashMap<>();
+    private final int dimensione;
+    private int indiceSoluzione;
+    private final Mediator mediator;
 
     public PanelGriglia()
     {
@@ -25,8 +28,9 @@ class PanelGriglia extends JPanel
 
     public PanelGriglia(int numeroSoluzione)
     {
+
         this.indiceSoluzione = numeroSoluzione;
-        mediator  = new ConcreteMediator();
+        mediator = new ConcreteMediator();
         dimensione = mediator.dimensione();
         impostaColori();
         this.setBackground(Color.BLACK);
@@ -38,15 +42,21 @@ class PanelGriglia extends JPanel
                 JLabel labelValore = new JLabel(" ");
                 if (numeroSoluzione >= 0)
                     labelValore.setText(mediator.valore(i, j, indiceSoluzione) + "");
+
                 labelValore.setHorizontalAlignment(JLabel.CENTER);
                 labelValore.setVerticalAlignment(JLabel.CENTER);
 
-                JLabel labelBlocco = new JLabel(s.cella(i, j).getBlocco() + "");
+
+                String[] blocco = mediator.blocco(i, j);
+                String idBlocco = blocco[0];
+                String valoreBlocco = blocco[1];
+
+                JLabel labelBlocco = new JLabel(valoreBlocco);
                 labelBlocco.setHorizontalAlignment(JLabel.RIGHT);
                 labelBlocco.setVerticalAlignment(JLabel.TOP);
 
                 JPanel panelCella = new JPanel(new BorderLayout());
-                panelCella.setBackground(bloccoColore.get(s.cella(i, j).getBlocco()));
+                panelCella.setBackground(bloccoColore.get(idBlocco));
 
                 panelCella.add(labelValore, BorderLayout.CENTER);
                 panelCella.add(labelBlocco, BorderLayout.NORTH);
@@ -58,25 +68,33 @@ class PanelGriglia extends JPanel
 
     private void impostaColori()
     {
-        for (Cella cella : s)
-        {
-            int red = new Random().nextInt(120, 256);
-            int green = new Random().nextInt(120, 256);
-            int blue = new Random().nextInt(120, 256);
-            Color colore = new Color(red, green, blue);
+        Set<Color> colori = new HashSet<>();
 
-            boolean coloreAdiacente = false;
-            for (Cella vicino : s.vicini(cella.getPosizione()[0], cella.getPosizione()[1]))
-                if (vicino.getBlocco() != cella.getBlocco())
-                    if (bloccoColore.containsKey(vicino.getBlocco()) && bloccoColore.get(vicino.getBlocco()).equals(colore))
+        for (int i = 0; i < dimensione; i++)
+            for (int j = 0; j < dimensione; j++)
+            {
+                String[] blocco = mediator.blocco(i, j);
+                String idBlocco = blocco[0];
+
+                if (!bloccoColore.containsKey(idBlocco))
+                {
+
+                    int red = new Random().nextInt(120, 256);
+                    int green = new Random().nextInt(120, 256);
+                    int blue = new Random().nextInt(120, 256);
+                    Color colore = new Color(red, green, blue);
+
+                    while (colori.contains(colore))
                     {
-                        coloreAdiacente = true;
-                        break;
+                        red = new Random().nextInt(120, 256);
+                        green = new Random().nextInt(120, 256);
+                        blue = new Random().nextInt(120, 256);
+                        colore = new Color(red, green, blue);
                     }
+                    colori.add(colore);
+                    bloccoColore.put(idBlocco, colore);
+                }
+            }
 
-            if (!bloccoColore.containsKey(cella.getBlocco()) && !coloreAdiacente)
-                bloccoColore.put(cella.getBlocco(), colore);
-        }
     }
-
 }

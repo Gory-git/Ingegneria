@@ -27,7 +27,7 @@ public class Main
 */
         new FinestraIniziale();
 /*
-        Soluzione s = new SoluzioneMatrix(9, 40);
+        Soluzione s = new SoluzioneMatrix(6, 20);
         System.out.println(s);
         System.out.println("\n---CLONE---\n");
         Soluzione clone = s.clone();

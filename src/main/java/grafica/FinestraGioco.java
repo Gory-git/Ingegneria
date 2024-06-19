@@ -1,11 +1,13 @@
 package grafica;
 
+import Command.Command;
 import Command.HistoryCommandHandler;
 import Command.Inserisci;
 import mediator.ConcreteMediator;
 import mediator.Mediator;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 class FinestraGioco extends FinestraManagerSubscriber
@@ -13,12 +15,13 @@ class FinestraGioco extends FinestraManagerSubscriber
     private final int dimensioneGriglia;
     private final Mediator mediator;
     private boolean controllaErrori = true;
-    private PanelGriglia panelGriglia;
+    private final PanelGriglia panelGriglia;
     private final GiocoHandler giocoHandler = new GiocoHandler();
 
     public FinestraGioco()
     {
         super("KENKEN GAME!");
+
         setSize(500, 500);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,16 +54,16 @@ class FinestraGioco extends FinestraManagerSubscriber
             final int j = i;
             menuItems[i].addActionListener(e -> {
                 //inserisco il valore i nella cella clickata
-                inserisciValore(X_Y[0], X_Y[1], (j+1), panelGriglia);
+                inserisciValore(X_Y[0], X_Y[1], (j+1));
             });
         }
 
-        // UNDO TODO
-        JMenuItem undo = new JMenuItem("UNDO"); // Undo TODO actionlistener
+        // UNDO
+        JMenuItem undo = new JMenuItem("UNDO"); // Undo
         undo.addActionListener(e -> {giocoHandler.undo();});
 
-        // REDO TODO
-        JMenuItem mDo= new JMenuItem("REDO"); // Redo TODO actionlistener
+        // REDO
+        JMenuItem mDo= new JMenuItem("REDO"); // Redo
         mDo.addActionListener(e -> {giocoHandler.redo();});
 
         // SALVA
@@ -160,9 +163,8 @@ class FinestraGioco extends FinestraManagerSubscriber
 
     }
 
-    private void inserisciValore(int x, int y, int valore, JPanel panelGriglia) // TODO rimuovere commenti inutili
+    private void inserisciValore(int x, int y, int valore) // TODO rimuovere commenti inutili
     {
-        //System.out.println("X: " + x + ", Y: " + y + "--> valore: " + valore);
 
         JPanel panelLabel = (JPanel) panelGriglia.getComponentAt(x, y);
         JLabel label;
@@ -177,11 +179,8 @@ class FinestraGioco extends FinestraManagerSubscriber
         int riga = Math.min(Math.floorDiv(y * dimensioneGriglia, 435), dimensioneGriglia - 1);
         int colonna = Math.min(Math.floorDiv(x * dimensioneGriglia, 485), dimensioneGriglia - 1);
 
-        // System.out.println("R: " + riga + "; C: " + colonna);
+        giocoHandler.handle(new Inserisci(riga, colonna, valore, x, y));
 
-        giocoHandler.handle(new Inserisci(riga, colonna, valore));
-
-        // System.out.println(mediator.soluzioni().get(0));
         if (mediator.valore(riga, colonna) == 0)
             label.setText(" ");
         else
@@ -189,7 +188,6 @@ class FinestraGioco extends FinestraManagerSubscriber
 
         if (controllaErrori && !mediator.controlla(riga, colonna, valore))
             JOptionPane.showMessageDialog(this,"Valore errato!","ERRORE!",JOptionPane.ERROR_MESSAGE);
-
     }
 
     private void risolta()
@@ -241,6 +239,52 @@ class FinestraGioco extends FinestraManagerSubscriber
             if (lunghezzaStoria < 0)
                 throw new IllegalArgumentException("Impossibile avere una stria di lunghezza negativa");
             super.lunghezzaStoria = lunghezzaStoria;
+        }
+
+        @Override
+        public void redo()
+        {
+            if (!comandiRedo.isEmpty())
+            {
+                Inserisci comando = (Inserisci) comandiRedo.getFirst();
+                JPanel panelLabel = (JPanel) panelGriglia.getComponentAt(comando.getX(), comando.getY());
+                JLabel label;
+                try
+                {
+                    label = (JLabel) panelLabel.getComponent(0);
+                }catch (ClassCastException e)
+                {
+                    return;
+                }
+                String valore = comando.getNuovoValore()  + "";
+                if (comando.getNuovoValore() == 0)
+                    valore = " ";
+                label.setText(valore);
+            }
+            super.redo();
+        }
+
+        @Override
+        public void undo()
+        {
+            if (!comandi.isEmpty())
+            {
+                Inserisci comando = (Inserisci) comandi.getFirst();
+                JPanel panelLabel = (JPanel) panelGriglia.getComponentAt(comando.getX(), comando.getY());
+                JLabel label;
+                try
+                {
+                    label = (JLabel) panelLabel.getComponent(0);
+                }catch (ClassCastException e)
+                {
+                    return;
+                }
+                String valore = comando.getValorePrecedente()  + "";
+                if (comando.getValorePrecedente() == 0)
+                    valore = " ";
+                label.setText(valore);
+            }
+            super.undo();
         }
     }
 

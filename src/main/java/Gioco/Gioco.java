@@ -1,5 +1,6 @@
 package Gioco;
 
+import Gioco.blocco.Blocco;
 import memento.Memento;
 import memento.Originator;
 import Gioco.soluzione.Soluzione;
@@ -16,11 +17,15 @@ public enum Gioco implements Originator, Manager
     INSTANCE;
     private LinkedList<Soluzione> soluzioni;
     private LinkedList<Subscriber> subscribers = new LinkedList<>();
+    private int dimensioneSoluzioni, numeroBlocchiSoluzioni;
 
     public void avvia(int soluzioni, int dimensione, int numeroBlocchi) throws CloneNotSupportedException, IOException
     {
         if (soluzioni < 0)
             throw new IllegalArgumentException("Numero di soluzioni non valido");
+
+        dimensioneSoluzioni = dimensione;
+        numeroBlocchiSoluzioni = numeroBlocchi;
 
         this.soluzioni = new LinkedList<>();
         this.soluzioni.add(new SoluzioneMatrix(dimensione, numeroBlocchi));
@@ -37,7 +42,6 @@ public enum Gioco implements Originator, Manager
                         uguale = true;
             }while (uguale);
             this.soluzioni.add(clone);
-
         }
     }
 
@@ -75,6 +79,16 @@ public enum Gioco implements Originator, Manager
         return soluzioni.get(0).dimensione();
     }
 
+    public String[] blocco(int riga, int colonna)
+    {
+        Blocco blocco = soluzioni.getFirst().cella(riga, colonna).getBlocco();
+        return new String[]
+                {
+                        blocco.hashCode() + "",
+                        blocco.toString()
+                };
+    }
+
     @Override
     public Memento salva()
     {
@@ -85,21 +99,19 @@ public enum Gioco implements Originator, Manager
     public void ripristina(Memento memento)
     {
         if (!(memento instanceof MementoGioco))
-            throw new IllegalArgumentException("Memento non corretto");
+            throw new IllegalArgumentException("Memento non corretto: non è una soluzione");
 
         MementoGioco mementoGioco = (MementoGioco) memento;
         //if (this != mementoSoluzione.originator())  // TODO valutare se utile. In questo caso credo non lo sia
         //    throw new IllegalArgumentException("Memento non corretto");
         for (Memento mementoSoluzione : mementoGioco.soluzioni)
         {
-            try
-            {
-                this.soluzioni = new LinkedList<>();
-                this.soluzioni.add(new SoluzioneMatrix((Soluzione) mementoSoluzione));
-            } catch (CloneNotSupportedException e)
-            {
-                throw new IllegalArgumentException("Memento non corretto: non è una soluzione");
-            }
+            int dimensione = mementoGioco.dimensioneSoluzioni;
+            int numeroBlocchi = mementoGioco.numeroBlocchiSoluzioni;
+            this.soluzioni = new LinkedList<>();
+            Soluzione soluzioneMemento = new SoluzioneMatrix(dimensione, numeroBlocchi);
+            soluzioneMemento.ripristina(mementoSoluzione);
+            this.soluzioni.add(soluzioneMemento);
         }
     }
 
@@ -128,7 +140,8 @@ public enum Gioco implements Originator, Manager
 
     private class MementoGioco implements Memento, Serializable
     {
-        LinkedList<Memento> soluzioni = new LinkedList<>();
+        private LinkedList<Memento> soluzioni = new LinkedList<>();
+        private int dimensioneSoluzioni, numeroBlocchiSoluzioni;
 
         private MementoGioco()
         {
@@ -136,6 +149,8 @@ public enum Gioco implements Originator, Manager
             {
                 this.soluzioni.add(soluzione.salva());
             }
+            dimensioneSoluzioni = Gioco.this.dimensioneSoluzioni;
+            numeroBlocchiSoluzioni = Gioco.this.numeroBlocchiSoluzioni;
         }
     }
 }

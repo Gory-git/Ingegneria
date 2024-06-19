@@ -17,4 +17,6 @@ public interface Mediator extends ManagerSubscriber
     int numeroSoluzioni();
     boolean controlla(int riga, int colonna, int valore);
     int dimensione();
+
+    String[] blocco(int riga, int colonna);
 }

@@ -90,7 +90,7 @@ class FinestraNuovoGioco  extends FinestraManagerSubscriber
             {
                 return;
             }
-            mediator.avvia(numeroSoluzioni, dimensioneGriglia,numeroBlocchi);
+            mediator.avvia(numeroSoluzioni, dimensioneGriglia, numeroBlocchi);
             FinestraGioco f = new FinestraGioco();
             f.addSubscriber(FinestraNuovoGioco.this);
             setVisible(false);

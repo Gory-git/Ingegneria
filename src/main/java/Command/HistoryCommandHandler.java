@@ -4,8 +4,8 @@ import java.util.LinkedList;
 
 public abstract class HistoryCommandHandler extends CommandHanler
 {
-    private final LinkedList<Command> comandi = new LinkedList<>();
-    private final LinkedList<Command> comandiRedo = new LinkedList<>();
+    protected final LinkedList<Command> comandi = new LinkedList<>();
+    protected final LinkedList<Command> comandiRedo = new LinkedList<>();
     protected int lunghezzaStoria = 100;
 
     @Override
@@ -24,8 +24,9 @@ public abstract class HistoryCommandHandler extends CommandHanler
         if (!comandiRedo.isEmpty())
         {
             Command redo = comandiRedo.removeFirst();
-            redo.deExecute();
             comandi.addFirst(redo);
+            if (comandi.size() > lunghezzaStoria)
+                comandi.removeLast();
         }
     }
     public void undo()
