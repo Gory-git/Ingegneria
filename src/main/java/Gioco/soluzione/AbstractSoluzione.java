@@ -1,5 +1,6 @@
 package Gioco.soluzione;
 
+import Gioco.blocco.AbstractBlocco;
 import Gioco.blocco.Blocco;
 import Gioco.cella.Cella;
 
@@ -42,33 +43,29 @@ public abstract class AbstractSoluzione implements Soluzione
     {
         int dim = dimensione();
 
-        String ret = "";
+        StringBuilder ret = new StringBuilder();
 
         int i = 1;
         for (Cella cella : this)
         {
             if (i == 1)
             {
-                ret += "|\t";
+                ret.append("|\t");
             }
 
-            ret += cella.toString() + ";\t";
+            ret.append(cella.toString()).append(";\t");
 
             if ( i == dim )
             {
-                ret += "|\n";
+                ret.append("|\n");
                 i = 0;
             }
             i++;
         }
-        return ret;
+        return ret.toString();
     }
 
-    @Override
-    public AbstractSoluzione clone() throws CloneNotSupportedException
-    {
-        return (AbstractSoluzione) super.clone();
-    }
+    public abstract AbstractSoluzione clone();
 
     @Override
     public Iterator<Cella> iterator()

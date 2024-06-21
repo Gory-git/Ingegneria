@@ -166,7 +166,7 @@ class FinestraGioco extends FinestraManagerSubscriber
 
     }
 
-    private void inserisciValore(int x, int y, int valore) // TODO rimuovere commenti inutili
+    private void inserisciValore(int x, int y, int valore)
     {
 
         JPanel panelLabel = (JPanel) panelGriglia.getComponentAt(x, y);
@@ -195,7 +195,6 @@ class FinestraGioco extends FinestraManagerSubscriber
 
     private void risolta()
     {
-        System.out.println("Risolta!");
         if (mediator.numeroSoluzioni() == 0)
         {
             int opzione = JOptionPane.showConfirmDialog

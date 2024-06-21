@@ -3,7 +3,6 @@ package Gioco.soluzione;
 import Gioco.blocco.Blocco;
 import Gioco.cella.Cella;
 import memento.Originator;
-import observer.Manager;
 
 import java.io.Serializable;
 import java.util.*;
@@ -11,7 +10,104 @@ import java.util.*;
 public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Originator
 {
     /**
-     * il metodo risolve la griglia simil sudoku
+     * il metodo posiziona il valore nella posizione designata
+     * @param riga riga della cella
+     * @param colonna colonna della cella
+     * @param valore valore che si vuole posizionare
+     */
+    default void posiziona(int riga, int colonna, int valore)
+    {
+        if (riga < 0 || riga >= dimensione())
+            throw new IllegalArgumentException("Valore di riga non ammissibile");
+        if (colonna < 0 || colonna >= dimensione())
+            throw new IllegalArgumentException("Valore di colonna non ammissibile");
+        if (valore < 0)
+            throw new IllegalArgumentException("Impossibile inserire un valore negativo");
+    }
+
+    /**
+     *  il metodo rimuove il contenuto della posizione designata
+     * @param riga riga della cella
+     * @param colonna colonna della cella
+     */
+    default void rimuovi(int riga, int colonna)
+    {
+        posiziona(riga, colonna, 0);
+    }
+
+    /**
+     * il metodo controlla se il valore nella posizione designata è ammissibile
+     * @param riga riga della cella presa in analisi
+     * @param colonna colonna della cella presa in analisi
+     * @param valore valore che si vuole controllare
+     * @return true se il valore, una volta inserito nella cella presa in analisi, rispetta i vincoli
+     */
+    default boolean controlla(int riga, int colonna, int valore)
+    {
+        for (int i = 0; i < dimensione(); i++)
+            if (i != riga && cella(i,colonna).getValore() == valore || i != colonna && cella(riga,i).getValore() == valore)
+                return false;
+        return true;
+    }
+
+    /**
+     * @return restitusisce true se la soluzione è riempita correttamente e i blocchi sono soddisfatti, false altrimenti
+     */
+    default boolean risolta()
+    {
+        for (int i = 0; i < dimensione(); i++)
+            for (int j = 0; j < dimensione(); j++)
+                if (!controlla(i, j, cella(i, j).getValore()) || !cella(i, j).getBlocco().soddisfatto())
+                    return false;
+        return true;
+    }
+
+    /**
+     * il metodo calcola e restituisce una lista contenente i vicini di una cella
+     * @param riga riga presa in analisi
+     * @param colonna colonna presa in analisi
+     * @return lista di celle contenente i vicini della cella presa in analisi
+     */
+    private List<Cella> vicini(int riga, int colonna)
+    {
+        List<Cella> vicini = new LinkedList<>();
+
+        if (riga > 0)
+            vicini.add(cella(riga - 1,colonna));
+        if (colonna > 0)
+            vicini.add(cella(riga,colonna - 1));
+        if (colonna < dimensione() - 1)
+            vicini.add(cella(riga,colonna + 1));
+        if (riga < dimensione() - 1)
+            vicini.add(cella(riga + 1,colonna));
+
+        return vicini;
+    }
+
+    /**
+     * il metodo restituisce la dimensione della griglia
+     * @return dimensione della griglia
+     */
+    int dimensione();
+
+    /**
+     * Il metodo restituisce la cella di posizione riga, colonna
+     * @param riga riga della cella che si vuole ottenere
+     * @param colonna colonna della cella che si vuole ottenere
+     * @return Cella richiesta
+     */
+    Cella cella(int riga, int colonna);
+
+    /**
+     * Factory di blocchi
+     * @param dimensione dimensione del blocco che si vuole creare
+     * @return nuovo blocco con dimensione specificata
+     */
+    Blocco blocco(int dimensione);
+
+    /**
+     * il metodo risolve la griglia invocando l'opportuno metodo,
+     * @param controllaBlocchi true se devo controllare il vincolo dei blocchi, false altrimenti
      */
     default void risolvi(boolean controllaBlocchi)
     {
@@ -23,7 +119,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
             inseribili[i] = new ArrayList[dimensione];
             for (int j = 0; j < dimensione; j++)
             {
-                inseribili[i][j] = new ArrayList();
+                inseribili[i][j] = new ArrayList<>();
                 riempi(i, j, inseribili);
             }
         }
@@ -43,7 +139,12 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
     }
 
     /**
-     * il metodo implementa la parte di risolvi. Utilizza il backtracking
+     * il metodo risllve la griglia utilizzando il backtracking
+     * @param riga riga attuale
+     * @param colonna colonna attuale
+     * @param controllaBlocchi true se devo controllare il vincolo dei blocchi, false altrimenti
+     * @param inseribili valori inseribili nella cella corrente rispettanti i vincoli
+     * @return true se la soluzione risulta corretta, false se non posso proseguire nella risoluzione
      */
     private boolean risolviBT(int riga, int colonna, boolean controllaBlocchi, ArrayList<Integer>[][] inseribili)
     {
@@ -60,14 +161,11 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
 
         while (!inseribili[riga][colonna].isEmpty())
         {
-            //System.out.println("R: " + riga + " ;C: " + colonna + " not empty");
-            //System.out.println(inseribili[riga][colonna]);
             int valore = inseribili[riga][colonna].remove(0);
             if (controlla(riga, colonna, valore))
             {
-                //System.out.println("R: " + riga + " ;C: " + colonna + " --> valore assegnabile: " + valore);
                 posizionaERimuovi(riga, colonna, valore, inseribili);
-                if (controllaBlocchi) // FIXME ogni tanto si rincoglionisce pd
+                if (controllaBlocchi)
                 {
                     if (risolta())
                         return true;
@@ -135,37 +233,8 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
     }
 
     /**
-     * il metodo posiziona il valore nella posizione designata
-     */
-    void posiziona(int riga, int colonna, int valore);
-
-    /**
-     * il metodo rimuove il contenuto della posizione designata
-     */
-    default void rimuovi(int riga, int colonna)
-    {
-        posiziona(riga, colonna, 0);
-    }
-
-    /**
-     * il metodo controlla se il valore nella posizione designata è ammissibile
-     */
-    boolean controlla(int riga, int colonna, int valore);
-
-    /**
-     * restituisce true se la soluzione è riempita correttamente e i blocchi sono soddisfatti
-     */
-    default boolean risolta()
-    {
-        for (int i = 0; i < dimensione(); i++)
-            for (int j = 0; j < dimensione(); j++)
-                if (!controlla(i, j, cella(i, j).getValore()) || !cella(i, j).getBlocco().soddisfatto())
-                    return false;
-        return true;
-    }
-
-    /**
-     * il metodo popola i blocchi sopra la griglia
+     * crea i blocchi sopra la griglia inizializzata
+     * @param numeroBlocchi numero dei blocchi da posizionare sulla griglia
      */
     default void popola(int numeroBlocchi)   // FIXME aggiungere controllo celle di un blocco tutte adiacenti.
     {
@@ -182,13 +251,14 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
         blocchi.add(blocco(dimensioneMassima));
         Collections.shuffle(blocchi);
 
-        for (Blocco blocco : blocchi)
+        for (Blocco blocco : blocchi) // FIXME devo migliorarlo
         {
             for (Cella cella : this)
                 if (cella.getBlocco() == null && popolaBT(cella,blocco))
                     break;
         }
     }
+
     /**
      * il metodo implementa la parte backtracking di popola
      * @param cella
@@ -219,29 +289,12 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
         if (ultimoVicino != null)
             return popolaBT(ultimoVicino, blocco);
         return false;
-    }/**/
+    }
 
-    /**
-     * il metodo restituisce una lista contenente i vicini di una cella
-     */
-    List<Cella> vicini(int riga, int colonna);
-
-    /**
-     * il metodo restituisce la dimensione della griglia
-     */
-    int dimensione();
-
-    /**
-     * Il metodo restituisce la cella di posizione riga, colonna
-     */
-    Cella cella(int riga, int colonna);
-
-    /**
-     * Factory di blocchi;
-     */
-    Blocco blocco(int dimensione);
     /**
      * Prototype
+     * @return un clone di this
+     * @throws CloneNotSupportedException siccome potrebbe dover richiamare super.clone()
      */
     Soluzione clone() throws CloneNotSupportedException;
 

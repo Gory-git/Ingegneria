@@ -144,10 +144,9 @@ public class BloccoList extends AbstractBlocco
     }
 
     @Override
-    public BloccoList clone() throws CloneNotSupportedException
+    public BloccoList clone()
     {
-        BloccoList blocco = (BloccoList) super.clone();
-        return new BloccoList(blocco.operatore, blocco.valore, blocco.dimensione(), blocco.celle);
+        return new BloccoList(operatore, valore, dimensione(), celle);
     }
 
     @Override

@@ -68,5 +68,5 @@ public interface Blocco extends Serializable, Iterable<Cella>, Cloneable
         }
         return false;
     }
-    public Blocco clone() throws CloneNotSupportedException;
+    Blocco clone();
 }

@@ -43,9 +43,7 @@ public abstract class AbstractBlocco implements Blocco
     {
         return operatore.toString() + " " + valore;
     }
-    public AbstractBlocco clone() throws CloneNotSupportedException
-    {
-        return (AbstractBlocco) super.clone();
-    }
+
+    public abstract AbstractBlocco clone();
 
 }

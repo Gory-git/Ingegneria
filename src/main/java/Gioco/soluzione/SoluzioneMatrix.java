@@ -32,13 +32,11 @@ public final class SoluzioneMatrix extends AbstractSoluzione
         risolvi(false);
         popola(numeroBlocchi);
 
-        // System.out.println(this);
-
         for (Cella cella : this)
             cella.setValore(0);
     }
 
-    public SoluzioneMatrix(Soluzione soluzione) throws CloneNotSupportedException
+    public SoluzioneMatrix(Soluzione soluzione)
     {
         if (soluzione == null)
             throw new IllegalArgumentException("Soluzione non valida");
@@ -56,39 +54,6 @@ public final class SoluzioneMatrix extends AbstractSoluzione
     }
 
     @Override
-    public void posiziona(int riga, int colonna, int valore)
-    {
-        // if (controlla(riga, colonna, valore) || valore == 0)
-            celle[riga][colonna].setValore(valore);
-    }
-
-    @Override
-    public boolean controlla(int riga, int colonna, int valore)     // TODO forse private
-    {
-        for (int i = 0; i < celle.length; i++)
-            if (i != riga && celle[i][colonna].getValore() == valore || i != colonna && celle[riga][i].getValore() == valore)
-                return false;
-        return true;
-    }
-
-    @Override
-    public List<Cella> vicini(int riga, int colonna)                // TODO forse private
-    {
-        List<Cella> vicini = new LinkedList<>();
-
-        if (riga > 0)
-            vicini.add(celle[riga - 1][colonna]);
-        if (colonna > 0)
-            vicini.add(celle[riga][colonna - 1]);
-        if (colonna < celle.length - 1)
-            vicini.add(celle[riga][colonna + 1]);
-        if (riga < celle.length - 1)
-            vicini.add(celle[riga + 1][colonna]);
-
-        return vicini;
-    }
-
-    @Override
     public int dimensione()
     {
         return celle.length;
@@ -101,13 +66,13 @@ public final class SoluzioneMatrix extends AbstractSoluzione
     }
 
     @Override
-    public Blocco blocco(int dimensione)                            // TODO forse private
+    public Blocco blocco(int dimensione)
     {
         return new BloccoList(dimensione);
     }
 
     @Override
-    public SoluzioneMatrix clone() throws CloneNotSupportedException
+    public SoluzioneMatrix clone()
     {
         SoluzioneMatrix clone = new SoluzioneMatrix(this);
 
@@ -117,16 +82,6 @@ public final class SoluzioneMatrix extends AbstractSoluzione
         clone.risolvi(true);
         return clone;
     }
-/*
-    @Override
-    public boolean risolta()
-    {
-        for (Cella cella : this)
-            if (!controlla(cella.getPosizione()[0], cella.getPosizione()[1], cella.getValore()) || !cella.getBlocco().soddisfatto())
-                return false;
-        return true;
-    }
-/**/
 
     @Override
     public Memento salva()
@@ -139,16 +94,10 @@ public final class SoluzioneMatrix extends AbstractSoluzione
     {
         if (!(memento instanceof MementoSoluzione mementoSoluzione))
             throw new IllegalArgumentException("Memento non corretto");
-        try
-        {
-            Soluzione soluzioneMatrix = new SoluzioneMatrix(mementoSoluzione.soluzione);
-            for (int i = 0; i < dimensione(); i++)
-                for (int j = 0; j < dimensione(); j++)
-                    celle[i][j] = soluzioneMatrix.cella(i, j);
-        } catch (CloneNotSupportedException e)
-        {
-            throw new RuntimeException(e);
-        }
+        Soluzione soluzioneMatrix = new SoluzioneMatrix(mementoSoluzione.soluzione);
+        for (int i = 0; i < dimensione(); i++)
+            for (int j = 0; j < dimensione(); j++)
+                celle[i][j] = soluzioneMatrix.cella(i, j);
     }
 
     private class MementoSoluzione implements Memento, Serializable
@@ -157,16 +106,10 @@ public final class SoluzioneMatrix extends AbstractSoluzione
 
         private MementoSoluzione()
         {
-            try
-            {
-                soluzione = new SoluzioneMatrix(SoluzioneMatrix.this);
-            } catch (CloneNotSupportedException e)
-            {
-                throw new RuntimeException(e);
-            }
+            soluzione = new SoluzioneMatrix(SoluzioneMatrix.this);
         }
 
-        SoluzioneMatrix originator()
+        private SoluzioneMatrix originator()
         {
             return SoluzioneMatrix.this;
         }

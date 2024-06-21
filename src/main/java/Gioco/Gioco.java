@@ -117,9 +117,8 @@ public enum Gioco implements Originator, Manager
     @Override
     public void addSubscriber(Subscriber subscriber)
     {
-        if (subscribers.contains(subscriber))
-            throw new IllegalArgumentException("Subscriber presente!");
-        subscribers.add(subscriber);
+        if (!subscribers.contains(subscriber))
+            subscribers.add(subscriber);
     }
 
     @Override
