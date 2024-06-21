@@ -30,7 +30,7 @@ class PanelGriglia extends JPanel
     {
 
         this.indiceSoluzione = numeroSoluzione;
-        mediator = new ConcreteMediator();
+        mediator = ConcreteMediator.ISTANZA;
         dimensione = mediator.dimensione();
         impostaColori();
         this.setBackground(Color.BLACK);

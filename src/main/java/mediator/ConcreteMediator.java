@@ -8,21 +8,20 @@ import permanenza.PermanenzaFile;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class ConcreteMediator implements Mediator
+public enum ConcreteMediator implements Mediator
 {
-    private Gioco istanza = Gioco.INSTANCE;
-    private LinkedList<Subscriber> subscribers = new LinkedList<>();
+    ISTANZA;
+    private final Gioco istanza = Gioco.INSTANCE;
+    private final LinkedList<Subscriber> subscribers = new LinkedList<>();
 
     @Override
     public void avvia(int numeroSoluzioni, int dimensioniGriglia, int numeroBlocchi)
     {
         try
         {
+            istanza.addSubscriber(this);
             istanza.avvia(numeroSoluzioni, dimensioniGriglia, numeroBlocchi);
-        } catch (CloneNotSupportedException e)
-        {
-            throw new RuntimeException(e);
-        } catch (IOException e)
+        } catch (CloneNotSupportedException | IOException e)
         {
             throw new RuntimeException(e);
         }

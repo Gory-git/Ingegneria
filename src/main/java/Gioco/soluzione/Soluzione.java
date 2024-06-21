@@ -153,9 +153,9 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
     boolean controlla(int riga, int colonna, int valore);
 
     /**
-     * il metodo controlla se la soluzione è valida
+     * restituisce true se la soluzione è riempita correttamente e i blocchi sono soddisfatti
      */
-    default boolean verifica()
+    default boolean risolta()
     {
         for (int i = 0; i < dimensione(); i++)
             for (int j = 0; j < dimensione(); j++)
@@ -181,27 +181,13 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
 
         blocchi.add(blocco(dimensioneMassima));
         Collections.shuffle(blocchi);
-        /*
+
         for (Blocco blocco : blocchi)
         {
             for (Cella cella : this)
-                if (cella.getBlocco() == null && popolaBT(cella,blocco, blocchi))
+                if (cella.getBlocco() == null && popolaBT(cella,blocco))
                     break;
         }
-        */
-        popolaBT(cella(0,0), null, blocchi);
-        /*
-        for (Blocco b : blocchi)
-            for (Cella c1 : b)
-            {
-                int viciniBlocco = 0;
-                for (Cella c2 : vicini(c1.getPosizione()[0], c1.getPosizione()[1]))
-                    if (c1.getBlocco() == c2.getBlocco())
-                        viciniBlocco++;
-                if (viciniBlocco == 0)
-                    ricompatta(c1, b);
-            }
-    /**/
     }
     /**
      * il metodo implementa la parte backtracking di popola
@@ -209,11 +195,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
      * @param blocco
      * @return
      */
-    private boolean popolaBT(Cella cella, Blocco blocco, LinkedList<Blocco> blocchi) // TODO creare nuova implementazione. SIAMO ALLA 5 %$*%#@
-    {
-        return false;
-    }
-    /*
+    private boolean popolaBT(Cella cella, Blocco blocco) // TODO creare nuova implementazione. SIAMO ALLA 5 %$*%#@
     {
         if (blocco.pieno())
             return true;
@@ -237,8 +219,8 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
         if (ultimoVicino != null)
             return popolaBT(ultimoVicino, blocco);
         return false;
-    }
-*/
+    }/**/
+
     /**
      * il metodo restituisce una lista contenente i vicini di una cella
      */
@@ -262,9 +244,5 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
      * Prototype
      */
     Soluzione clone() throws CloneNotSupportedException;
-    /**
-     * restituisce true se la soluzione è riempita correttamente e i blocchi sono soddisfatti
-     */
-    boolean risolta();
 
 }

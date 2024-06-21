@@ -9,7 +9,7 @@ import java.awt.event.*;
 
 public class FinestraIniziale extends FinestraSubscriber
 {
-    private final Mediator mediator = new ConcreteMediator();
+    private final Mediator mediator = ConcreteMediator.ISTANZA;
     private JButton nuovoGioco, caricaGioco;
 
     public FinestraIniziale()

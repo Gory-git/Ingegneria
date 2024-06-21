@@ -26,7 +26,7 @@ class FinestraGioco extends FinestraManagerSubscriber
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        mediator = new ConcreteMediator();
+        mediator = ConcreteMediator.ISTANZA;
         mediator.addSubscriber(this);
         this.dimensioneGriglia = mediator.dimensione();
 
@@ -138,7 +138,10 @@ class FinestraGioco extends FinestraManagerSubscriber
         avvisoMossaErrata.addActionListener(e ->
         {
             controllaErrori = !controllaErrori;
-            avvisoMossaErrata.setText("ATTIVA AVVISO");
+            if (controllaErrori)
+                avvisoMossaErrata.setText("DISATTIVA AVVISO");
+            else
+                avvisoMossaErrata.setText("ATTIVA AVVISO");
         });
 
         JMenu operazioni = new JMenu("Operazioni");
@@ -192,6 +195,7 @@ class FinestraGioco extends FinestraManagerSubscriber
 
     private void risolta()
     {
+        System.out.println("Risolta!");
         if (mediator.numeroSoluzioni() == 0)
         {
             int opzione = JOptionPane.showConfirmDialog

@@ -117,7 +117,7 @@ public final class SoluzioneMatrix extends AbstractSoluzione
         clone.risolvi(true);
         return clone;
     }
-
+/*
     @Override
     public boolean risolta()
     {
@@ -126,7 +126,7 @@ public final class SoluzioneMatrix extends AbstractSoluzione
                 return false;
         return true;
     }
-
+/**/
 
     @Override
     public Memento salva()

@@ -4,22 +4,20 @@ import mediator.ConcreteMediator;
 import mediator.Mediator;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 class FinestraNuovoGioco  extends FinestraManagerSubscriber
 {
-    private Mediator mediator = new ConcreteMediator();
+    private Mediator mediator = ConcreteMediator.ISTANZA;
     private JPanel panelNuovoGioco;
     private JSlider sliderDimensione;
     private JSpinner spinnerSoluzioni;
     public FinestraNuovoGioco()
     {
         super("SELEZIONA VINCOLI");
-        this.setSize(400, 130);
+        this.setSize(300, 150);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -47,21 +45,21 @@ class FinestraNuovoGioco  extends FinestraManagerSubscriber
         panelNuovoGioco.setLayout(new FlowLayout());
         panelNuovoGioco.setBackground(Color.LIGHT_GRAY);
 
-        JButton avviaGioco = new JButton("Avvia!");
-        avviaGioco.addActionListener(new Listener());
-        avviaGioco.setBounds(350, 400, 120, 40);
-        panelNuovoGioco.add(avviaGioco);
-
         sliderDimensione = new JSlider(JSlider.HORIZONTAL, 3, 9, 6);
         sliderDimensione.setMajorTickSpacing(1);
         sliderDimensione.setPaintTicks(true);
         sliderDimensione.setPaintLabels(true);
+        panelNuovoGioco.add(new JLabel("Dimensione:"));
         panelNuovoGioco.add(sliderDimensione);
 
         SpinnerModel valoriSoluzioni = new SpinnerNumberModel(0, 0, 100, 1);
         spinnerSoluzioni = new JSpinner(valoriSoluzioni);
-
+        panelNuovoGioco.add(new JLabel("Numero Soluzioni:"));
         panelNuovoGioco.add(spinnerSoluzioni);
+
+        JButton avviaGioco = new JButton("Avvia!");
+        avviaGioco.addActionListener(new Listener());
+        panelNuovoGioco.add(avviaGioco);
 
         add(panelNuovoGioco);
         setLocationRelativeTo(null);

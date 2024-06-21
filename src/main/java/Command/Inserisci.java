@@ -6,7 +6,7 @@ import mediator.Mediator;
 public class Inserisci implements Command
 {
     private int valorePrecedente, riga, colonna, nuovoValore, x, y;
-    private final Mediator mediator = new ConcreteMediator();
+    private final Mediator mediator = ConcreteMediator.ISTANZA;
     public Inserisci(int riga, int colonna, int nuovoValore, int x, int y)
     {
         this.riga = riga;

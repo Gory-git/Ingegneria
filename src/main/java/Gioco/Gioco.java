@@ -16,7 +16,7 @@ public enum Gioco implements Originator, Manager
 {
     INSTANCE;
     private LinkedList<Soluzione> soluzioni;
-    private LinkedList<Subscriber> subscribers = new LinkedList<>();
+    private final LinkedList<Subscriber> subscribers = new LinkedList<>();
     private int dimensioneSoluzioni, numeroBlocchiSoluzioni;
 
     public void avvia(int soluzioni, int dimensione, int numeroBlocchi) throws CloneNotSupportedException, IOException
@@ -32,15 +32,15 @@ public enum Gioco implements Originator, Manager
 
         for (int i = 0; i < soluzioni; i++)
         {
-            Soluzione clone;
-            boolean uguale = false;
+            Soluzione clone = this.soluzioni.getFirst().clone();
+            /*boolean uguale = false;
             do
             {
                 clone = this.soluzioni.getFirst().clone();
-                for (Soluzione soluzione : this.soluzioni)
-                    if (soluzione.equals(clone))
-                        uguale = true;
-            }while (uguale);
+                //for (Soluzione soluzione : this.soluzioni)
+                //    if (soluzione.equals(clone))
+                //        uguale = true;
+            }while (uguale);*/
             this.soluzioni.add(clone);
         }
     }
@@ -102,8 +102,7 @@ public enum Gioco implements Originator, Manager
             throw new IllegalArgumentException("Memento non corretto: non è una soluzione");
 
         MementoGioco mementoGioco = (MementoGioco) memento;
-        //if (this != mementoSoluzione.originator())  // TODO valutare se utile. In questo caso credo non lo sia
-        //    throw new IllegalArgumentException("Memento non corretto");
+
         for (Memento mementoSoluzione : mementoGioco.soluzioni)
         {
             int dimensione = mementoGioco.dimensioneSoluzioni;
@@ -140,7 +139,7 @@ public enum Gioco implements Originator, Manager
 
     private class MementoGioco implements Memento, Serializable
     {
-        private LinkedList<Memento> soluzioni = new LinkedList<>();
+        private final LinkedList<Memento> soluzioni = new LinkedList<>();
         private int dimensioneSoluzioni, numeroBlocchiSoluzioni;
 
         private MementoGioco()

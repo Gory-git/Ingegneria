@@ -20,11 +20,11 @@ class FinestraFinale extends JFrame
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        mediator = new ConcreteMediator();
+        mediator = ConcreteMediator.ISTANZA;
         numeroSoluzioni = mediator.numeroSoluzioni();
         griglie = new PanelGriglia[numeroSoluzioni];
 
-        for (int i = 0; i <= numeroSoluzioni; i++)
+        for (int i = 0; i < numeroSoluzioni; i++)
         {
             griglie[i] = new PanelGriglia(i);
             griglie[i].setVisible(true);
@@ -104,7 +104,7 @@ class FinestraFinale extends JFrame
 
         setJMenuBar(barraMenu);
 
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 }
