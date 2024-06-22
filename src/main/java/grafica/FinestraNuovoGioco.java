@@ -1,6 +1,5 @@
 package grafica;
 
-import mediator.ConcreteMediator;
 import mediator.Mediator;
 
 import javax.swing.*;
@@ -10,7 +9,7 @@ import java.awt.event.ActionListener;
 
 class FinestraNuovoGioco  extends FinestraManagerSubscriber
 {
-    private Mediator mediator = ConcreteMediator.ISTANZA;
+    private Mediator mediator = Mediator.ISTANZA;
     private JPanel panelNuovoGioco;
     private JSlider sliderDimensione;
     private JSpinner spinnerSoluzioni;
@@ -52,7 +51,7 @@ class FinestraNuovoGioco  extends FinestraManagerSubscriber
         panelNuovoGioco.add(new JLabel("Dimensione:"));
         panelNuovoGioco.add(sliderDimensione);
 
-        SpinnerModel valoriSoluzioni = new SpinnerNumberModel(0, 0, 100, 1);
+        SpinnerModel valoriSoluzioni = new SpinnerNumberModel(0, 0, 50, 1);
         spinnerSoluzioni = new JSpinner(valoriSoluzioni);
         panelNuovoGioco.add(new JLabel("Numero Soluzioni:"));
         panelNuovoGioco.add(spinnerSoluzioni);
