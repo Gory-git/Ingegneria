@@ -14,19 +14,21 @@ class FinestraFinale extends JFrame implements Component
     private final int numeroSoluzioni;
     private final PanelGriglia[] griglie;
     private final int[] attuale = {0};
-    public FinestraFinale()
+    public FinestraFinale(Mediator mediator)
     {
         super("SOLUZIONI!");
         setSize(500, 500);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        setMediator(mediator);
+
         numeroSoluzioni = mediator.numeroSoluzioni();
         griglie = new PanelGriglia[numeroSoluzioni];
 
-        for (int i = 0; i < numeroSoluzioni; i++)
+        for (int i = 0; i < numeroSoluzioni - 1; i++)
         {
-            griglie[i] = new PanelGriglia(i, mediator);
+            griglie[i] = new PanelGriglia(i + 1, mediator);
             griglie[i].setVisible(true);
         }
         add(griglie[0]);
@@ -38,12 +40,12 @@ class FinestraFinale extends JFrame implements Component
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if (attuale[0] == numeroSoluzioni - 1)
+                if (attuale[0] == numeroSoluzioni - 2)
                 {
                     JOptionPane.showMessageDialog
                             (
                                     griglie[attuale[0]],
-                                    "Hai visto tutte le " + numeroSoluzioni + " soluzioni!",
+                                    "Hai visto tutte le " + (numeroSoluzioni - 1) + " soluzioni!",
                                     "Attenzione",
                                     JOptionPane.ERROR_MESSAGE
                             );
@@ -52,8 +54,8 @@ class FinestraFinale extends JFrame implements Component
                     remove(griglie[attuale[0]]);
                     attuale[0] = attuale[0] + 1;
                     add(griglie[attuale[0]]);
-                    SwingUtilities.updateComponentTreeUI(FinestraFinale.this);
                 }
+                SwingUtilities.updateComponentTreeUI(FinestraFinale.this);
             }
         });
 
@@ -78,8 +80,8 @@ class FinestraFinale extends JFrame implements Component
                     remove(griglie[attuale[0]]);
                     attuale[0] = attuale[0] - 1;
                     add(griglie[attuale[0]]);
-                    SwingUtilities.updateComponentTreeUI(FinestraFinale.this);
                 }
+                SwingUtilities.updateComponentTreeUI(FinestraFinale.this);
             }
         });
         // NUOVOGIOCO

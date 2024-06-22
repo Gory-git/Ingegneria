@@ -11,7 +11,6 @@ public class BloccoList extends AbstractBlocco
 
     public BloccoList(Operatore operatore, int valore, int dimensione, List<Cella> celle)
     {
-        // CONTROLLO ECCEZIONI
         if ( celle == null)
             throw new IllegalArgumentException("Celle dev'essere non null");
         if ( celle.size() != dimensione)

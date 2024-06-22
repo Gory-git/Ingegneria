@@ -49,7 +49,14 @@ public class FinestraIniziale extends FinestraSubscriber
                 f.setMediator(mediator);
             } else if (e.getSource() == caricaGioco)
             {
-                mediator.carica();
+                try
+                {
+                    mediator.carica();
+                }catch (Exception exception)
+                {
+                    JOptionPane.showMessageDialog(FinestraIniziale.this,"Non trovo un salvataggio idoneo!","ATTENZIONE!",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 FinestraGioco f = new FinestraGioco(mediator);
                 f.addSubscriber(FinestraIniziale.this);
             }

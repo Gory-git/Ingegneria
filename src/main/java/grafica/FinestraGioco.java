@@ -26,7 +26,7 @@ class FinestraGioco extends FinestraManagerSubscriber
         mediator.addSubscriber(this);
         this.dimensioneGriglia = mediator.dimensione();
 
-        panelGriglia = new PanelGriglia(mediator);
+        panelGriglia = new PanelGriglia(0, mediator);
 
         //clicka per scegliere il valore da assegnare.
         JPopupMenu valoriDaInserire = new JPopupMenu();
@@ -110,8 +110,7 @@ class FinestraGioco extends FinestraManagerSubscriber
             {
                 if (mediator.numeroSoluzioni() > 0)
                 {
-                    FinestraFinale f = new FinestraFinale();
-                    f.setMediator(mediator);
+                    new FinestraFinale(mediator);
                     setVisible(false);
                 }else
                 {
@@ -221,8 +220,7 @@ class FinestraGioco extends FinestraManagerSubscriber
                             JOptionPane.INFORMATION_MESSAGE
                     );
             setVisible(false);
-            FinestraFinale f = new FinestraFinale();
-            f.setMediator(mediator);
+            new FinestraFinale(mediator);
         }
 
     }

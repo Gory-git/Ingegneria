@@ -61,12 +61,12 @@ public enum Gioco implements Originator, Manager
     {
         if (indiceSoluzione < 0 || indiceSoluzione > soluzioni.size() - 1)
             throw new IllegalArgumentException("Inserire un indice di soluzione valido");
-        return soluzioni.get(indiceSoluzione + 1).cella(riga, colonna).getValore();
+        return soluzioni.get(indiceSoluzione).cella(riga, colonna).getValore();
     }
 
     public int numeroSoluzioni()
     {
-        return soluzioni.size() - 1;
+        return soluzioni.size();
     }
 
     public boolean controlla(int riga, int colonna, int valore)
@@ -107,7 +107,8 @@ public enum Gioco implements Originator, Manager
         {
             int dimensione = mementoGioco.dimensioneSoluzioni;
             int numeroBlocchi = mementoGioco.numeroBlocchiSoluzioni;
-            this.soluzioni = new LinkedList<>();
+            if (this.soluzioni == null)
+                this.soluzioni = new LinkedList<>();
             Soluzione soluzioneMemento = new SoluzioneMatrix(dimensione, numeroBlocchi);
             soluzioneMemento.ripristina(mementoSoluzione);
             this.soluzioni.add(soluzioneMemento);

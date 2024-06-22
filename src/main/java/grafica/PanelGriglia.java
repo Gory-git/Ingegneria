@@ -19,11 +19,6 @@ class PanelGriglia extends JPanel implements Component
     private final int dimensione;
     private int indiceSoluzione;
 
-    public PanelGriglia(Mediator mediator)
-    {
-        this(-1, mediator);
-    }
-
     public PanelGriglia(int numeroSoluzione, Mediator mediator)
     {
 
@@ -38,7 +33,7 @@ class PanelGriglia extends JPanel implements Component
             for (int j = 0; j < dimensione; j++)
             {
                 JLabel labelValore = new JLabel(" ");
-                if (numeroSoluzione >= 0)
+                if (mediator.valore(i, j, indiceSoluzione) != 0)
                     labelValore.setText(mediator.valore(i, j, indiceSoluzione) + "");
 
                 labelValore.setHorizontalAlignment(JLabel.CENTER);
