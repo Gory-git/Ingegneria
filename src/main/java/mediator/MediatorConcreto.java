@@ -1,6 +1,10 @@
 package mediator;
 
 import Gioco.Gioco;
+import grafica.FinestraFinale;
+import grafica.FinestraGioco;
+import grafica.FinestraIniziale;
+import grafica.FinestraNuovoGioco;
 import memento.Memento;
 import observer.Subscriber;
 import permanenza.PermanenzaFile;
@@ -12,6 +16,10 @@ public class MediatorConcreto implements Mediator
 {
     private final Gioco istanza = Gioco.INSTANCE;
     private final LinkedList<Subscriber> subscribers = new LinkedList<>();
+    private FinestraIniziale finestraIniziale;
+    private FinestraNuovoGioco finestraNuovoGioco;
+    private FinestraGioco finestraGioco;
+    private FinestraFinale finestraFinale;
 
     @Override
     public void avvia(int numeroSoluzioni, int dimensioniGriglia, int numeroBlocchi)
@@ -84,6 +92,45 @@ public class MediatorConcreto implements Mediator
     }
 
     @Override
+    public void crea(String nome)
+    {
+        switch (nome.toLowerCase())
+        {
+            case "i" :
+            {
+                finestraIniziale = new FinestraIniziale();
+                finestraIniziale.setMediator(this);
+                break;
+            }
+            case "ng" :
+            {
+                finestraNuovoGioco = new FinestraNuovoGioco();
+                finestraNuovoGioco.addSubscriber(finestraIniziale);
+                finestraNuovoGioco.setMediator(this);
+                break;
+            }
+            case "gi":
+            {
+                finestraGioco = new FinestraGioco(this);
+                finestraGioco.addSubscriber(finestraIniziale);
+                break;
+            }
+            case "gng":
+            {
+                finestraGioco = new FinestraGioco(this);
+                finestraGioco.addSubscriber(finestraNuovoGioco);
+                break;
+            }
+            case "f":
+            {
+                finestraFinale = new FinestraFinale(this);
+                break;
+            }
+        }
+    }
+
+
+    @Override
     public void addSubscriber(Subscriber subscriber)
     {
         if (subscribers.contains(subscriber))
@@ -110,5 +157,10 @@ public class MediatorConcreto implements Mediator
     public void update()
     {
         sendNotification();
+    }
+
+    public static void main(String[] args)
+    {
+        new MediatorConcreto().crea("i");
     }
 }

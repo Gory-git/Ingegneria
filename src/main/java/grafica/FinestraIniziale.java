@@ -44,9 +44,7 @@ public class FinestraIniziale extends FinestraSubscriber
         {
             if (e.getSource() == nuovoGioco)
             {
-                FinestraNuovoGioco f = new FinestraNuovoGioco();
-                f.addSubscriber(FinestraIniziale.this);
-                f.setMediator(mediator);
+                mediator.crea("ng");
             } else if (e.getSource() == caricaGioco)
             {
                 try
@@ -57,8 +55,7 @@ public class FinestraIniziale extends FinestraSubscriber
                     JOptionPane.showMessageDialog(FinestraIniziale.this,"Non trovo un salvataggio idoneo!","ATTENZIONE!",JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                FinestraGioco f = new FinestraGioco(mediator);
-                f.addSubscriber(FinestraIniziale.this);
+                mediator.crea("gi");
             }
             setVisible(false);
         }

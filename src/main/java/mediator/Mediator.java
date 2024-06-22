@@ -23,4 +23,6 @@ public interface Mediator extends ManagerSubscriber
     int dimensione();
 
     String[] blocco(int riga, int colonna);
+
+    void crea(String nome);
 }

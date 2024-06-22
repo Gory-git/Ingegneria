@@ -8,20 +8,20 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class FinestraFinale extends JFrame implements Component
+public class FinestraFinale extends JFrame implements Component
 {
     private Mediator mediator;
     private final int numeroSoluzioni;
     private final PanelGriglia[] griglie;
     private final int[] attuale = {0};
-    public FinestraFinale(Mediator mediator)
+    public FinestraFinale(Mediator mediatore)
     {
         super("SOLUZIONI!");
         setSize(500, 500);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setMediator(mediator);
+        setMediator(mediatore);
 
         numeroSoluzioni = mediator.numeroSoluzioni();
         griglie = new PanelGriglia[numeroSoluzioni];
@@ -91,8 +91,7 @@ class FinestraFinale extends JFrame implements Component
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                FinestraIniziale f = new FinestraIniziale();
-                f.setMediator(mediator);
+                mediator.crea("i");
                 setVisible(false);
             }
         });

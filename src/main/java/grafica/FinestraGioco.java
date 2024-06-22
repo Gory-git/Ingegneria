@@ -8,7 +8,7 @@ import mediator.MediatorConcreto;
 import javax.swing.*;
 import java.awt.event.*;
 
-class FinestraGioco extends FinestraManagerSubscriber
+public class FinestraGioco extends FinestraManagerSubscriber
 {
     private final int dimensioneGriglia;
     private boolean controllaErrori = true;
@@ -206,8 +206,7 @@ class FinestraGioco extends FinestraManagerSubscriber
             if (opzione == JOptionPane.YES_OPTION)
             {
                 setVisible(false);
-                FinestraIniziale f = new FinestraIniziale();
-                f.setMediator(mediator);
+                mediator.crea("i");
             }else
                 dispatchEvent(new WindowEvent(FinestraGioco.this, WindowEvent.WINDOW_CLOSING));
         }else
@@ -220,7 +219,7 @@ class FinestraGioco extends FinestraManagerSubscriber
                             JOptionPane.INFORMATION_MESSAGE
                     );
             setVisible(false);
-            new FinestraFinale(mediator);
+            mediator.crea("f");
         }
 
     }

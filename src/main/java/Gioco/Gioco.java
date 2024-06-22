@@ -33,14 +33,6 @@ public enum Gioco implements Originator, Manager
         for (int i = 0; i < soluzioni; i++)
         {
             Soluzione clone = this.soluzioni.getFirst().clone();
-            /*boolean uguale = false;
-            do
-            {
-                clone = this.soluzioni.getFirst().clone();
-                //for (Soluzione soluzione : this.soluzioni)
-                //    if (soluzione.equals(clone))
-                //        uguale = true;
-            }while (uguale);*/
             this.soluzioni.add(clone);
         }
     }
