@@ -1,6 +1,5 @@
 package grafica;
 
-import mediator.ConcreteMediator;
 import mediator.Mediator;
 
 import javax.swing.*;
@@ -20,7 +19,7 @@ class FinestraFinale extends JFrame
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        mediator = ConcreteMediator.ISTANZA;
+        mediator = Mediator.ISTANZA;
         numeroSoluzioni = mediator.numeroSoluzioni();
         griglie = new PanelGriglia[numeroSoluzioni];
 

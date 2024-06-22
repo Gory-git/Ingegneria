@@ -1,13 +1,10 @@
 package grafica;
 
-import Command.Command;
 import Command.HistoryCommandHandler;
 import Command.Inserisci;
-import mediator.ConcreteMediator;
 import mediator.Mediator;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
 class FinestraGioco extends FinestraManagerSubscriber
@@ -26,7 +23,7 @@ class FinestraGioco extends FinestraManagerSubscriber
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        mediator = ConcreteMediator.ISTANZA;
+        mediator = Mediator.ISTANZA;
         mediator.addSubscriber(this);
         this.dimensioneGriglia = mediator.dimensione();
 

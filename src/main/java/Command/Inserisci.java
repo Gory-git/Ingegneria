@@ -1,12 +1,11 @@
 package Command;
 
-import mediator.ConcreteMediator;
 import mediator.Mediator;
 
 public class Inserisci implements Command
 {
     private int valorePrecedente, riga, colonna, nuovoValore, x, y;
-    private final Mediator mediator = ConcreteMediator.ISTANZA;
+    private final Mediator mediator = Mediator.ISTANZA;
     public Inserisci(int riga, int colonna, int nuovoValore, int x, int y)
     {
         this.riga = riga;

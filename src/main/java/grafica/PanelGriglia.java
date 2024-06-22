@@ -1,9 +1,5 @@
 package grafica;
 
-import Gioco.blocco.Blocco;
-import Gioco.cella.Cella;
-import Gioco.soluzione.Soluzione;
-import mediator.ConcreteMediator;
 import mediator.Mediator;
 
 import javax.swing.*;
@@ -30,7 +26,7 @@ class PanelGriglia extends JPanel
     {
 
         this.indiceSoluzione = numeroSoluzione;
-        mediator = ConcreteMediator.ISTANZA;
+        mediator = Mediator.ISTANZA;
         dimensione = mediator.dimensione();
         impostaColori();
         this.setBackground(Color.BLACK);

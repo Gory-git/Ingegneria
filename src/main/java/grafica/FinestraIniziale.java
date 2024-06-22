@@ -1,6 +1,5 @@
 package grafica;
 
-import mediator.ConcreteMediator;
 import mediator.Mediator;
 
 import javax.swing.*;
@@ -9,7 +8,7 @@ import java.awt.event.*;
 
 public class FinestraIniziale extends FinestraSubscriber
 {
-    private final Mediator mediator = ConcreteMediator.ISTANZA;
+    private final Mediator mediator = Mediator.ISTANZA;
     private JButton nuovoGioco, caricaGioco;
 
     public FinestraIniziale()
