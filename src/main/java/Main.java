@@ -1,6 +1,7 @@
 import Gioco.soluzione.Soluzione;
 import Gioco.soluzione.SoluzioneMatrix;
 import grafica.FinestraIniziale;
+import mediator.MediatorConcreto;
 
 import java.io.IOException;
 
@@ -25,7 +26,8 @@ public class Main
         System.out.println(Gioco.INSTANCE.getSoluzioni().get(2));
         //mediator.salva();
 */
-        new FinestraIniziale();
+        FinestraIniziale f = new FinestraIniziale();
+        f.setMediator(new MediatorConcreto());
 /*
         Soluzione s = new SoluzioneMatrix(6, 20);
         System.out.println(s);

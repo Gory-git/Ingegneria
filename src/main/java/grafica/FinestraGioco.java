@@ -3,6 +3,7 @@ package grafica;
 import Command.HistoryCommandHandler;
 import Command.Inserisci;
 import mediator.Mediator;
+import mediator.MediatorConcreto;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -10,24 +11,23 @@ import java.awt.event.*;
 class FinestraGioco extends FinestraManagerSubscriber
 {
     private final int dimensioneGriglia;
-    private final Mediator mediator;
     private boolean controllaErrori = true;
     private final PanelGriglia panelGriglia;
     private final GiocoHandler giocoHandler = new GiocoHandler();
 
-    public FinestraGioco()
+    public FinestraGioco(Mediator mediator)
     {
         super("KENKEN GAME!");
 
         setSize(500, 500);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        mediator = Mediator.ISTANZA;
+        setMediator(mediator);
         mediator.addSubscriber(this);
         this.dimensioneGriglia = mediator.dimensione();
 
-        panelGriglia = new PanelGriglia();
+        panelGriglia = new PanelGriglia(mediator);
+
         //clicka per scegliere il valore da assegnare.
         JPopupMenu valoriDaInserire = new JPopupMenu();
         JMenuItem[] menuItems = new JMenuItem[dimensioneGriglia];
@@ -110,7 +110,8 @@ class FinestraGioco extends FinestraManagerSubscriber
             {
                 if (mediator.numeroSoluzioni() > 0)
                 {
-                    new FinestraFinale();
+                    FinestraFinale f = new FinestraFinale();
+                    f.setMediator(mediator);
                     setVisible(false);
                 }else
                 {
@@ -123,7 +124,8 @@ class FinestraGioco extends FinestraManagerSubscriber
                             );
                     if (opzione == JOptionPane.YES_OPTION)
                     {
-                        new FinestraIniziale();
+                        FinestraIniziale f = new FinestraIniziale();
+                        f.setMediator(mediator);
                         setVisible(false);
                     }else
                         dispatchEvent(new WindowEvent(FinestraGioco.this, WindowEvent.WINDOW_CLOSING));
@@ -178,8 +180,9 @@ class FinestraGioco extends FinestraManagerSubscriber
 
         int riga = Math.min(Math.floorDiv(y * dimensioneGriglia, 435), dimensioneGriglia - 1);
         int colonna = Math.min(Math.floorDiv(x * dimensioneGriglia, 485), dimensioneGriglia - 1);
-
-        giocoHandler.handle(new Inserisci(riga, colonna, valore, x, y));
+        Inserisci inserisci = new Inserisci(riga, colonna, valore, x, y);
+        inserisci.setMediator(mediator);
+        giocoHandler.handle(inserisci);
 
         if (mediator.valore(riga, colonna) == 0)
             label.setText(" ");
@@ -197,14 +200,15 @@ class FinestraGioco extends FinestraManagerSubscriber
             int opzione = JOptionPane.showConfirmDialog
                     (
                             panelGriglia,
-                            "Iniziare una nuova partita?",
+                            "Hai risolto il gioco correttamente!\nIniziare una nuova partita?",
                             "Attenzione",
                             JOptionPane.YES_NO_OPTION
                     );
             if (opzione == JOptionPane.YES_OPTION)
             {
                 setVisible(false);
-                new FinestraIniziale();
+                FinestraIniziale f = new FinestraIniziale();
+                f.setMediator(mediator);
             }else
                 dispatchEvent(new WindowEvent(FinestraGioco.this, WindowEvent.WINDOW_CLOSING));
         }else
@@ -217,7 +221,8 @@ class FinestraGioco extends FinestraManagerSubscriber
                             JOptionPane.INFORMATION_MESSAGE
                     );
             setVisible(false);
-            new FinestraFinale();
+            FinestraFinale f = new FinestraFinale();
+            f.setMediator(mediator);
         }
 
     }

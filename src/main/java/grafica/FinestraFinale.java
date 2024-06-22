@@ -1,17 +1,19 @@
 package grafica;
 
+import mediator.Component;
 import mediator.Mediator;
+import mediator.MediatorConcreto;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class FinestraFinale extends JFrame
+class FinestraFinale extends JFrame implements Component
 {
     private Mediator mediator;
-    private int numeroSoluzioni;
-    private PanelGriglia[] griglie;
-    private int[] attuale = {0};
+    private final int numeroSoluzioni;
+    private final PanelGriglia[] griglie;
+    private final int[] attuale = {0};
     public FinestraFinale()
     {
         super("SOLUZIONI!");
@@ -19,13 +21,12 @@ class FinestraFinale extends JFrame
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        mediator = Mediator.ISTANZA;
         numeroSoluzioni = mediator.numeroSoluzioni();
         griglie = new PanelGriglia[numeroSoluzioni];
 
         for (int i = 0; i < numeroSoluzioni; i++)
         {
-            griglie[i] = new PanelGriglia(i);
+            griglie[i] = new PanelGriglia(i, mediator);
             griglie[i].setVisible(true);
         }
         add(griglie[0]);
@@ -88,7 +89,8 @@ class FinestraFinale extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                new FinestraIniziale();
+                FinestraIniziale f = new FinestraIniziale();
+                f.setMediator(mediator);
                 setVisible(false);
             }
         });
@@ -105,5 +107,11 @@ class FinestraFinale extends JFrame
 
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    @Override
+    public void setMediator(Mediator mediator)
+    {
+        this.mediator = mediator;
     }
 }

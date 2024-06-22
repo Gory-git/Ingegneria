@@ -1,7 +1,10 @@
 package grafica;
 
+import mediator.Component;
 import mediator.Mediator;
+import mediator.MediatorConcreto;
 
+import javax.print.attribute.standard.Media;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -9,24 +12,23 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-class PanelGriglia extends JPanel
+class PanelGriglia extends JPanel implements Component
 {
-
+    private Mediator mediator;
     private final HashMap<String, Color> bloccoColore = new HashMap<>();
     private final int dimensione;
     private int indiceSoluzione;
-    private final Mediator mediator;
 
-    public PanelGriglia()
+    public PanelGriglia(Mediator mediator)
     {
-        this(-1);
+        this(-1, mediator);
     }
 
-    public PanelGriglia(int numeroSoluzione)
+    public PanelGriglia(int numeroSoluzione, Mediator mediator)
     {
 
         this.indiceSoluzione = numeroSoluzione;
-        mediator = Mediator.ISTANZA;
+        setMediator(mediator);
         dimensione = mediator.dimensione();
         impostaColori();
         this.setBackground(Color.BLACK);
@@ -92,5 +94,11 @@ class PanelGriglia extends JPanel
                 }
             }
 
+    }
+
+    @Override
+    public void setMediator(Mediator mediator)
+    {
+        this.mediator = mediator;
     }
 }

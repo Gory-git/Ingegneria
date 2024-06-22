@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public final class Cella implements Serializable, Cloneable, Comparable<Cella>
 {
-    private int[] posizione;
+    private final int[] posizione;
     private int valore;
     private Blocco blocco;
 
@@ -34,14 +34,6 @@ public final class Cella implements Serializable, Cloneable, Comparable<Cella>
         this.blocco = blocco;
     }
 
-    public Cella(int[] posizione, Blocco blocco)
-    {
-        this(0, posizione);
-        if ( blocco == null)
-            throw new IllegalArgumentException("Blocco dev'essere non null");
-        this.blocco = blocco;
-    }
-
     public void setValore(int valore)
     {
         this.valore = valore;
@@ -54,8 +46,6 @@ public final class Cella implements Serializable, Cloneable, Comparable<Cella>
 
     public void setBlocco(Blocco blocco)
     {
-        //if ( blocco == null)
-        //    throw new IllegalArgumentException("Blocco dev'essere non null");
         this.blocco = blocco;
     }
 
@@ -74,11 +64,7 @@ public final class Cella implements Serializable, Cloneable, Comparable<Cella>
     {
         if(c == null)
             throw new IllegalArgumentException();
-        if(this.valore > c.valore)
-            return 1;
-        if(this.valore < c.valore)
-            return -1;
-        return 0;
+        return Integer.compare(this.valore, c.valore);
     }
 
     @Override
@@ -89,7 +75,7 @@ public final class Cella implements Serializable, Cloneable, Comparable<Cella>
 
         //H += M * blocco.hashCode();
         H += M * valore;
-        H += M * posizione.hashCode();
+        H += M * Arrays.hashCode(posizione);
 
         return H;
     }
@@ -99,9 +85,8 @@ public final class Cella implements Serializable, Cloneable, Comparable<Cella>
     {
         if(obj == this)
             return true;
-        if(!(obj instanceof Cella))
+        if(!(obj instanceof Cella cella))
             return false;
-        Cella cella = (Cella) obj;
 
         return this.valore == cella.valore
                 && Arrays.equals(this.posizione, cella.posizione)

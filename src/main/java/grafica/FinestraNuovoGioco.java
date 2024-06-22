@@ -1,6 +1,6 @@
 package grafica;
 
-import mediator.Mediator;
+import mediator.MediatorConcreto;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 
 class FinestraNuovoGioco  extends FinestraManagerSubscriber
 {
-    private Mediator mediator = Mediator.ISTANZA;
     private JPanel panelNuovoGioco;
     private JSlider sliderDimensione;
     private JSpinner spinnerSoluzioni;
@@ -60,6 +59,7 @@ class FinestraNuovoGioco  extends FinestraManagerSubscriber
         avviaGioco.addActionListener(new Listener());
         panelNuovoGioco.add(avviaGioco);
 
+
         add(panelNuovoGioco);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -88,7 +88,7 @@ class FinestraNuovoGioco  extends FinestraManagerSubscriber
                 return;
             }
             mediator.avvia(numeroSoluzioni, dimensioneGriglia, numeroBlocchi);
-            FinestraGioco f = new FinestraGioco();
+            FinestraGioco f = new FinestraGioco(mediator);
             f.addSubscriber(FinestraNuovoGioco.this);
             setVisible(false);
         }

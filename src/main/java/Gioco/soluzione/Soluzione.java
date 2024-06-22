@@ -23,6 +23,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
             throw new IllegalArgumentException("Valore di colonna non ammissibile");
         if (valore < 0)
             throw new IllegalArgumentException("Impossibile inserire un valore negativo");
+        cella(riga, colonna).setValore(valore);
     }
 
     /**
@@ -269,6 +270,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
     {
         if (blocco.pieno())
             return true;
+
         if (cella.getBlocco() == null)
         {
             cella.setBlocco(blocco);

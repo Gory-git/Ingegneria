@@ -1,18 +1,27 @@
 package grafica;
 
+import mediator.Component;
+import mediator.Mediator;
 import observer.ManagerSubscriber;
 import observer.Subscriber;
 
 import javax.swing.*;
 import java.util.LinkedList;
 
-abstract class FinestraManagerSubscriber extends JFrame implements ManagerSubscriber
+abstract class FinestraManagerSubscriber extends JFrame implements ManagerSubscriber, Component
 {
-    private LinkedList<Subscriber> subscribers = new LinkedList<>();
+    private final LinkedList<Subscriber> subscribers = new LinkedList<>();
+    protected Mediator mediator;
 
     public FinestraManagerSubscriber(String s)
     {
         super(s);
+    }
+
+    @Override
+    public void setMediator(Mediator mediator)
+    {
+        this.mediator = mediator;
     }
 
     @Override

@@ -1,11 +1,12 @@
 package Command;
 
+import mediator.Component;
 import mediator.Mediator;
 
-public class Inserisci implements Command
+public class Inserisci implements Command, Component
 {
+    private Mediator mediator;
     private int valorePrecedente, riga, colonna, nuovoValore, x, y;
-    private final Mediator mediator = Mediator.ISTANZA;
     public Inserisci(int riga, int colonna, int nuovoValore, int x, int y)
     {
         this.riga = riga;
@@ -52,5 +53,11 @@ public class Inserisci implements Command
     public int getY()
     {
         return y;
+    }
+
+    @Override
+    public void setMediator(Mediator mediator)
+    {
+        this.mediator = mediator;
     }
 }

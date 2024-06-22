@@ -1,6 +1,6 @@
 package grafica;
 
-import mediator.Mediator;
+import mediator.MediatorConcreto;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,8 +8,8 @@ import java.awt.event.*;
 
 public class FinestraIniziale extends FinestraSubscriber
 {
-    private final Mediator mediator = Mediator.ISTANZA;
-    private JButton nuovoGioco, caricaGioco;
+    private final JButton nuovoGioco;
+    private final JButton caricaGioco;
 
     public FinestraIniziale()
     {
@@ -46,10 +46,11 @@ public class FinestraIniziale extends FinestraSubscriber
             {
                 FinestraNuovoGioco f = new FinestraNuovoGioco();
                 f.addSubscriber(FinestraIniziale.this);
+                f.setMediator(mediator);
             } else if (e.getSource() == caricaGioco)
             {
                 mediator.carica();
-                FinestraGioco f = new FinestraGioco();
+                FinestraGioco f = new FinestraGioco(mediator);
                 f.addSubscriber(FinestraIniziale.this);
             }
             setVisible(false);
