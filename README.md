@@ -1,4 +1,4 @@
-#KENKEN
+# KENKEN
 Progetto del corso di Ingegneria del Software - Ingegneria Informatica - UniCal.
 ## Come usare l'applicazione
 ### Schermata Iniziale
