@@ -1,5 +1,6 @@
 # KENKEN
 Progetto del corso di Ingegneria del Software - Ingegneria Informatica - UniCal.
+Voci Gregorio MAT. 230631
 ## Come usare l'applicazione
 ### Schermata Iniziale
 Appena avviato il progetto si presenterà una schermata in cui si può scegliere se iniziare una nuova partita o continuarne una salvata in precedenza.
