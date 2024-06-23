@@ -1,7 +1,5 @@
 package grafica;
 
-import mediator.MediatorConcreto;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -82,7 +80,7 @@ public class FinestraNuovoGioco  extends FinestraManagerSubscriber
             int numeroBlocchi;
             try
             {
-                numeroBlocchi= (int) JOptionPane.showInputDialog(panelNuovoGioco, "Inserire numero di blocchi che si vuole risolvere: ", "Scelta numero blocchi", JOptionPane.PLAIN_MESSAGE, null,numeriPossibiliBlocchi, (Object) 6);
+                numeroBlocchi= (int) JOptionPane.showInputDialog(panelNuovoGioco, "Inserire numero minimo di blocchi che si vuole risolvere: ", "Scelta numero blocchi", JOptionPane.PLAIN_MESSAGE, null,numeriPossibiliBlocchi, 6);
             }catch (NullPointerException ex)
             {
                 return;

@@ -74,13 +74,13 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
         List<Cella> vicini = new LinkedList<>();
 
         if (riga > 0)
-            vicini.add(cella(riga - 1,colonna));
-        if (colonna > 0)
-            vicini.add(cella(riga,colonna - 1));
+            vicini.add(cella(riga - 1,colonna)); // vicino di sopra
         if (colonna < dimensione() - 1)
-            vicini.add(cella(riga,colonna + 1));
+            vicini.add(cella(riga,colonna + 1)); // vicino a destra
         if (riga < dimensione() - 1)
-            vicini.add(cella(riga + 1,colonna));
+            vicini.add(cella(riga + 1,colonna)); // vicino sotto
+        if (colonna > 0)
+            vicini.add(cella(riga,colonna - 1)); // vicino a sinistra
 
         return vicini;
     }
@@ -237,7 +237,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
      * crea i blocchi sopra la griglia inizializzata
      * @param numeroBlocchi numero dei blocchi da posizionare sulla griglia
      */
-    default void popola(int numeroBlocchi)   // FIXME aggiungere controllo celle di un blocco tutte adiacenti.
+    default void popola(int numeroBlocchi)
     {
         int dimensioneMassima = dimensione() * dimensione();
         LinkedList<Blocco> blocchi = new LinkedList<>();
@@ -252,44 +252,87 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
         blocchi.add(blocco(dimensioneMassima));
         Collections.shuffle(blocchi);
 
-        for (Blocco blocco : blocchi) // FIXME devo migliorarlo
+        for (Blocco blocco : blocchi)
         {
-            for (Cella cella : this)
-                if (cella.getBlocco() == null && popolaBT(cella,blocco))
-                    break;
+            List<Cella> celleBlocco = popolaRec(blocco.dimensione(), new LinkedList<Cella>());
+            if (celleBlocco.size() < blocco.dimensione())
+                blocco = blocco(celleBlocco.size());
+            for (Cella cella : celleBlocco)
+            {
+                blocco.aggiungiCella(cella);
+                cella.setBlocco(blocco);
+            }
         }
+        for (Cella cella : this)
+            if (cella.getBlocco() == null)
+            {
+                Blocco blocco = blocco(1);
+                cella.setBlocco(blocco);
+                blocco.aggiungiCella(cella);
+            }
     }
 
     /**
      * il metodo implementa la parte backtracking di popola
-     * @param cella
-     * @param blocco
-     * @return
+     * @param numeroCelle numero di celle che desidero ottenere, non viene garantito che il metodo riesca a trovarle.
+     * @param celle lista nella quale devo ottenere le celle
+     * @return lista contenente le celle
      */
-    private boolean popolaBT(Cella cella, Blocco blocco) // TODO creare nuova implementazione. SIAMO ALLA 5 %$*%#@
+    private List<Cella> popolaRec(int numeroCelle, List<Cella> celle)
     {
-        if (blocco.pieno())
-            return true;
-
-        if (cella.getBlocco() == null)
-        {
-            cella.setBlocco(blocco);
-            blocco.aggiungiCella(cella);
-        }
-
-        List<Cella> vicini = vicini(cella.getPosizione()[0], cella.getPosizione()[1]);
-        Cella ultimoVicino = null;
-        for (Cella vicino : vicini)
-            if (vicino.getBlocco() == null && !blocco.pieno())
+        Cella cella = null;
+        for (Cella c : this)
+            if (c.getBlocco() == null && celle.size() < numeroCelle && adiacente(c, celle))
             {
-                vicino.setBlocco(blocco);
-                blocco.aggiungiCella(vicino);
-                ultimoVicino = vicino;
-                if (blocco.pieno())
-                    return true;
+                cella = c;
+                break;
             }
-        if (ultimoVicino != null)
-            return popolaBT(ultimoVicino, blocco);
+        if (cella == null)
+            return celle;
+        celle.add(cella);
+        if (celle.size() == numeroCelle)
+            return celle;
+        Cella ultimoVicino = null;
+        for (Cella vicino : vicini(cella.getPosizione()[0], cella.getPosizione()[1]))
+        {
+            if (vicino.getBlocco() == null && celle.size() < numeroCelle && !celle.contains(vicino))
+            {
+                celle.add(vicino);
+                ultimoVicino = vicino;
+            }
+            if (celle.size() == numeroCelle)
+                return celle;
+            else
+                popolaRec(numeroCelle, celle);
+        }
+        if (ultimoVicino == null)
+            ultimoVicino = celle.get(celle.size() - 1);
+        if (celle.size() < numeroCelle)
+            for (Cella vicino : vicini(ultimoVicino.getPosizione()[0], ultimoVicino.getPosizione()[1]))
+            {
+                popolaRec(numeroCelle, celle);
+                if (celle.size() == numeroCelle)
+                    break;
+            }
+        return celle;
+    }
+
+    /**
+     *  metodo ausiliario di popolaRec
+     * @param cella cella presa in analisi
+     * @param celle lista di celle presa in analisi
+     * @return true se la cella risulta idonea, false altrimenti
+     */
+    private boolean adiacente(Cella cella, List<Cella> celle)
+    {
+        if (celle.isEmpty())
+            return true;
+        if (celle.contains(cella))
+            return false;
+        for (Cella cella1 : celle)
+            for (Cella vicino : vicini(cella1.getPosizione()[0], cella1.getPosizione()[1]))
+                if (cella == vicino)
+                    return true;
         return false;
     }
 

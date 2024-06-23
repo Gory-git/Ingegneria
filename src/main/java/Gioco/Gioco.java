@@ -94,13 +94,11 @@ public enum Gioco implements Originator, Manager
             throw new IllegalArgumentException("Memento non corretto: non è una soluzione");
 
         MementoGioco mementoGioco = (MementoGioco) memento;
-
+        this.soluzioni = new LinkedList<>();
         for (Memento mementoSoluzione : mementoGioco.soluzioni)
         {
             int dimensione = mementoGioco.dimensioneSoluzioni;
             int numeroBlocchi = mementoGioco.numeroBlocchiSoluzioni;
-            if (this.soluzioni == null)
-                this.soluzioni = new LinkedList<>();
             Soluzione soluzioneMemento = new SoluzioneMatrix(dimensione, numeroBlocchi);
             soluzioneMemento.ripristina(mementoSoluzione);
             this.soluzioni.add(soluzioneMemento);

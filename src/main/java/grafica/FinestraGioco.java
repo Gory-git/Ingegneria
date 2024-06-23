@@ -108,7 +108,7 @@ public class FinestraGioco extends FinestraManagerSubscriber
                     );
             if (opzione == JOptionPane.OK_OPTION)
             {
-                if (mediator.numeroSoluzioni() > 0)
+                if (mediator.numeroSoluzioni() - 1 > 0)
                 {
                     new FinestraFinale(mediator);
                     setVisible(false);
@@ -123,8 +123,7 @@ public class FinestraGioco extends FinestraManagerSubscriber
                             );
                     if (opzione == JOptionPane.YES_OPTION)
                     {
-                        FinestraIniziale f = new FinestraIniziale();
-                        f.setMediator(mediator);
+                        mediator.crea("i");
                         setVisible(false);
                     }else
                         dispatchEvent(new WindowEvent(FinestraGioco.this, WindowEvent.WINDOW_CLOSING));
@@ -194,7 +193,7 @@ public class FinestraGioco extends FinestraManagerSubscriber
 
     private void risolta()
     {
-        if (mediator.numeroSoluzioni() == 0)
+        if (mediator.numeroSoluzioni() - 1 == 0)
         {
             int opzione = JOptionPane.showConfirmDialog
                     (

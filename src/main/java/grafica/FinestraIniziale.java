@@ -1,7 +1,5 @@
 package grafica;
 
-import mediator.MediatorConcreto;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -14,7 +12,7 @@ public class FinestraIniziale extends FinestraSubscriber
     public FinestraIniziale()
     {
         super("KENKEN");
-        this.setSize(200, 110);
+        this.setSize(300, 80);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
