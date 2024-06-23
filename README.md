@@ -25,3 +25,6 @@ Voci Gregorio MAT. 230631
 + Per visualizzare la successiva bisogna premere nel menù: opzioni -> avanti.
 + Per visualizzare la precedente bisogna premere indietro.
 + Per iniziare una nuova partita bisogna premere nuova partita.
+
+> [!NOTE]
+> Il file Jar si trova in: out/artifacts/ingegneria.jar/
