@@ -10,7 +10,6 @@ import observer.Subscriber;
 
 import java.io.*;
 import java.util.LinkedList;
-import java.util.List;
 
 public enum Gioco implements Originator, Manager
 {
@@ -130,7 +129,7 @@ public enum Gioco implements Originator, Manager
     private class MementoGioco implements Memento, Serializable
     {
         private final LinkedList<Memento> soluzioni = new LinkedList<>();
-        private int dimensioneSoluzioni, numeroBlocchiSoluzioni;
+        private final int dimensioneSoluzioni, numeroBlocchiSoluzioni;
 
         private MementoGioco()
         {

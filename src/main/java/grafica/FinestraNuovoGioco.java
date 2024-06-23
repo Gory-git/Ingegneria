@@ -19,14 +19,10 @@ public class FinestraNuovoGioco  extends FinestraManagerSubscriber
 
         // BOTTONE INDIETRO
         JMenuItem indietro = new JMenuItem("INDIETRO");
-        indietro.addActionListener(new ActionListener()
+        indietro.addActionListener(e ->
         {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                sendNotification();
-                setVisible(false);
-            }
+            sendNotification();
+            setVisible(false);
         });
 
         JMenu menu = new JMenu("Opzioni");

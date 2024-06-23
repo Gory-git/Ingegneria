@@ -57,11 +57,11 @@ public class FinestraGioco extends FinestraManagerSubscriber
 
         // UNDO
         JMenuItem undo = new JMenuItem("UNDO"); // Undo
-        undo.addActionListener(e -> {giocoHandler.undo();});
+        undo.addActionListener(e -> giocoHandler.undo());
 
         // REDO
         JMenuItem mDo= new JMenuItem("REDO"); // Redo
-        mDo.addActionListener(e -> {giocoHandler.redo();});
+        mDo.addActionListener(e -> giocoHandler.redo());
 
         // SALVA
         JMenuItem salva = new JMenuItem("SALVA");
@@ -231,17 +231,6 @@ public class FinestraGioco extends FinestraManagerSubscriber
 
     private class GiocoHandler extends HistoryCommandHandler
     {
-        public GiocoHandler()
-        {
-
-        }
-        public GiocoHandler(int lunghezzaStoria)
-        {
-            if (lunghezzaStoria < 0)
-                throw new IllegalArgumentException("Impossibile avere una stria di lunghezza negativa");
-            super.lunghezzaStoria = lunghezzaStoria;
-        }
-
         @Override
         public void redo()
         {

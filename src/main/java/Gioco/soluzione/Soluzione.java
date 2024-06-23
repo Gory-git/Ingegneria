@@ -254,7 +254,7 @@ public interface Soluzione extends Serializable, Cloneable, Iterable<Cella>, Ori
 
         for (Blocco blocco : blocchi)
         {
-            List<Cella> celleBlocco = popolaRec(blocco.dimensione(), new LinkedList<Cella>());
+            List<Cella> celleBlocco = popolaRec(blocco.dimensione(), new LinkedList<>());
             if (celleBlocco.size() < blocco.dimensione())
                 blocco = blocco(celleBlocco.size());
             for (Cella cella : celleBlocco)
