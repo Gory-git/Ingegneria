@@ -39,18 +39,12 @@ class BloccoListTest {
     @Test
     void sePienoNonAggiungeCella()
     {
-        BloccoList b = new BloccoList(1);
-        b.aggiungiCella(new Cella(new int[]{0, 0}));
-        try
-        {
-            b.aggiungiCella(new Cella(new int[]{0, 0}));
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }finally
-        {
-            assertEquals(1, b.celle().size());
-        }
+        int dimensione = 1;
+        BloccoList b = new BloccoList(dimensione);
+        b.aggiungiCella(new Cella(1, new int[]{0, 0}));
+
+        assertThrows(IllegalStateException.class, () -> b.aggiungiCella(new Cella(1, new int[]{0, 0})));
+        assertEquals(dimensione, b.celle().size());
     }
 
     @Test
