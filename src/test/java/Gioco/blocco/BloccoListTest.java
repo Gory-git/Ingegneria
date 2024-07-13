@@ -1,10 +1,7 @@
 package Gioco.blocco;
 
 import Gioco.cella.Cella;
-import Gioco.operatore.Operatore;
 import org.junit.jupiter.api.Test;
-
-import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.*;
 

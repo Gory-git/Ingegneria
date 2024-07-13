@@ -26,5 +26,8 @@ Voci Gregorio MAT. 230631
 + Per visualizzare la precedente bisogna premere indietro.
 + Per iniziare una nuova partita bisogna premere nuova partita.
 
-> [!NOTE]
+> [NOTA]
 > Il file Jar si trova in: out/artifacts/ingegneria.jar/
+
+> [NOTA]
+> Il main si trova in Mediator Concreto
